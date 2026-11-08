@@ -1,3 +1,7 @@
+> Historical migration report from the earlier draft.
+> Superseded on 8 November 2026: all 61 keys cited in the revised manuscript are present in zotero.bib.
+> Current validation: bib_validation.txt.
+
 # Zotero citation-key migration
 
 Matched 28 of 62 cited works by DOI or normalised exact title.

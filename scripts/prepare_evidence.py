@@ -1,71 +1,150 @@
-"""Audit saved predictions and export the immutable tables consumed by R.
+"""Audit the completed matched four-case experiment and export R figure data.
 
-No fitting, model selection or checkpoint inference is performed.
+Only saved predictions, checkpoints and contracts are read. No training occurs.
 """
 from pathlib import Path
-import hashlib,json
+import hashlib
+import json
 import numpy as np
 import pandas as pd
 import torch
-ROOT=Path(__file__).resolve().parents[2]
-OUT=ROOT/'article/evidence'
-SOURCES={}
-def read(path):
- p=ROOT/path;SOURCES[path]=hashlib.sha256(p.read_bytes()).hexdigest();return pd.read_csv(p)
-def save(df,name):df.to_csv(OUT/name,index=False)
-co=read('share/CO2/outputs/co2_temporal_13k_v1/combined_metrics.csv')
-co=co[co.model.isin(['product_knn','deepgwr','geoaggregator','ols'])].copy()
-co['model_label']=co.model.map({'product_knn':'DLAN','deepgwr':'Joint attention','geoaggregator':'GeoAggregator','ols':'OLS'})
-assert len(co)==62 and all(co[co.model!='ols'].groupby(['model','split']).size()==10)
-save(co,'co2_metrics.csv')
-rows=[]; audits=[];bands=[]
-for kind in ['product_knn','deepgwr','geoaggregator']:
- for seed in range(1,11):
-  p=ROOT/f'share/CO2/outputs/co2_temporal_13k_v1/{kind}/seed_{seed}_predictions.npz'
-  SOURCES[str(p.relative_to(ROOT))]=hashlib.sha256(p.read_bytes()).hexdigest();a=np.load(p)
-  for split in ['validation','test']:
-   actual=a[f'{split}_actual'];pred=a[f'{split}_predicted'];ids=a[f'{split}_row_id'];err=pred-actual
-   rmse=float(np.sqrt(np.mean(err**2)));mae=float(np.mean(abs(err)));r2=float(1-np.sum(err**2)/np.sum((actual-actual.mean())**2))
-   m=co[(co.model==kind)&(co.seed==seed)&(co.split==split)].iloc[0]
-   assert np.allclose([rmse,mae,r2],[m.rmse,m.mae,m.r2],rtol=2e-5,atol=1e-6)
-   audits.append(dict(case='CO2',model=kind,seed=seed,split=split,rows=len(ids),rmse=rmse,mae=mae,r2=r2))
-   if split=='test' and seed==1:
-    rows.extend(dict(case='CO2',model=m.model_label,row_id=int(i),actual=float(y),predicted=float(z),residual=float(e)) for i,y,z,e in zip(ids,actual,pred,err))
-  if kind=='product_knn':
-   p=ROOT/f'share/CO2/outputs/co2_temporal_13k_v1/{kind}/seed_{seed}_checkpoint.pt'
-   s=torch.load(p,map_location='cpu',weights_only=False)['state']['model_state']
-   for key,value in s.items():
-    if key.endswith('raw_bandwidth'):
-     b=torch.nn.functional.softplus(value).numpy()+1e-6
-     for axis,axisname in enumerate(['Space x','Space y','Time']):
-      for head in range(b.shape[1]):bands.append(dict(seed=seed,axis=axisname,head=head,bandwidth=float(b[axis,head])))
-save(pd.DataFrame(rows),'co2_predictions_seed1.csv');save(pd.DataFrame(bands),'co2_bandwidths.csv')
-hpbase='share/WuhanHP/outputs/location_holdout_three_seeds/'
-hp=read(hpbase+'test_metric_summary.csv');hp=hp[hp.model.isin(['DeepGWRTransformer','GeoAggregator','GNNWR','GCNNWR'])].copy();hp['model']=hp.model.replace({'DeepGWRTransformer':'DLAN-P'});save(hp,'hp_summary.csv')
-data=np.load(ROOT/'share/WuhanHP/data/processed.npz');groups=data['group'];all_y=data['y_raw'].ravel();coords=data['u_raw']
-hr=[];group_rows=[]
-for kind,label in [('deepgwr','DLAN-P'),('geoaggregator','GeoAggregator'),('gnnwr','GNNWR'),('gcnnwr','GCNNWR')]:
- for seed in [10,20,30]:
-  p=ROOT/(hpbase+f'{kind}_seed{seed}_predictions.npz');a=np.load(p);ids=a['test_row_id'].astype(int);y=all_y[ids];pred=a['test_predicted'];e=pred-y
-  metrics=read(hpbase+f'{kind}_seed{seed}_metrics.csv');m=metrics[metrics.split=='test'].iloc[0]
-  rmse=np.sqrt(np.mean(e**2));assert np.isclose(rmse,m.rmse,rtol=2e-5)
-  audits.append(dict(case='WuhanHP',model=label,seed=seed,split='test',rows=len(ids),rmse=rmse))
-  if seed==10:
-   d=pd.DataFrame(dict(group=groups[ids],actual=y,predicted=pred,residual=e,x=coords[ids,0],y=coords[ids,1]))
-   for group,g in d.groupby('group'):
-    group_rows.append(dict(model=label,group=group,n=len(g),rmse=np.sqrt(np.mean(g.residual**2)),mean_residual=g.residual.mean(),x=g.x.iloc[0],y=g.y.iloc[0]))
-save(pd.DataFrame(group_rows),'hp_group_errors_seed10.csv')
-od=read('share/OD-Wuhan/outputs/gtdr_reference_support_10seeds_v1/ordinary/product_knn/metrics.csv')
-od=od[(od.seed.isin([1,2,3,4]))&(od.split=='test')].copy();assert len(od)==4
-od['model_label']='DLAN (partial)'
-for _,m in od.iterrows():
- p=ROOT/f'share/OD-Wuhan/outputs/gtdr_reference_support_10seeds_v1/ordinary/product_knn/seed_{int(m.seed)}_predictions.npz';a=np.load(p)
- print('OD keys',a.files) if m.seed==1 else None
- y=a['test_actual'];pred=a['test_predicted'];rmse=np.sqrt(np.mean((pred-y)**2));assert np.isclose(rmse,m.rmse,rtol=2e-5)
- audits.append(dict(case='WuhanOD',model='DLAN',seed=m.seed,split='test',rows=len(y),rmse=rmse))
-save(od,'od_partial_metrics.csv')
-odhist=read('share/OD-Wuhan/outputs/gtdr_product256_10seeds_v1/test_comparison.csv');save(odhist,'od_historical_summary.csv')
-ab=read('output/deepgwr_kernel_ablation/gaussian_vs_learned/analysis/comparison.csv');save(ab[(ab.split=='test')&ab.dataset.isin(['WuhanHP','OD-Wuhan'])],'gaussian_ablation.csv')
-save(pd.DataFrame(audits),'prediction_recalculation.csv')
-(OUT/'source_hashes.json').write_text(json.dumps(SOURCES,indent=2))
-print('Audited',len(audits),'prediction sets; no model trained.')
+
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / 'article/evidence'
+VERSION = 'dlan_matched4_10seeds_v1'
+CASES = {'CO2': ['dlan', 'geoaggregator'], 'OD-Wuhan': ['dlan', 'geoaggregator'],
+         'WuhanHP': ['dlan', 'geoaggregator', 'gcnnwr'],
+         'GVI': ['dlan', 'geoaggregator', 'gcnnwr']}
+LABELS = {'dlan': 'DLAN', 'geoaggregator': 'GeoAggregator', 'gcnnwr': 'GCNNWR'}
+sources = {}
+def record(path):
+    path = Path(path)
+    sources[str(path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return path
+
+def metrics(actual, prediction):
+    error = prediction.astype(np.float64) - actual.astype(np.float64)
+    return dict(rmse=float(np.sqrt(np.mean(error ** 2))), mae=float(np.mean(abs(error))),
+                r2=float(1 - np.sum(error ** 2) / np.sum((actual - actual.mean()) ** 2)))
+
+status = json.loads(record(ROOT / 'runs' / VERSION / 'status.json').read_text())
+assert status['status'] == 'complete' and status['completed_fits'] == 100
+for name, digest in status['source_hashes'].items():
+    assert hashlib.sha256((ROOT / name).read_bytes()).hexdigest() == digest, name
+records, predictions, bandwidths, group_errors, ols = [], [], [], [], []
+for case, models in CASES.items():
+    base = ROOT / 'share' / case
+    contract = json.loads(record(base / 'data' / VERSION / 'contract.json').read_text())
+    datafile = record(base / 'data' / VERSION / 'ordinary.npz')
+    assert sources[str(datafile.relative_to(ROOT))] == contract['data_sha256']
+    data = np.load(datafile)
+    map_coordinates = data['u_raw']
+    if case == 'WuhanHP':
+        # The frozen matched input inherits normalised coordinates; use the
+        # row-aligned source geometry solely for maps in projected metres.
+        geometry_source = np.load(record(base / 'data' / 'processed.npz'))
+        np.testing.assert_allclose(geometry_source['y_raw'].ravel(), data['actual'], rtol=1e-6)
+        map_coordinates = geometry_source['u_raw']
+    partitions = [data[f'{part}_ids'] for part in ('train', 'validation', 'test')]
+    assert len(np.unique(np.concatenate(partitions))) == contract['rows']
+    train_groups = set(data['groups'][partitions[0]])
+    if case in ('WuhanHP', 'GVI'):
+        assert train_groups.isdisjoint(data['groups'][partitions[1]])
+        assert train_groups.isdisjoint(data['groups'][partitions[2]])
+        assert set(data['groups'][partitions[1]]).isdisjoint(data['groups'][partitions[2]])
+    for kind in models:
+        folder = base / 'outputs' / VERSION / kind
+        config = json.loads(record(folder / 'configuration.json').read_text())
+        assert config['parameters'] == 6957
+        for seed in range(1, 11):
+            frame = pd.read_csv(record(folder / f'seed_{seed}_metrics.csv'))
+            assert len(frame) == 2 and set(frame.split) == {'validation', 'test'}
+            assert (frame.parameters == 6957).all() and (frame.seed == seed).all()
+            assert set(frame.config_digest) == {config['config_digest']}
+            saved = np.load(record(folder / f'seed_{seed}_predictions.npz'))
+            audit = pd.read_csv(record(folder / f'seed_{seed}_audit.csv'))
+            # Audit files record checkpoint-reloaded prediction consistency.
+            assert len(audit) == 2 and audit['prediction_reload_pass'].all()
+            for part in ('validation', 'test'):
+                ids = saved[f'{part}_row_id'].astype(int)
+                np.testing.assert_array_equal(ids, data['row_id'][data[f'{part}_ids']])
+                actual = saved[f'{part}_actual'].astype(np.float64)
+                pred = saved[f'{part}_predicted'].astype(np.float64)
+                np.testing.assert_allclose(actual, data['actual'][data[f'{part}_ids']], rtol=1e-6, atol=1e-6)
+                recalculated = metrics(actual, pred)
+                original = frame[frame.split == part].iloc[0]
+                for key, value in recalculated.items():
+                    np.testing.assert_allclose(value, original[key], rtol=2e-5, atol=1e-6)
+                row = original.to_dict()
+                row.update(recalculated, model_label=LABELS[kind], audited_rows=len(ids))
+                if case == 'WuhanHP':
+                    groups = data['groups'][data[f'{part}_ids']]
+                    group_mse = pd.DataFrame({'group': groups, 'squared': (pred - actual)**2}).groupby('group').squared.mean()
+                    row['equal_group_rmse'] = float(np.sqrt(group_mse.mean()))
+                    for group, subset in pd.DataFrame(dict(group=groups, actual=actual, predicted=pred, row_id=ids)).groupby('group'):
+                        first = int(subset.row_id.iloc[0]); ge = subset.predicted - subset.actual
+                        group_errors.append(dict(case=case, model=LABELS[kind], seed=seed, split=part,
+                            group=group, n=len(subset), rmse=np.sqrt(np.mean(ge**2)),
+                            mean_residual=ge.mean(), x=map_coordinates[first,0], y=map_coordinates[first,1]))
+                if case == 'OD-Wuhan':
+                    threshold = np.quantile(actual, .99)
+                    tail = actual >= threshold
+                    row['upper_1pct_sse_share'] = float(np.sum((pred[tail]-actual[tail])**2) / np.sum((pred-actual)**2))
+                    row['body_rmse'] = float(np.sqrt(np.mean((pred[~tail]-actual[~tail])**2)))
+                records.append(row)
+                if part == 'test':
+                    indices = data[f'{part}_ids']
+                    predictions.append(pd.DataFrame(dict(case=case, model=LABELS[kind], seed=seed,
+                        row_id=ids, actual=actual, predicted=pred, residual=pred-actual,
+                        group=data['groups'][indices], x=map_coordinates[indices,0], y=map_coordinates[indices,1])))
+            checkpoint = torch.load(record(folder / f'seed_{seed}_checkpoint.pt'), map_location='cpu', weights_only=False)
+            assert checkpoint['configuration']['config_digest'] == config['config_digest']
+            st = checkpoint['state']
+            assert set(st['context_ids'].tolist()) == set(data['train_ids'].tolist())
+            if kind == 'dlan':
+                for key, value in st['model_state'].items():
+                    if key.endswith('raw_bandwidth'):
+                        values = torch.nn.functional.softplus(value).numpy() + 1e-6
+                        names = {'CO2': ['Space x','Space y','Time'], 'OD-Wuhan': ['Origin x','Origin y','Destination x','Destination y'],
+                                 'WuhanHP': ['Space x','Space y'], 'GVI': ['Space x','Space y']}[case]
+                        for axis, name in enumerate(names):
+                            bandwidths.append(dict(case=case, seed=seed, axis=name, bandwidth=float(values[axis,0])))
+            if case == 'GVI' and kind == 'gcnnwr':
+                # Read the already fitted training-only OLS buffers; do not fit a new model.
+                test = data['test_ids']
+                x = torch.as_tensor(data['x'][test], dtype=torch.float32)
+                x = (x - st['x_mean']) / st['x_std']
+                design = torch.cat((torch.ones_like(x[:,:1]),x),1)
+                pred = (design @ st['model_state']['network.ols_coefficients'] * st['y_std'] + st['y_mean']).numpy()
+                ols.append(dict(case=case, seed=seed, **metrics(data['actual'][test].astype(float),pred.astype(float))))
+                if seed == 1:
+                    predictions.append(pd.DataFrame(dict(case=case, model='OLS buffer', seed=seed,
+                        row_id=data['row_id'][test], actual=data['actual'][test], predicted=pred,
+                        residual=pred-data['actual'][test],group=data['groups'][test],
+                        x=data['u_raw'][test,0],y=data['u_raw'][test,1])))
+
+all_metrics = pd.DataFrame(records)
+assert len(all_metrics) == 200
+summary = all_metrics.groupby(['case','model_label','split']).agg(
+    runs=('seed','nunique'), parameters=('parameters','first'), rmse_mean=('rmse','mean'),
+    rmse_sd=('rmse','std'), mae_mean=('mae','mean'), r2_mean=('r2','mean'),
+    seconds_mean=('seconds','mean'), seconds_sd=('seconds','std'), epochs_mean=('epochs','mean'),
+    equal_group_rmse=('equal_group_rmse','mean'), upper_1pct_sse_share=('upper_1pct_sse_share','mean'), body_rmse=('body_rmse','mean')).reset_index()
+paired=[]
+for case, subset in all_metrics[all_metrics.split == 'test'].groupby('case'):
+    p = subset.pivot(index='seed',columns='model_label',values='rmse')
+    for other in p.columns.drop('DLAN'):
+        paired.append(dict(case=case, comparator=other, dlan_wins=int((p.DLAN < p[other]).sum()),
+            mean_reduction_pct=float((1-p.DLAN.mean()/p[other].mean())*100),
+            mean_paired_difference=float((p.DLAN-p[other]).mean())))
+for name, data in [('matched_metrics.csv',all_metrics),('matched_summary.csv',summary),
+                   ('matched_predictions.csv',pd.concat(predictions,ignore_index=True)),
+                   ('matched_bandwidths.csv',pd.DataFrame(bandwidths)),
+                   ('matched_hp_groups.csv',pd.DataFrame(group_errors)),
+                   ('matched_paired.csv',pd.DataFrame(paired)),('gvi_ols_buffer.csv',pd.DataFrame(ols))]:
+    data.to_csv(OUT/name,index=False)
+(OUT/'matched_source_hashes.json').write_text(json.dumps(sources,indent=2))
+print(summary[summary.split=='test'].to_string(index=False))
+print(pd.DataFrame(paired).to_string(index=False))
+print('GVI fitted OLS buffer:',pd.DataFrame(ols)[['rmse','mae','r2']].mean().to_dict())
+print('Audited 100 fits and 200 held-out prediction arrays. No training.')
