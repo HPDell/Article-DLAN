@@ -1,8 +1,22 @@
 # DLAN manuscript for IJGIS
 
-`main.tex` contains all manuscript text, tables, glossary definitions and references. Only figures are included externally. The publisher's unmodified Interact class is in `template/`; provenance is recorded in `template/SOURCE.txt`. British English and author–date citations are used. Author metadata remain to be supplied.
+`main.tex` contains all manuscript text, tables and glossary definitions, with each sentence starting on a new line.
+References are read from the user-supplied `zotero.bib` using the publisher's `tfcad.bst` author–date style.
+The unmodified Interact class is `interact.cls`.
+British English is used; author metadata remain to be supplied.
 
-Build from this directory with `make`; all compiler output goes to `_out/`. `make figures` regenerates the R figures from the frozen evidence tables. `make audit` rechecks the repository's saved predictions and regenerates those tables; it does not train models. `make references` embeds the verified reference metadata into the one manuscript file. Verified reference metadata are frozen in `evidence/references_crossref.json`; the default build needs no reference-network requests.
+Build from this directory with `latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=_out main.tex`.
+All compiler output goes to `_out/`.
+`Rscript scripts/plot_results.R` regenerates the R figures from frozen evidence tables.
+`python scripts/prepare_evidence.py` checks saved predictions without training.
+`python scripts/render_references.py` validates the citation keys against `zotero.bib`; it no longer inserts inline bibliography entries.
+
+## Citation migration, 8 November 2026
+
+28 of 62 cited works matched the supplied export by DOI or normalised exact title.
+The 34 unmatched original keys remain in the manuscript, so their citations are unresolved until those records are supplied.
+See [the complete missing-reference list and key mapping](evidence/missing_references.md).
+The Zotero export has not been modified.
 
 ## Evidence snapshot, 7 November 2026
 

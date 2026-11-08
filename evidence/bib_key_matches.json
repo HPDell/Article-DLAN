@@ -1,0 +1,1054 @@
+{
+  "matches": [
+    {
+      "old_key": "anselin1988",
+      "new_key": "Anselin-1988",
+      "method": "title",
+      "title": "Spatial Econometrics: Methods and Models",
+      "duplicates": []
+    },
+    {
+      "old_key": "anselin1995",
+      "new_key": "Anselin-1995",
+      "method": "doi",
+      "title": "Local Indicators of Spatial Association—LISA",
+      "duplicates": []
+    },
+    {
+      "old_key": "brunsdon1996",
+      "new_key": "BrunsdonFotheringham-1996",
+      "method": "doi",
+      "title": "Geographically Weighted Regression: A Method for Exploring Spatial Nonstationarity",
+      "duplicates": []
+    },
+    {
+      "old_key": "brunsdon1999",
+      "new_key": "BrunsdonFotheringham-1999",
+      "method": "doi",
+      "title": "Some Notes on Parametric Significance Tests for Geographically Weighted Regression",
+      "duplicates": []
+    },
+    {
+      "old_key": "cleveland1979",
+      "new_key": "Cleveland-1979",
+      "method": "title",
+      "title": "Robust Locally Weighted Regression and Smoothing Scatterplots",
+      "duplicates": []
+    },
+    {
+      "old_key": "deng2025",
+      "new_key": "DengLi-2025a",
+      "method": "doi",
+      "title": "GeoAggregator: An Efficient Transformer Model for Geo-Spatial Tabular Data",
+      "duplicates": []
+    },
+    {
+      "old_key": "fotheringham2002",
+      "new_key": "FotheringhamBrunsdon-2002",
+      "method": "title",
+      "title": "Geographically Weighted Regression: The Analysis of Spatially Varying Relationships",
+      "duplicates": []
+    },
+    {
+      "old_key": "fotheringham2015",
+      "new_key": "FotheringhamCrespo-2015a",
+      "method": "doi",
+      "title": "Geographical and Temporal Weighted Regression (GTWR)",
+      "duplicates": []
+    },
+    {
+      "old_key": "fotheringham2017",
+      "new_key": "FotheringhamYang-2017",
+      "method": "doi",
+      "title": "Multiscale Geographically Weighted Regression (MGWR)",
+      "duplicates": []
+    },
+    {
+      "old_key": "gollini2015",
+      "new_key": "GolliniLu-2015",
+      "method": "doi",
+      "title": "<b>GWmodel</b>\n                    : An\n                    <i>R</i>\n                    Package for Exploring Spatial Heterogeneity Using Geographically Weighted Models",
+      "duplicates": []
+    },
+    {
+      "old_key": "goodchild2004",
+      "new_key": "Goodchild-2004",
+      "method": "doi",
+      "title": "The Validity and Usefulness of Laws in Geographic Information Science and Geography",
+      "duplicates": []
+    },
+    {
+      "old_key": "harris2010",
+      "new_key": "HarrisFotheringham-2010a",
+      "method": "doi",
+      "title": "The Use of Geographically Weighted Regression for Spatial Prediction: An Evaluation of Models Using Simulated Data Sets",
+      "duplicates": []
+    },
+    {
+      "old_key": "huang2010",
+      "new_key": "HuangWu-2010",
+      "method": "doi",
+      "title": "Geographically and temporally weighted regression for modeling spatio-temporal variation in house prices",
+      "duplicates": []
+    },
+    {
+      "old_key": "hurvich1998",
+      "new_key": "HurvichSimonoff-1998",
+      "method": "doi",
+      "title": "Smoothing Parameter Selection in Nonparametric Regression Using an Improved Akaike Information Criterion",
+      "duplicates": []
+    },
+    {
+      "old_key": "hyndman1996",
+      "new_key": "HyndmanBashtannyk-1996",
+      "method": "doi",
+      "title": "Estimating and Visualizing Conditional Densities",
+      "duplicates": []
+    },
+    {
+      "old_key": "kordi2016",
+      "new_key": "KordiFotheringham-2016",
+      "method": "doi",
+      "title": "Spatially Weighted Interaction Models (SWIM)",
+      "duplicates": []
+    },
+    {
+      "old_key": "lu2014",
+      "new_key": "LuHarris-2014",
+      "method": "title",
+      "title": "The GWmodel R package: further topics for exploring spatial heterogeneity using geographically weighted models",
+      "duplicates": []
+    },
+    {
+      "old_key": "lu2016",
+      "new_key": "LuHarris-2015",
+      "method": "doi",
+      "title": "Calibrating a Geographically Weighted Regression Model with Parameter-specific Distance Metrics",
+      "duplicates": []
+    },
+    {
+      "old_key": "lu2025",
+      "new_key": "LuHuHuang-2025",
+      "method": "doi",
+      "title": "Geographical and temporal density regression",
+      "duplicates": [
+        "LuHu-2025"
+      ]
+    },
+    {
+      "old_key": "moran1950",
+      "new_key": "Moran-1950",
+      "method": "title",
+      "title": "NOTES ON CONTINUOUS STOCHASTIC PHENOMENA",
+      "duplicates": []
+    },
+    {
+      "old_key": "nadaraya1964",
+      "new_key": "Nadaraya-1964",
+      "method": "doi",
+      "title": "On Estimating Regression",
+      "duplicates": []
+    },
+    {
+      "old_key": "oshan2019",
+      "new_key": "OshanLi-2019",
+      "method": "doi",
+      "title": "mgwr: A Python Implementation of Multiscale Geographically Weighted Regression for Investigating Process Spatial Heterogeneity and Scale",
+      "duplicates": []
+    },
+    {
+      "old_key": "tobler1970",
+      "new_key": "Tobler-1970",
+      "method": "doi",
+      "title": "A Computer Movie Simulating Urban Growth in the Detroit Region",
+      "duplicates": []
+    },
+    {
+      "old_key": "vaswani2017",
+      "new_key": "VaswaniShazeer-2023",
+      "method": "title",
+      "title": "Attention Is All You Need",
+      "duplicates": []
+    },
+    {
+      "old_key": "watson1964",
+      "new_key": "Watson-1964",
+      "method": "title",
+      "title": "Smooth Regression Analysis",
+      "duplicates": []
+    },
+    {
+      "old_key": "wheeler2007",
+      "new_key": "Wheeler-2007",
+      "method": "doi",
+      "title": "Diagnostic Tools and a Remedial Method for Collinearity in Geographically Weighted Regression",
+      "duplicates": []
+    },
+    {
+      "old_key": "wu2020",
+      "new_key": "DuWang-2020",
+      "method": "doi",
+      "title": "Geographically neural network weighted regression for the accurate estimation of spatial non-stationarity",
+      "duplicates": []
+    },
+    {
+      "old_key": "yu2020",
+      "new_key": "YuFotheringham-2020",
+      "method": "doi",
+      "title": "Inference in Multiscale Geographically Weighted Regression",
+      "duplicates": []
+    }
+  ],
+  "unmatched": [
+    {
+      "old_key": "ba2016",
+      "title": "Layer Normalization",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.556,
+          "key": "WickhamSeidel-2022",
+          "title": "Scales: {{Scale Functions}} for {{Visualization}}",
+          "doi": null
+        },
+        {
+          "score": 0.533,
+          "key": "Greig-1980",
+          "title": "Optimisation",
+          "doi": null
+        },
+        {
+          "score": 0.5,
+          "key": "CliffOrd-1973",
+          "title": "Spatial Autocorrelation",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "bahdanau2015",
+      "title": "Neural Machine Translation by Jointly Learning to Align and Translate",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.479,
+          "key": "Harris-2008",
+          "title": "Equal {{Rights}} in {{Education}} in the {{UK}} ({{England}})",
+          "doi": null
+        },
+        {
+          "score": 0.463,
+          "key": "Lei-2024",
+          "title": "Research on After-School Education in {{China}}: History, Progress and Trends",
+          "doi": "10.23977/trance.2024.060413"
+        },
+        {
+          "score": 0.462,
+          "key": "Jiang-2021",
+          "title": "Bourdieu and {{Chinese}} Education: {{Inequality}}, Competition, and Change",
+          "doi": "10.1080/00131857.2020.1738919"
+        }
+      ]
+    },
+    {
+      "old_key": "biljecki2021",
+      "title": "Street view imagery in urban analytics and GIS: A review",
+      "doi": "10.1016/j.landurbplan.2021.104217",
+      "candidates": [
+        {
+          "score": 0.481,
+          "key": "Al-SaiHusin-2022",
+          "title": "Explore {{Big Data Analytics Applications}} and {{Opportunities}}: {{A Review}}",
+          "doi": "10.3390/bdcc6040157"
+        },
+        {
+          "score": 0.452,
+          "key": "LiuWang-2023-en",
+          "title": "{On spatial effects in geographical analysis}",
+          "doi": null
+        },
+        {
+          "score": 0.447,
+          "key": "MeerowNewell-2016",
+          "title": "Defining Urban Resilience: {{A}} Review",
+          "doi": "10.1016/j.landurbplan.2015.11.011"
+        }
+      ]
+    },
+    {
+      "old_key": "breiman2001",
+      "title": "Random Forests",
+      "doi": "10.1023/a:1010933404324",
+      "candidates": [
+        {
+          "score": 0.414,
+          "key": "Codd-1970",
+          "title": "A Relational Model of Data for Large Shared Data Banks",
+          "doi": "10.1145/362384.362685"
+        },
+        {
+          "score": 0.41,
+          "key": "JaderbergSimonyan-2016",
+          "title": "Spatial Transformer Networks",
+          "doi": "10.48550/arXiv.1506.02025"
+        },
+        {
+          "score": 0.409,
+          "key": "Routledge-1997",
+          "title": "P-Values from Permutation and {{F-tests}}",
+          "doi": "10.1016/S0167-9473(96)00073-4"
+        }
+      ]
+    },
+    {
+      "old_key": "brenning2012",
+      "title": "Spatial cross-validation and bootstrap for the assessment of prediction rules in remote sensing: The R package sperrorest",
+      "doi": "10.1109/igarss.2012.6352393",
+      "candidates": [
+        {
+          "score": 0.459,
+          "key": "Autor-2014",
+          "title": "Skills, Education, and the Rise of Earnings Inequality among the \"Other 99 Percent\"",
+          "doi": "10.1126/science.1251868"
+        },
+        {
+          "score": 0.444,
+          "key": "Troendle-2002",
+          "title": "A {{Likelihood Ratio Test}} for the {{Nonparametric Behrens-Fisher Problem}}",
+          "doi": "10.1002/1521-4036(200210)44:7<813::AID-BIMJ813>3.0.CO;2-A"
+        },
+        {
+          "score": 0.442,
+          "key": "BowmanHall-1984",
+          "title": "Cross-{{Validation}} in {{Nonparametric-Estimation}} of {{Probabilities}} and {{Probability Densities}}",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "chen2016",
+      "title": "XGBoost",
+      "doi": "10.1145/2939672.2939785",
+      "candidates": [
+        {
+          "score": 0.4,
+          "key": "LiLiu-2016",
+          "title": "{基于GIS电力智能选线系统的设计与实现}",
+          "doi": null
+        },
+        {
+          "score": 0.4,
+          "key": "LinYaPing-2017",
+          "title": "{基于云GIS的地理国情统计分析方法研究}",
+          "doi": null
+        },
+        {
+          "score": 0.4,
+          "key": "ZouLiu-2024",
+          "title": "{GIS技术辅助下配电网抢修驻点选址方法研究}",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "fan1992",
+      "title": "Design-adaptive Nonparametric Regression",
+      "doi": "10.1080/01621459.1992.10476255",
+      "candidates": [
+        {
+          "score": 0.61,
+          "key": "Ghosh-2003",
+          "title": "Bayesian Nonparametrics",
+          "doi": null
+        },
+        {
+          "score": 0.6,
+          "key": "DelgadoManteiga-2001",
+          "title": "Significance Testing in Nonparametric Regression Based on the Bootstrap",
+          "doi": "10.1214/aos/1013203462"
+        },
+        {
+          "score": 0.596,
+          "key": "Ledolter-2013",
+          "title": "Local {{Polynomial Regression}}: {{A Nonparametric Regression Approach}}",
+          "doi": "10.1002/9781118596289.ch4"
+        }
+      ]
+    },
+    {
+      "old_key": "friedman2001",
+      "title": "Greedy function approximation: A gradient boosting machine.",
+      "doi": "10.1214/aos/1013203451",
+      "candidates": [
+        {
+          "score": 0.549,
+          "key": "Fletcher-1964",
+          "title": "Function Minimization by Conjugate Gradients",
+          "doi": "10.1093/comjnl/7.2.149"
+        },
+        {
+          "score": 0.53,
+          "key": "HallCarroll-1989",
+          "title": "Variance {{Function Estimation}} in {{Regression}}: {{The Effect}} of {{Estimating}} the {{Mean}}",
+          "doi": "10.1111/j.2517-6161.1989.tb01744.x"
+        },
+        {
+          "score": 0.477,
+          "key": "LaFleurGreevy-2009",
+          "title": "Introduction to {{Permutation}} and {{Resampling-Based Hypothesis Tests}}",
+          "doi": "10.1080/15374410902740411"
+        }
+      ]
+    },
+    {
+      "old_key": "friedman2008",
+      "title": "Predictive learning via rule ensembles",
+      "doi": "10.1214/07-aoas148",
+      "candidates": [
+        {
+          "score": 0.54,
+          "key": "NavaresAznarte-2020",
+          "title": "Predicting Air Quality with Deep Learning {{LSTM}}: {{Towards}} Comprehensive Models",
+          "doi": "10.1016/j.ecoinf.2019.101019"
+        },
+        {
+          "score": 0.421,
+          "key": "Goodman-1978",
+          "title": "Hedonic Prices, Price Indices and Housing Markets",
+          "doi": "10.1016/0094-1190(78)90004-9"
+        },
+        {
+          "score": 0.416,
+          "key": "RomanoTirlea-2022",
+          "title": "Permutation Testing for Dependence in Time Series",
+          "doi": "10.1111/jtsa.12638"
+        }
+      ]
+    },
+    {
+      "old_key": "gcnnwr2022",
+      "title": "Geographically convolutional neural network weighted regression: a method for modeling spatially non-stationary relationships based on a global spatial proximity grid",
+      "doi": "10.1080/13658816.2022.2100892",
+      "candidates": [
+        {
+          "score": 0.724,
+          "key": "WuWang-2021",
+          "title": "Geographically and Temporally Neural Network Weighted Regression for Modeling Spatiotemporal Non-Stationary Relationships",
+          "doi": "10.1080/13658816.2020.1775836"
+        },
+        {
+          "score": 0.624,
+          "key": "BrunsdonFotheringham-1996",
+          "title": "Geographically Weighted Regression: A Method for Exploring Spatial Nonstationarity",
+          "doi": "10.1111/j.1538-4632.1996.tb00936.x"
+        },
+        {
+          "score": 0.613,
+          "key": "DuWang-2020",
+          "title": "Geographically Neural Network Weighted Regression for the Accurate Estimation of Spatial Non-Stationarity",
+          "doi": "10.1080/13658816.2019.1707834"
+        }
+      ]
+    },
+    {
+      "old_key": "gilmer2017",
+      "title": "Neural Message Passing for Quantum Chemistry",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.457,
+          "key": "BeckmannJenkinson-2003",
+          "title": "General Multilevel Linear Modeling for Group Analysis in {{FMRI}}",
+          "doi": "10.1016/S1053-8119(03)00435-X"
+        },
+        {
+          "score": 0.438,
+          "key": "MyersMontgomery-2012",
+          "title": "Generalized Linear Models: With Applications in Engineering and the Sciences.",
+          "doi": null
+        },
+        {
+          "score": 0.432,
+          "key": "ZeileisKleiber-2008",
+          "title": "Regression {{Models}} for {{Count Data}} in {{{\\emph{R}}}}",
+          "doi": "10.18637/jss.v027.i08"
+        }
+      ]
+    },
+    {
+      "old_key": "goodchild1992",
+      "title": "Geographical information science",
+      "doi": "10.1080/02693799208901893",
+      "candidates": [
+        {
+          "score": 0.635,
+          "key": "Shapiro-1980",
+          "title": "{{DESIGN OF A SPATIAL INFORMATION SYSTEM}}",
+          "doi": "10.1016/B978-0-12-267180-7.50010-4"
+        },
+        {
+          "score": 0.583,
+          "key": "Couclelis-2009",
+          "title": "Rethinking {{Time Geography}} in the {{Information Age}}",
+          "doi": "10.1068/a4151"
+        },
+        {
+          "score": 0.571,
+          "key": "LuHuHuang-2025",
+          "title": "Geographical and Temporal Density Regression",
+          "doi": "10.1080/13658816.2025.2466110"
+        }
+      ]
+    },
+    {
+      "old_key": "jain2019",
+      "title": "Attention is not Explanation",
+      "doi": "10.18653/v1/n19-1357",
+      "candidates": [
+        {
+          "score": 0.565,
+          "key": "VaswaniShazeer-2023",
+          "title": "Attention Is All You Need",
+          "doi": "10.48550/arXiv.1706.03762"
+        },
+        {
+          "score": 0.52,
+          "key": "GrilichesMason-1972",
+          "title": "Education, {{Income}}, and {{Ability}}",
+          "doi": "10.1086/259988"
+        },
+        {
+          "score": 0.492,
+          "key": "WickhamSeidel-2022",
+          "title": "Scales: {{Scale Functions}} for {{Visualization}}",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "janowicz2020",
+      "title": "GeoAI: spatially explicit artificial intelligence techniques for geographic knowledge discovery and beyond",
+      "doi": "10.1080/13658816.2019.1684500",
+      "candidates": [
+        {
+          "score": 0.491,
+          "key": "BrunsdonFotheringham-1999",
+          "title": "Some {{Notes}} on {{Parametric Significance Tests}} for {{Geographically Weighted Regression}}",
+          "doi": "10.1111/0022-4146.00146"
+        },
+        {
+          "score": 0.466,
+          "key": "ComberHarris-2024a",
+          "title": "Multiscale Spatially Varying Coefficient Modelling Using a Geographical Gaussian Process {{GAM}}",
+          "doi": "10.1080/13658816.2023.2270285"
+        },
+        {
+          "score": 0.443,
+          "key": "HorsfordScott-2018",
+          "title": "The {{Politics}} of {{Education Policy}} in an {{Era}} of {{Inequality}}: {{Possibilities}} for {{Democratic Schooling}}",
+          "doi": "10.4324/9781315680682"
+        }
+      ]
+    },
+    {
+      "old_key": "jones1996",
+      "title": "A Brief Survey of Bandwidth Selection for Density Estimation",
+      "doi": "10.1080/01621459.1996.10476701",
+      "candidates": [
+        {
+          "score": 0.638,
+          "key": "Hansen-1994",
+          "title": "Autoregressive {{Conditional Density Estimation}}",
+          "doi": "10.2307/2527081"
+        },
+        {
+          "score": 0.512,
+          "key": "Bowman-1984",
+          "title": "An {{Alternative Method}} of {{Cross-Validation}} for the {{Smoothing}} of {{Density Estimates}}",
+          "doi": null
+        },
+        {
+          "score": 0.5,
+          "key": "Efromovich-2007",
+          "title": "Conditional Density Estimation in a Regression Setting",
+          "doi": "10.1214/009053607000000253"
+        }
+      ]
+    },
+    {
+      "old_key": "lee2019",
+      "title": "Set Transformer: A Framework for Attention-based Permutation-Invariant Neural Networks",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.521,
+          "key": "PesarinSalmaso-2012",
+          "title": "A Review and Some New Results on Permutation Testing for Multivariate Problems",
+          "doi": "10.1007/s11222-011-9261-0"
+        },
+        {
+          "score": 0.474,
+          "key": "SengZhang-2021",
+          "title": "Spatiotemporal Prediction of Air Quality Based on {{LSTM}} Neural Network",
+          "doi": "10.1016/j.aej.2020.12.009"
+        },
+        {
+          "score": 0.463,
+          "key": "WangQin-2021",
+          "title": "Feature {{Extraction}} of {{QAR Data}} via {{Sequence-Parameter Attention Based Convolutional Autoencoder Model}}",
+          "doi": "10.1109/ICCASIT53235.2021.9633758"
+        }
+      ]
+    },
+    {
+      "old_key": "li2015",
+      "title": "Assessing street-level urban greenery using Google Street View and a modified green view index",
+      "doi": "10.1016/j.ufug.2015.06.006",
+      "candidates": [
+        {
+          "score": 0.413,
+          "key": "Yuan-2016",
+          "title": "Spatial {{Heterogeneity}} in the {{Tumor Microenvironment}}",
+          "doi": "10.1101/cshperspect.a026583"
+        },
+        {
+          "score": 0.407,
+          "key": "GolliniLu-2015",
+          "title": "{{GWmodel}}: {{An R Package}} for {{Exploring Spatial Heterogeneity Using Geographically Weighted Models}}",
+          "doi": "10.18637/jss.v063.i17"
+        },
+        {
+          "score": 0.397,
+          "key": "ZhuHuang-2005",
+          "title": "Modeling Spatial-Temporal Binary Data Using {{Markov}} Random Fields",
+          "doi": "10.1198/108571105X46543"
+        }
+      ]
+    },
+    {
+      "old_key": "li2018",
+      "title": "Urban visual intelligence: Uncovering hidden city profiles with street view images",
+      "doi": "10.1073/pnas.2220417120",
+      "candidates": [
+        {
+          "score": 0.439,
+          "key": "WoodDykes-2010",
+          "title": "Visualisation of {{Origins}}, {{Destinations}} and {{Flows}} with {{OD Maps}}",
+          "doi": "10.1179/000870410X12658023467367"
+        },
+        {
+          "score": 0.422,
+          "key": "TuerlinckxRijmen-2006",
+          "title": "Statistical {{Inference}} in {{Generalized Linear Mixed Models}}: {{A Review}}",
+          "doi": "10.1348/000711005X79857"
+        },
+        {
+          "score": 0.414,
+          "key": "CooperBarmuta-1997",
+          "title": "Quantifying {{Spatial Heterogeneity}} in {{Streams}}",
+          "doi": "10.2307/1468250"
+        }
+      ]
+    },
+    {
+      "old_key": "loshchilov2019",
+      "title": "Decoupled Weight Decay Regularization",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.479,
+          "key": "BivandYu-2022",
+          "title": "Spgwr: {{Geographically Weighted Regression}}",
+          "doi": null
+        },
+        {
+          "score": 0.475,
+          "key": "HosmerLemeshow-2013",
+          "title": "Applied Logistic Regression.",
+          "doi": null
+        },
+        {
+          "score": 0.458,
+          "key": "Xue-2019",
+          "title": "Hierarchical {{Geographically Weighted Regression Model}}",
+          "doi": "10.32604/jqc.2019.05954"
+        }
+      ]
+    },
+    {
+      "old_key": "lundberg2017",
+      "title": "A Unified Approach to Interpreting Model Predictions",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.55,
+          "key": "CliffOrd-1981",
+          "title": "Spatial Processes: Models \\& Applications",
+          "doi": null
+        },
+        {
+          "score": 0.544,
+          "key": "VianaBarbosa-2021",
+          "title": "Attention-Based Spatial Interpolation for House Price Prediction",
+          "doi": "10.1145/3474717.3484257"
+        },
+        {
+          "score": 0.533,
+          "key": "ZhangGao-2025",
+          "title": "An Improved Machine-Learning Model for Lightning-Ignited Wildfire Prediction in Texas",
+          "doi": "10.1088/1748-9326/add754"
+        }
+      ]
+    },
+    {
+      "old_key": "mai2022",
+      "title": "A review of location encoding for GeoAI: methods and applications",
+      "doi": "10.1080/13658816.2021.2004602",
+      "candidates": [
+        {
+          "score": 0.594,
+          "key": "Garson-2013",
+          "title": "Hierarchical {{Linear Modeling}}: {{Guide}} and {{Applications}}",
+          "doi": "10.4135/9781483384450"
+        },
+        {
+          "score": 0.557,
+          "key": "Anselin-2004",
+          "title": "Advances in Spatial Econometrics: Methodology, Tools and Applications",
+          "doi": null
+        },
+        {
+          "score": 0.555,
+          "key": "Stroup-2013",
+          "title": "Generalized Linear Mixed Models: Modern Concepts, Methods and Applications",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "paez2011",
+      "title": "A Simulation-Based Study of Geographically Weighted Regression as a Method for Investigating Spatially Varying Relationships",
+      "doi": "10.1068/a44111",
+      "candidates": [
+        {
+          "score": 0.71,
+          "key": "FotheringhamBrunsdon-2002",
+          "title": "Geographically {{Weighted Regression}}: {{The Analysis}} of {{Spatially Varying Relationships}}",
+          "doi": null
+        },
+        {
+          "score": 0.706,
+          "key": "WangHuang-2022",
+          "title": "{{GWRBoost}}:A Geographically Weighted Gradient Boosting Method for Explainable Quantification of Spatially-Varying Relationships",
+          "doi": "10.48550/arXiv.2212.05814"
+        },
+        {
+          "score": 0.659,
+          "key": "BrunsdonFotheringham-1996",
+          "title": "Geographically Weighted Regression: A Method for Exploring Spatial Nonstationarity",
+          "doi": "10.1111/j.1538-4632.1996.tb00936.x"
+        }
+      ]
+    },
+    {
+      "old_key": "parzen1962",
+      "title": "On Estimation of a Probability Density Function and Mode",
+      "doi": "10.1214/aoms/1177704472",
+      "candidates": [
+        {
+          "score": 0.54,
+          "key": "BowmanHall-1984",
+          "title": "Cross-{{Validation}} in {{Nonparametric-Estimation}} of {{Probabilities}} and {{Probability Densities}}",
+          "doi": null
+        },
+        {
+          "score": 0.532,
+          "key": "Dabo-NiangRachdi-2010",
+          "title": "{{KERNEL REGRESSION ESTIMATION FOR SPATIAL FUNCTIONAL RANDOM VARIABLES}}",
+          "doi": null
+        },
+        {
+          "score": 0.5,
+          "key": "LuIm-2010",
+          "title": "Population Estimation Based on Multi-Sensor Data Fusion",
+          "doi": "10.1080/01431161.2010.496801"
+        }
+      ]
+    },
+    {
+      "old_key": "perez2018",
+      "title": "FiLM: Visual Reasoning with a General Conditioning Layer",
+      "doi": "10.1609/aaai.v32i1.11671",
+      "candidates": [
+        {
+          "score": 0.478,
+          "key": "HyndmanBashtannyk-1996",
+          "title": "Estimating and {{Visualizing Conditional Densities}}",
+          "doi": "10.1080/10618600.1996.10474715"
+        },
+        {
+          "score": 0.478,
+          "key": "PangCheng-2020",
+          "title": "{\\emph{Suzhi}} {{Education}} and {{General Education}} in {{China}}",
+          "doi": "10.1177/2096531120913171"
+        },
+        {
+          "score": 0.463,
+          "key": "KimNeykov-2022",
+          "title": "Local Permutation Tests for Conditional Independence",
+          "doi": "10.1214/22-AOS2233"
+        }
+      ]
+    },
+    {
+      "old_key": "reichstein2019",
+      "title": "Deep learning and process understanding for data-driven Earth system science",
+      "doi": "10.1038/s41586-019-0912-1",
+      "candidates": [
+        {
+          "score": 0.465,
+          "key": "KerrAinscow-2022",
+          "title": "Promoting Equity in Market-Driven Education Systems: Lessons from {{England}}",
+          "doi": "10.3390/educsci12070495"
+        },
+        {
+          "score": 0.45,
+          "key": "Liu-2024",
+          "title": "Unveiling and Addressing the Causes of Educational Inequalities in {{China}}",
+          "doi": "10.54097/xbj91d35"
+        },
+        {
+          "score": 0.439,
+          "key": "BurnhamAnderson-2004",
+          "title": "Multimodel {{Inference}}: {{Understanding AIC}} and {{BIC}} in {{Model Selection}}",
+          "doi": "10.1177/0049124104268644"
+        }
+      ]
+    },
+    {
+      "old_key": "roberts2017",
+      "title": "Cross‐validation strategies for data with temporal, spatial, hierarchical, or phylogenetic structure",
+      "doi": "10.1111/ecog.02881",
+      "candidates": [
+        {
+          "score": 0.439,
+          "key": "Ord-1975",
+          "title": "Estimation {{Methods}} for {{Models}} of {{Spatial Interaction}}",
+          "doi": "10.1080/01621459.1975.10480272"
+        },
+        {
+          "score": 0.439,
+          "key": "FengLi-2024",
+          "title": "Estimation and Bootstrapping under Spatiotemporal Models with Unobserved Heterogeneity",
+          "doi": "10.1016/j.jeconom.2023.105559"
+        },
+        {
+          "score": 0.431,
+          "key": "Jiang-2015",
+          "title": "Geospatial Analysis Requires a Different Way of Thinking: The Problem of Spatial Heterogeneity",
+          "doi": "10.1007/s10708-014-9537-y"
+        }
+      ]
+    },
+    {
+      "old_key": "rosenblatt1956",
+      "title": "Remarks on Some Nonparametric Estimates of a Density Function",
+      "doi": "10.1214/aoms/1177728190",
+      "candidates": [
+        {
+          "score": 0.534,
+          "key": "BowmanHall-1984",
+          "title": "Cross-{{Validation}} in {{Nonparametric-Estimation}} of {{Probabilities}} and {{Probability Densities}}",
+          "doi": null
+        },
+        {
+          "score": 0.504,
+          "key": "WaldWolfowitz-1943",
+          "title": "An {{Exact Test}} for {{Randomness}} in the {{Non-Parametric Case Based}} on {{Serial Correlation}}",
+          "doi": null
+        },
+        {
+          "score": 0.5,
+          "key": "FayShih-1998",
+          "title": "Permutation {{Tests Using Estimated Distribution Functions}}",
+          "doi": "10.1080/01621459.1998.10474120"
+        }
+      ]
+    },
+    {
+      "old_key": "stone1974",
+      "title": "Cross-Validatory Choice and Assessment of Statistical Predictions",
+      "doi": "10.1111/j.2517-6161.1974.tb00994.x",
+      "candidates": [
+        {
+          "score": 0.552,
+          "key": "RCoreTeam-2021",
+          "title": "R: {{A Language}} and {{Environment}} for {{Statistical Computing}}",
+          "doi": null
+        },
+        {
+          "score": 0.489,
+          "key": "LudeckeBen-Shachar-2021",
+          "title": "Performance: {{An R Package}} for {{Assessment}}, {{Comparison}} and {{Testing}} of {{Statistical Models}}",
+          "doi": "10.21105/joss.03139"
+        },
+        {
+          "score": 0.477,
+          "key": "VareaGonzalez-Calvo-2021",
+          "title": "Touchless Classes and Absent Bodies: Teaching Physical Education in Times of {{Covid-19}}",
+          "doi": "10.1080/13573322.2020.1791814"
+        }
+      ]
+    },
+    {
+      "old_key": "su2024",
+      "title": "RoFormer: Enhanced transformer with Rotary Position Embedding",
+      "doi": "10.1016/j.neucom.2023.127063",
+      "candidates": [
+        {
+          "score": 0.444,
+          "key": "HallHart-1990",
+          "title": "Bootstrap {{Test}} for {{Difference}} between {{Means}} in {{Nonparametric Regression}}",
+          "doi": "10.1080/01621459.1990.10474974"
+        },
+        {
+          "score": 0.425,
+          "key": "LudeckeBen-Shachar-2021",
+          "title": "Performance: {{An R Package}} for {{Assessment}}, {{Comparison}} and {{Testing}} of {{Statistical Models}}",
+          "doi": "10.21105/joss.03139"
+        },
+        {
+          "score": 0.415,
+          "key": "LiuWang-2025",
+          "title": "An Improved Transformer Based Traffic Flow Prediction Model",
+          "doi": "10.1038/s41598-025-92425-7"
+        }
+      ]
+    },
+    {
+      "old_key": "tancik2020",
+      "title": "Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.426,
+          "key": "JiaoTao-2025",
+          "title": "Geographical Graph Attention Networks: Spatial Deep Learning Models for Spatial Prediction and Exploratory Spatial Data Analysis",
+          "doi": "10.1111/tgis.70029"
+        },
+        {
+          "score": 0.424,
+          "key": "WangQin-2021",
+          "title": "Feature {{Extraction}} of {{QAR Data}} via {{Sequence-Parameter Attention Based Convolutional Autoencoder Model}}",
+          "doi": "10.1109/ICCASIT53235.2021.9633758"
+        },
+        {
+          "score": 0.423,
+          "key": "Dabo-NiangRachdi-2010",
+          "title": "{{KERNEL REGRESSION ESTIMATION FOR SPATIAL FUNCTIONAL RANDOM VARIABLES}}",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "valavi2019",
+      "title": "<scp>block</scp>\n                    <scp>CV</scp>\n                    : An\n                    <scp>r</scp>\n                    package for generating spatially or environmentally separated folds for\n                    <i>k</i>\n                    ‐fold cross‐validation of species distribution models",
+      "doi": "10.1111/2041-210x.13107",
+      "candidates": [
+        {
+          "score": 0.448,
+          "key": "ParadinasIllian-2023",
+          "title": "Understanding Spatial Effects in Species Distribution Models",
+          "doi": "10.1371/journal.pone.0285463"
+        },
+        {
+          "score": 0.446,
+          "key": "GolliniLu-2015",
+          "title": "{{GWmodel}}: {{An R Package}} for {{Exploring Spatial Heterogeneity Using Geographically Weighted Models}}",
+          "doi": "10.18637/jss.v063.i17"
+        },
+        {
+          "score": 0.433,
+          "key": "Anselin-2004",
+          "title": "Advances in Spatial Econometrics: Methodology, Tools and Applications",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "velickovic2018",
+      "title": "Graph Attention Networks",
+      "doi": "",
+      "candidates": [
+        {
+          "score": 0.529,
+          "key": "HagenauerHelbich-2022",
+          "title": "A Geographically Weighted Artificial Neural Network",
+          "doi": "10.1080/13658816.2021.1871618"
+        },
+        {
+          "score": 0.512,
+          "key": "VaswaniShazeer-2023",
+          "title": "Attention Is All You Need",
+          "doi": "10.48550/arXiv.1706.03762"
+        },
+        {
+          "score": 0.5,
+          "key": "HaynesFotheringham-2020",
+          "title": "Gravity and {{Spatial Interaction Models}}",
+          "doi": null
+        }
+      ]
+    },
+    {
+      "old_key": "wheeler2005",
+      "title": "Multicollinearity and correlation among local regression coefficients in geographically weighted regression",
+      "doi": "10.1007/s10109-005-0155-6",
+      "candidates": [
+        {
+          "score": 0.667,
+          "key": "LeungMei-2000a",
+          "title": "Testing for {{Spatial Autocorrelation}} among the {{Residuals}} of the {{Geographically Weighted Regression}}",
+          "doi": "10.1068/a32117"
+        },
+        {
+          "score": 0.621,
+          "key": "MeiXu-2016",
+          "title": "A Bootstrap Test for Constant Coefficients in Geographically Weighted Regression Models",
+          "doi": "10.1080/13658816.2016.1149181"
+        },
+        {
+          "score": 0.61,
+          "key": "Lo-2008",
+          "title": "Population {{Estimation Using Geographically Weighted Regression}}",
+          "doi": "10.2747/1548-1603.45.2.131"
+        }
+      ]
+    },
+    {
+      "old_key": "wiegreffe2019",
+      "title": "Attention is not not Explanation",
+      "doi": "10.18653/v1/d19-1002",
+      "candidates": [
+        {
+          "score": 0.531,
+          "key": "VaswaniShazeer-2023",
+          "title": "Attention Is All You Need",
+          "doi": "10.48550/arXiv.1706.03762"
+        },
+        {
+          "score": 0.491,
+          "key": "GrilichesMason-1972",
+          "title": "Education, {{Income}}, and {{Ability}}",
+          "doi": "10.1086/259988"
+        },
+        {
+          "score": 0.471,
+          "key": "VianaBarbosa-2021",
+          "title": "Attention-Based Spatial Interpolation for House Price Prediction",
+          "doi": "10.1145/3474717.3484257"
+        }
+      ]
+    }
+  ]
+}
