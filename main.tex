@@ -311,24 +311,33 @@ Query microbatching limits transient memory and gradient accumulation preserves 
 Computational scalability is therefore evaluated through both measured fit cost and these explicit algorithmic properties.
 
 \section{Data and experimental design}\label{sec:data}
-\subsection{Four complementary geographical settings}
 The empirical comparison comprises CO$_2$, WuhanOD, WuhanHP and GVI (Table~\ref{tab:data}).
 The cases represent space--time observations, geographical flows and two planar prediction tasks.
 They also span repeated regional observations, houses nested within communities and high-dimensional environmental features.
 All results in the main comparison come from one completed experiment version,
 with identical training controls and exactly 6,957 trainable parameters for every evaluated configuration.
 
-\begin{table}[tb]\centering
-\caption{Data and fixed evaluation partitions.
-All observations are retained.
-The coordinate dimension $D$ is distinct from the covariate dimension $p$.}\label{tab:data}
-\small\begin{tabularx}{\linewidth}{lrrrX}
-\toprule Case & $N$ & $p$ & $D$ & Training / validation / test; task\\\midrule
-CO$_2$ & 13,000 & 8 & 3 & 9,732 / 1,643 / 1,625; 2014--2019 / 2020 / 2021\\
-WuhanOD & 13,807 & 35 & 4 & 9,618 / 2,104 / 2,085; held-out unordered endpoint pairs\\
-WuhanHP & 19,599 & 17 & 2 & 15,475 / 2,196 / 1,928; held-out housing communities\\
-GVI & 2,122 & 176 & 2 & 1,696 / 213 / 213; fixed 1-km spatial groups\\
-\bottomrule\end{tabularx}\end{table}
+\begin{table}[tb]
+  \centering
+  \caption{
+    Data and fixed evaluation partitions. 
+    All observations are retained.
+    The coordinate dimension $D$ is distinct from the covariate dimension $p$.
+  }\label{tab:data}
+  \small
+  \begin{tabular}{lrrrrrr}
+    \toprule
+    Case    & $N$    & $p$ & $D$ & Training & validation & test \\
+    \midrule
+    CO$_2$  & 13,000 & 8   & 3   & 9,732 & 1,643 & 1,625 \\
+    WuhanOD & 13,807 & 35  & 4   & 9,618 & 2,104 & 2,085 \\
+    WuhanHP & 19,599 & 17  & 2   & 15,475 & 2,196 & 1,928 \\
+    GVI     & 2,122  & 176 & 2   & 1,696 & 213 & 213 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Data descriptions}
 
 \subsubsection{\texorpdfstring{CO$_2$}{CO2}: repeated observations and future-year prediction}
 The CO$_2$ case uses the supplied 13,000-row file in the MGTWR data package.
