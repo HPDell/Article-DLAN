@@ -604,6 +604,16 @@ the positional encodings used in the attention mechanisms of \DLAN and \GAgg may
   }\label{fig:co2pred}
 \end{figure}
 
+\autoref{fig:co2pred} shows the prediction residuals for \COO on seed 1.
+As shown in the figure, \DLAN's predictions follow the identity line closely,
+with residuals concentrated near zero across the observed response range.
+\GAgg and \GTNNWR show greater dispersion
+and a stronger tendency to overpredict low responses and underpredict high responses.
+\DLAN substantially reduces this response-dependent error, with ten-seed mean RMSE of 0.2910 compared with 0.6897 for \GAgg and 0.8986 for GTNNWR, and mean $R^2$ of 0.9338.
+It outperforms both baselines in every paired seed, 
+so the tighter residual distribution in the illustrated run 
+is consistent with the repeated-run advantage in future-year prediction.
+
 \begin{figure}[tp]
   \centering
   \includegraphics[width=\linewidth]{matched_od_tail.pdf}
@@ -615,6 +625,15 @@ the positional encodings used in the attention mechanisms of \DLAN and \GAgg may
   }\label{fig:odtail}
 \end{figure}
 
+For \WuhanOD, \DLAN's main advantage is lower mean error and a smaller extreme error across training seeds, as shown in \autoref{fig:odtail}.
+With attention width of 12 and nearest-neighbours of 512, \DLAN achieves mean RMSE of 565.28 and MAE of 50.28, reducing mean RMSE by 26.85\% relative to \GAgg and 84.16\% relative to \GNNWR.
+Its worst-seed RMSE is 827.76, compared with 3,110.57 for \GAgg.
+The response-tail diagnostics show that the largest 1\% of observed flows
+account for 97.43\% of \DLAN's squared error and 98.28\% of \GAgg's.
+Excluding these flows gives RMSE of 85.39 for \DLAN and 65.88 for \GAgg,
+locating \DLAN's overall advantage in the error behaviour associated with large flows
+rather than uniformly smaller errors across the response distribution.
+
 \begin{figure}[tp]
   \centering
   \includegraphics[width=\linewidth]{matched_hp_groups.pdf}
@@ -625,116 +644,33 @@ the positional encodings used in the attention mechanisms of \DLAN and \GAgg may
   }\label{fig:hpgroups}
 \end{figure}
 
+As shown in \autoref{fig:hpgroups}, \DLAN improves prediction both across individual dwellings
+and when each held-out community receives equal weight for \WuhanHP.
+Its mean observation-level RMSE is 0.1656, compared with 0.1702 for \GNNWR, 0.1707 for \GAgg and 0.1718 for \GCNNWR.
+Equal-community RMSE is also lowest at 0.1629, versus 0.1695, 0.1699 and 0.1722, respectively,
+showing that its advantage persists when large communities no longer dominate the metric.
+\DLAN wins nine paired seeds against \GNNWR and \GCNNWR, and eight against \GAgg.
+Its reference-conditioned predictor combines geographical context with individual housing attributes, allowing dwellings at the same coordinates to receive different predictions
+while predicting communities absent from the labelled training-reference bank.
+
 \begin{figure}[tp]
   \centering
   \includegraphics[width=\linewidth]{matched_gvi_response.pdf}
-  \caption{GVI seed-1 prediction diagnostics for all four planar models
+  \caption{
+    GVI seed-1 prediction diagnostics for all four planar models
     and the recovered OLS predictor,
     with ten-seed mean predictions summarised by observed-response quintile.
-    The quintiles are descriptive and do not enter training.}
-  \label{fig:gvi}
+    The quintiles are descriptive and do not enter training.
+  }\label{fig:gvi}
 \end{figure}
 
-For \COO, \DLAN's seed-1 predictions follow the identity line closely,
-with residuals concentrated near zero across the observed response range
-(Figure~\ref{fig:co2pred}).
-\GAgg and GTNNWR show greater dispersion
-and a stronger tendency to overpredict low responses and underpredict high responses.
-\DLAN substantially reduces this response-dependent error,
-with ten-seed mean RMSE of 0.2910
-compared with 0.6897 for \GAgg and 0.8986 for GTNNWR,
-and mean $R^2$ of 0.9338.
-It outperforms both baselines in every paired seed,
-so the tighter residual distribution in the illustrated run
-is consistent with the repeated-run advantage in future-year prediction.
-
-For WuhanOD, \DLAN's main advantage is lower mean error
-and a smaller extreme error across training seeds.
-The width-12, $K=512$ configuration achieves mean RMSE of 565.28
-and MAE of 50.28,
-reducing mean RMSE by 26.85\% relative to \GAgg
-and 84.16\% relative to \GNNWR.
-Its worst-seed RMSE is 827.76,
-compared with 3,110.57 for \GAgg,
-although its median RMSE is higher
-and it wins four of ten paired seeds.
-The response-tail diagnostics show that the largest 1\% of observed flows
-account for 97.43\% of \DLAN's squared error
-and 98.28\% of \GAgg's
-(Figure~\ref{fig:odtail}).
-Excluding these flows gives RMSE of 85.39 for \DLAN
-and 65.88 for \GAgg,
-locating \DLAN's overall advantage in the error behaviour associated with large flows
-rather than uniformly smaller errors across the response distribution.
-The retained $K=1,024$ comparison also gives \DLAN a lower mean RMSE
-than either baseline
-(Table~\ref{tab:odcapacity}).
-
-\begin{table}[tb]\centering
-\caption{Restored-width WuhanOD comparison at K1024 and 7,069 parameters,
-retained as a capacity diagnostic.
-The reported DLAN model instead uses K512, as shown in Table~\ref{tab:accuracy}.}\label{tab:odcapacity}
-\small\begin{tabular}{lrrrr}\toprule
-Model & RMSE & Median RMSE & MAE & $R^2$\\\midrule
-\DLAN, K1024 & $608.73\pm252.45$ & 552.52 & 52.08 & 0.8809\\
-\GAgg & $772.73\pm835.04$ & 478.91 & 60.19 & 0.6592\\
-\GNNWR & $3568.80\pm969.21$ & 3171.19 & 210.94 & -2.7794\\
-\bottomrule\end{tabular}\end{table}
-
-For WuhanHP, \DLAN improves prediction both across individual dwellings
-and when each held-out community receives equal weight
-(Figure~\ref{fig:hpgroups}).
-Its mean observation-level RMSE is 0.1656,
-compared with 0.1702 for \GNNWR,
-0.1707 for \GAgg and 0.1718 for \GCNNWR.
-Equal-community RMSE is also lowest at 0.1629,
-versus 0.1695, 0.1699 and 0.1722, respectively,
-showing that its advantage persists when large communities no longer dominate the metric.
-\DLAN wins nine paired seeds against \GNNWR and \GCNNWR,
-and eight against \GAgg.
-Its reference-conditioned predictor combines geographical context
-with individual housing attributes,
-allowing dwellings at the same coordinates to receive different predictions
-while predicting communities absent from the labelled training-reference bank.
-
-For \GVI, \DLAN reduces prediction error relative to all three neural baselines
-in every paired seed,
-with mean RMSE of 0.0985 and MAE of 0.0760.
-The prediction diagnostics show less overprediction in the lower response quintiles
-than \GAgg and \GNNWR,
-although high-GVI observations remain underpredicted by all models
-(Figure~\ref{fig:gvi}).
-\GCNNWR achieves RMSE of 0.1185,
-close to the recovered global OLS predictor's 0.1186,
-whereas \DLAN achieves a larger reduction from the global linear reference
-and lowers RMSE by 7.58\% relative to \GAgg.
-These results support \DLAN's nonlinear, reference-conditioned prediction
-for visible greenery from the shared frozen features.
-Adding capture month further lowers its mean RMSE to 0.09613,
-a 2.39\% reduction
-(Table~\ref{tab:gvi3d}; Figure~\ref{fig:gvi3d}),
-with improvements in six of ten seeds.
-This augmented configuration also changes network widths and candidate support,
-and retains the exploratory spatial split with overlapping image footprints;
-it evaluates spatial prediction with an additional temporal coordinate
-rather than future-period extrapolation.
-
-\begin{table}[tb]\centering
-\caption{GVI month augmentation under the same spatial split and 6,957-parameter budget.
-The last column counts seeds with lower three-coordinate test RMSE.}\label{tab:gvi3d}
-\small\begin{tabular}{lrrr}\toprule
-Model & Planar RMSE & Month-augmented RMSE & Wins\\\midrule
-DLAN & $0.09848\pm0.00376$ & $0.09613\pm0.00563$ & 6/10\\
-\GAgg & $0.10655\pm0.00505$ & $0.10498\pm0.00621$ & 5/10\\\bottomrule\end{tabular}\end{table}
-
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{gvi_2d_3d.pdf}
-\caption{Planar versus month-augmented GVI prediction on identical spatial partitions.
-Lines connect paired seeds;
-black diamonds indicate means.
-All regressors have 6,957 parameters,
-with architecture and candidate-count adjustments described in the text.}\label{fig:gvi3d}
-\end{figure}
+\autoref{fig:gvi} shows the prediction diagnostics for \GVI.
+\DLAN reduces prediction error relative to all three neural baselines in every paired seed,
+with mean RMSE of 0.0985 and MAE of 0.0760. 
+The prediction diagnostics show less overprediction in the lower response quintiles than \GAgg and \GNNWR, although high-GVI observations remain underpredicted by all models.
+\GCNNWR achieves RMSE of 0.1185, close to the recovered global OLS predictor's 0.1186,
+whereas \DLAN achieves a larger reduction from the global linear reference and lowers RMSE by 7.58\% relative to \GAgg.
+These results support \DLAN's nonlinear, reference-conditioned prediction for visible greenery from the shared frozen features.
 
 \subsection{Attention width and candidate support}\label{sec:odsensitivity}
 Increasing WuhanOD attention width from 12 to 16,
@@ -759,14 +695,18 @@ The default width-12 configuration therefore remains the smaller configuration
 with better median RMSE and MAE.
 
 \begin{table}[tb]\centering
-\caption{Completed WuhanOD width and support experiments, ten seeds per configuration.
-The K512 and K2048 configurations were run on another machine.}\label{tab:sensitivity}
-\small\setlength{\tabcolsep}{4pt}\begin{tabular}{lrrrr}\toprule
-Configuration & Parameters & RMSE & Median & Worst\\\midrule
-Width 12; K1024 & 7,069 & $608.73\pm252.45$ & 552.52 & 1222.61\\
-Width 16; K1024 & 10,773 & $609.93\pm104.63$ & 635.55 & 753.40\\
-Width 12; K512 & 7,069 & $565.28\pm154.31$ & 556.20 & 827.76\\
-Width 12; K2048 & 7,069 & $587.60\pm171.15$ & 563.58 & 840.72\\\bottomrule\end{tabular}\end{table}
+  \caption{Completed WuhanOD width and support experiments, ten seeds per configuration.
+  The K512 and K2048 configurations were run on another machine.}\label{tab:sensitivity}
+  \small\setlength{\tabcolsep}{4pt}
+  \begin{tabular}{lrrrr}\toprule
+    Configuration   & Parameters & RMSE              & Median & Worst\\\midrule
+    Width 12; K1024 & 7,069      & $608.73\pm252.45$ & 552.52 & 1222.61\\
+    Width 16; K1024 & 10,773     & $609.93\pm104.63$ & 635.55 & 753.40\\
+    Width 12; K512  & 7,069      & $565.28\pm154.31$ & 556.20 & 827.76\\
+    Width 12; K2048 & 7,069      & $587.60\pm171.15$ & 563.58 & 840.72\\\bottomrule
+  \end{tabular}
+\end{table}
+
 
 The complete candidate-count runs have mean RMSE 565.28 at $K=512$,
 608.73 at $K=1,024$ and 587.60 at $K=2,048$.
@@ -783,12 +723,13 @@ The experiments do not automatically change the default configuration
 according to the reused test set.
 
 \begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{od_width_neighbours.pdf}
-\caption{Completed WuhanOD width and candidate-support comparisons.
-Top: paired width-12 and width-16 results at $K=1,024$.
-Bottom: ten seeds per candidate count at width 12;
-$K=512$ and $K=2,048$ were trained on another computer.}\label{fig:odsensitivity}
+  \includegraphics[width=\linewidth]{od_width_neighbours.pdf}
+  \caption{Completed WuhanOD width and candidate-support comparisons.
+    Top: paired width-12 and width-16 results at $K=1,024$.
+    Bottom: ten seeds per candidate count at width 12;
+  $K=512$ and $K=2,048$ were trained on another computer.}\label{fig:odsensitivity}
 \end{figure}
+
 
 The historical HPC product-distance model achieves
 RMSE $497.16\pm117.28$ with width 12 and $K=1,024$.
@@ -819,28 +760,32 @@ The accuracy--cost trade-off depends on the task
 (Figure~\ref{fig:cost}).
 
 \begin{table}[tb]\centering
-\caption{Recorded mean fit cost for the reported configurations.
-WuhanOD DLAN K512 was trained on another machine;
-its 804.63-second time is not a same-hardware comparison with the baselines.}\label{tab:cost}
-\small\begin{tabular}{llrr}\toprule
-Case & Model & Fit seconds & Epochs\\\midrule
-\COO & DLAN & 79.56 & 126.4\\
- & \GAgg & 80.80 & 170.1\\
- & GTNNWR & 41.32 & 210.6\\
-\midrule
-WuhanOD & DLAN & 804.63 & 230.4\\
- & \GAgg & 305.22 & 268.7\\
- & GNNWR & 33.83 & 262.2\\
-\midrule
-WuhanHP & DLAN & 33.90 & 40.3\\
- & \GAgg & 45.45 & 62.2\\
- & GNNWR & 32.41 & 120.5\\
- & GCNNWR & 13.17 & 88.0\\
-\midrule
-GVI & DLAN & 5.16 & 56.6\\
- & \GAgg & 6.41 & 75.2\\
- & GNNWR & 9.25 & 219.0\\
- & GCNNWR & 0.65 & 32.1\\\bottomrule\end{tabular}\end{table}
+  \caption{Recorded mean fit cost for the reported configurations.
+    WuhanOD DLAN K512 was trained on another machine;
+  its 804.63-second time is not a same-hardware comparison with the baselines.}\label{tab:cost}
+  \small
+  \begin{tabular}{llrr}\toprule
+    Case    & Model  & Fit seconds & Epochs\\\midrule
+    \COO    & DLAN   & 79.56       & 126.4\\
+            & \GAgg  & 80.80       & 170.1\\
+            & GTNNWR & 41.32       & 210.6\\
+    \midrule
+    WuhanOD & DLAN   & 804.63      & 230.4\\
+            & \GAgg  & 305.22      & 268.7\\
+            & GNNWR  & 33.83       & 262.2\\
+    \midrule
+    WuhanHP & DLAN   & 33.90       & 40.3\\
+            & \GAgg  & 45.45       & 62.2\\
+            & GNNWR  & 32.41       & 120.5\\
+            & GCNNWR & 13.17       & 88.0\\
+    \midrule
+    GVI     & DLAN   & 5.16        & 56.6\\
+            & \GAgg  & 6.41        & 75.2\\
+            & GNNWR  & 9.25        & 219.0\\
+            & GCNNWR & 0.65        & 32.1\\\bottomrule
+  \end{tabular}
+\end{table}
+
 
 \begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_accuracy_cost.pdf}
@@ -871,12 +816,13 @@ Restricted attention controls subsequent attention activation size;
 it does not establish subquadratic end-to-end training in sample size.
 
 \begin{figure}[tp]\centering
-\includegraphics[width=.94\linewidth]{retrieval_complexity.pdf}
-\caption{Analytical distance work per query, $N_{\train}D$,
-for one block and head.
-Stable sorting and neural projections add computation;
-these curves are not empirical timing measurements.}\label{fig:complexity}
+  \includegraphics[width=.94\linewidth]{retrieval_complexity.pdf}
+  \caption{Analytical distance work per query, $N_{\train}D$,
+    for one block and head.
+    Stable sorting and neural projections add computation;
+  these curves are not empirical timing measurements.}\label{fig:complexity}
 \end{figure}
+
 
 \section{Discussion}\label{sec:discussion}
 \subsection{Predictive scope under controlled capacity}
