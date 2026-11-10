@@ -1,0 +1,32 @@
+[
+  {
+    "version": "dlan_matched4_10seeds_v1",
+    "status": "complete",
+    "planned": 100,
+    "completed": 100
+  },
+  {
+    "version": "gnnwr_upstream_baselines10_v1",
+    "status": "complete",
+    "planned": 50,
+    "completed": 50
+  },
+  {
+    "version": "gvi_spatiotemporal_matched10_v1",
+    "status": "complete",
+    "planned": 20,
+    "completed": 20
+  },
+  {
+    "version": "wuhan_od_attention_capacity10_v1",
+    "status": "complete",
+    "planned": 20,
+    "completed": 20
+  },
+  {
+    "version": "wuhan_od_dlan_width16_10_v1",
+    "status": "complete",
+    "planned": 10,
+    "completed": 10
+  }
+]

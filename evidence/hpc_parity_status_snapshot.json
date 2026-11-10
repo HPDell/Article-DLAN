@@ -1,0 +1,20 @@
+{
+  "status": "running",
+  "pid": 1474362,
+  "planned_fits": 30,
+  "reused_fits": 10,
+  "completed_fits": 23,
+  "source_hashes": {
+    "models/DeepGWRTransformer.py": "d0980bcb90db69195627ce176497bb7960cae9ded47d3c833607ec5359a902c2",
+    "models/gtdr_reference_trainer.py": "89973e0fc4d6b772f8bbbf1d3132ed657c20084257f28e2c040c822ea759846d"
+  },
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "variants": [
+    "raw_m16",
+    "raw_m64",
+    "axis_m16"
+  ],
+  "started_utc": "2026-11-10T03:13:25.005909+00:00",
+  "seed": 8,
+  "variant": "axis_m16"
+}

@@ -12,10 +12,10 @@ import torch
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'article/evidence'
 VERSION = 'dlan_matched4_10seeds_v1'
-CASES = {'CO2': ['dlan', 'geoaggregator'], 'OD-Wuhan': ['dlan', 'geoaggregator'],
-         'WuhanHP': ['dlan', 'geoaggregator', 'gcnnwr'],
-         'GVI': ['dlan', 'geoaggregator', 'gcnnwr']}
-LABELS = {'dlan': 'DLAN', 'geoaggregator': 'GeoAggregator', 'gcnnwr': 'GCNNWR'}
+CASES = {'CO2': ['dlan', 'geoaggregator', 'gtnnwr'], 'OD-Wuhan': ['dlan', 'geoaggregator', 'gnnwr'],
+         'WuhanHP': ['dlan', 'geoaggregator', 'gcnnwr', 'gnnwr'],
+         'GVI': ['dlan', 'geoaggregator', 'gcnnwr', 'gnnwr']}
+LABELS = {'dlan': 'DLAN', 'geoaggregator': 'GeoAggregator', 'gcnnwr': 'GCNNWR', 'gnnwr': 'GNNWR', 'gtnnwr': 'GTNNWR'}
 sources = {}
 def record(path):
     path = Path(path)
@@ -53,7 +53,8 @@ for case, models in CASES.items():
         assert train_groups.isdisjoint(data['groups'][partitions[2]])
         assert set(data['groups'][partitions[1]]).isdisjoint(data['groups'][partitions[2]])
     for kind in models:
-        folder = base / 'outputs' / VERSION / kind
+        version = 'gnnwr_upstream_matched10_v1' if kind in ('gnnwr', 'gtnnwr') else VERSION
+        folder = base / 'outputs' / version / kind
         config = json.loads(record(folder / 'configuration.json').read_text())
         assert config['parameters'] == 6957
         for seed in range(1, 11):
@@ -124,7 +125,7 @@ for case, models in CASES.items():
                         x=data['u_raw'][test,0],y=data['u_raw'][test,1])))
 
 all_metrics = pd.DataFrame(records)
-assert len(all_metrics) == 200
+assert len(all_metrics) == 280
 summary = all_metrics.groupby(['case','model_label','split']).agg(
     runs=('seed','nunique'), parameters=('parameters','first'), rmse_mean=('rmse','mean'),
     rmse_sd=('rmse','std'), mae_mean=('mae','mean'), r2_mean=('r2','mean'),
@@ -147,4 +148,4 @@ for name, data in [('matched_metrics.csv',all_metrics),('matched_summary.csv',su
 print(summary[summary.split=='test'].to_string(index=False))
 print(pd.DataFrame(paired).to_string(index=False))
 print('GVI fitted OLS buffer:',pd.DataFrame(ols)[['rmse','mae','r2']].mean().to_dict())
-print('Audited 100 fits and 200 held-out prediction arrays. No training.')
+print('Audited 140 main-comparison fits and 280 held-out prediction arrays. No training.')

@@ -1,23 +1,29 @@
-# Validation of the updated DLAN manuscript
+# DLAN manuscript validation
 
-Date: 8 November 2026 (Asia/Shanghai).
+Date: 10 November 2026, Asia/Shanghai.
 
-## Experimental evidence
+- Main comparison: 140 fits, 280 saved validation/test arrays, every model at 6,957 trainable parameters.
+- Completed extensions: 80 distinct fits and 160 arrays across the 7,069-parameter WuhanOD comparison, 10,773-parameter width-16 model, K512/K2048 runs and GVI 3D.
+- Separate historical HPC model: ten fits and twenty arrays; not pooled with local scores.
+- Total saved-prediction audit: 460 arrays, with IDs, actual responses and recalculated metrics checked. All 220 current fits also have checkpoint/configuration checks and recorded reload audits. No model retraining or full checkpoint inference was performed.
+- Completed experiment statuses and available source hashes were verified against current files. The incomplete coordinate/microbatch diagnostic is frozen in `hpc_parity_status_snapshot.json` and not used as a final causal comparison.
+- R plotting completed: fourteen vector-PDF/PNG figures. Main figures include the new GNNWR/GTNNWR baselines. New supplementary figures distinguish capacity/seed risk, width/support and the GVI coordinate experiment.
+- `render_references.py`: 53 cited keys found, zero missing. Both literal citations and glossary citation fields are checked. Core GNNWR/GCNNWR citations accompany the existing variant/application citations. `zotero.bib` is unchanged.
+- Local latexmk/pdfLaTeX build passed: 49 pages, fourteen figures and nine inline tables. The final log has no undefined citations/references, errors or overfull boxes.
+- All pages rendered with Poppler for contact-sheet inspection; representative main and supplementary plots were inspected directly. QA is in `_out/nov10_qa/`.
+- Native-editor compilation was attempted and failed because the uncached Tectonic bundle could not be downloaded. The delivered PDF was successfully built with the local compiler.
+- User formatting, authors/affiliations, glossary macros and double spacing are preserved. Revised prose uses sentence and longer-clause source lines.
 
-- The main comparison uses `dlan_matched4_10seeds_v1` only: 100 completed fits, ten seeds per supported configuration, and exactly 6,957 trainable parameters each.
-- `python article/scripts/prepare_evidence.py` passed. It recalculated 200 validation/test prediction arrays, verified IDs/targets/configuration digests, checked fixed data/source hashes, read all 100 checkpoints, and confirmed the recorded reload audits. No training or new neural inference was run.
-- The GVI OLS diagnostic uses the existing training-fitted coefficient buffers, with no new fit. It is explicitly separate from the parameter-matched neural systems.
-- WuhanHP map geometry is taken from the row-aligned original projected coordinates; the frozen model inputs inherit an earlier coordinate normalisation. Targets were checked for equality before mapping.
-- Final-model module-isolating ablations remain unrun. The manuscript clearly separates the completed historical Gaussian ablation from the new main experiment.
-- GVI 3-D formal training remains outside the reported completed comparison.
+Main numerical conclusions are drawn within each budget. Cross-machine neighbour runs, historical HPC results and incomplete diagnostics are explicitly separated. Existing author declarations remain to be completed by the authors.
 
-## Document and figures
+## Correction: reported WuhanOD configuration
 
-- `Rscript article/scripts/plot_results.R` passed: eleven R-generated vector figures, including the architecture and labelled historical Gaussian comparison.
-- `python article/scripts/render_references.py`: 61 cited keys found in the supplied `zotero.bib`; zero missing. Empty citation syntax was removed, and the XGBoost discussion uses the matching Chen and Guestrin record. The unrelated Lundberg spatial-service citation is no longer used as a feature-attribution source.
-- `latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=_out main.tex` passed: 44-page PDF with eleven figures and six inline tables. The final log has no undefined citations/references, TeX errors or overfull boxes.
-- Sentence boundaries and long-clause source breaks were checked without changing the user's class/format settings.
-- Poppler rendered all 44 pages for a contact-sheet inspection; representative quantitative figures were also inspected directly. QA outputs are in `_out/matched_qa/`.
-- The built-in editor's compilation was attempted but failed because its Tectonic bundle could not be downloaded. The delivered PDF was successfully compiled using local pdfLaTeX.
-
-The old partial-result snapshots are preserved as historical evidence, not combined with the new main experiment. Author details, funding and conflict declarations remain for author completion.
+The previous primary table still showed the superseded 919.92 allocation although the support table included K512.
+The abstract, primary table, width/budget descriptions, main figures, fit-time table, tail diagnostics and conclusion now report width 12 / head (10,8) / K512 at 7,069 parameters.
+The exact ten-seed mean 565.2762909669982 was rechecked from saved predictions; K2048 remains 587.5989767259074.
+All twenty K512 validation/test arrays were recalculated in this correction; Q/K projection shapes [48,12] and candidate count 512 were verified against saved artifacts.
+WuhanOD comparators come from the same 7,069-parameter group, with cross-machine execution explicitly retained.
+Earlier 6,957-parameter and K1024 results remain historical diagnostics instead of being erased or relabelled.
+Primary R figures now read the `reported_` tables generated by `prepare_reported_results.py`.
+The corrected local build passes with 49 pages, 14 figures, 9 tables, 53 references and no undefined references or overfull boxes.
+The native editor compilation was also attempted; its uncached Tectonic bundle remains unavailable, while local pdfLaTeX succeeds.

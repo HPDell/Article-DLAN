@@ -1,0 +1,20 @@
+{
+  "OD-Wuhan": {
+    "DLAN": "experiments/WuhanOD-DLANNeighbors/outputs/wuhan_od_dlan_knn512_10_v1/dlan",
+    "GeoAggregator": "share/OD-Wuhan/outputs/wuhan_od_attention_capacity10_v1/geoaggregator",
+    "GNNWR": "share/OD-Wuhan/outputs/gnnwr_upstream_attention10_v1/gnnwr",
+    "parameters": 7069,
+    "attention_width": 12,
+    "head": [
+      10,
+      8
+    ],
+    "DLAN_candidates": 512,
+    "cross_machine": true
+  },
+  "other_cases": {
+    "source": "matched_metrics.csv",
+    "parameters": 6957
+  },
+  "selection": "K512 reported at user request; K1024, K2048 and old allocation remain separate configuration comparisons"
+}

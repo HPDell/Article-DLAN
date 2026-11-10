@@ -1,0 +1,13 @@
+   experiment     case   model_label split  runs  parameters   rmse_mean    rmse_sd  rmse_median  rmse_worst   mae_mean   r2_mean  seconds_mean  epochs_mean  log1p_rmse_mean
+       GVI 3D   GVI-ST          DLAN  test    10        6957    0.096125   0.005632     0.096141    0.105565   0.073497  0.361036      5.621528         52.2              NaN
+       GVI 3D   GVI-ST GeoAggregator  test    10        6957    0.104980   0.006213     0.106061    0.113656   0.082445  0.237840      6.239413         72.2              NaN
+  OD capacity OD-Wuhan          DLAN  test    10        7069  608.731112 252.453147   552.521079 1222.613512  52.083653  0.880925    269.358076        214.7         0.466378
+  OD capacity OD-Wuhan         GNNWR  test    10        7069 3568.803945 969.208499  3171.185893 5179.314717 210.937533 -2.779379     33.828878        262.2         0.704230
+  OD capacity OD-Wuhan GeoAggregator  test    10        7069  772.733981 835.035352   478.909178 3110.570394  60.187094  0.659212    305.219110        268.7         0.510475
+OD neighbours OD-Wuhan         K2048  test    10        7069  587.598977 171.150757   563.582116  840.722454  51.074914  0.896586    769.510642        208.6         0.467850
+OD neighbours OD-Wuhan          K512  test    10        7069  565.276291 154.306900   556.197638  827.759645  50.281942  0.905120    804.632105        230.4         0.464633
+   OD width16 OD-Wuhan  DLAN width16  test    10       10773  609.928123 104.632089   635.547648  753.403027  52.938669  0.893739    275.507960        194.2         0.456339
+        model  rmse_2d  rmse_3d  rmse_3d_sd  wins_3d  reduction_pct
+         DLAN 0.098476 0.096125    0.005632        6       2.386862
+GeoAggregator 0.106551 0.104980    0.006213        5       1.474322
+Audited 80 supplementary fits / 160 prediction sets, plus 10 historical HPC fits / 20 prediction sets.

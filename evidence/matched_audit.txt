@@ -1,20 +1,28 @@
-    case   model_label split  runs  parameters  rmse_mean    rmse_sd  mae_mean  r2_mean  seconds_mean  seconds_sd  epochs_mean  equal_group_rmse  upper_1pct_sse_share  body_rmse
-     CO2          DLAN  test    10        6957   0.290984   0.107647  0.225920 0.933834     79.562165   20.269861        126.4               NaN                   NaN        NaN
-     CO2 GeoAggregator  test    10        6957   0.689701   0.018222  0.506431 0.668834     80.797875   17.891838        170.1               NaN                   NaN        NaN
-     GVI          DLAN  test    10        6957   0.098476   0.003758  0.076046 0.330595      5.164004    1.018985         56.6               NaN                   NaN        NaN
-     GVI        GCNNWR  test    10        6957   0.118508   0.000145  0.094370 0.031814      0.649259    0.252954         32.1               NaN                   NaN        NaN
-     GVI GeoAggregator  test    10        6957   0.106551   0.005051  0.083078 0.215744      6.407289    1.102102         75.2               NaN                   NaN        NaN
-OD-Wuhan          DLAN  test    10        6957 919.923195 424.903179 79.699137 0.719298    150.259455   38.042504        205.4               NaN              0.976991  83.776148
-OD-Wuhan GeoAggregator  test    10        6957 662.084584 348.936702 56.346975 0.847527    124.403570   22.554486        259.8               NaN              0.988063  60.017536
- WuhanHP          DLAN  test    10        6957   0.165577   0.004095  0.125359 0.608029     33.900313    4.301429         40.3          0.162917                   NaN        NaN
- WuhanHP        GCNNWR  test    10        6957   0.171761   0.001909  0.128906 0.578388     13.166800    1.399107         88.0          0.172248                   NaN        NaN
- WuhanHP GeoAggregator  test    10        6957   0.170684   0.002981  0.131000 0.583588     45.454485    9.315859         62.2          0.169932                   NaN        NaN
+    case   model_label split  runs  parameters   rmse_mean    rmse_sd   mae_mean   r2_mean  seconds_mean  seconds_sd  epochs_mean  equal_group_rmse  upper_1pct_sse_share  body_rmse
+     CO2          DLAN  test    10        6957    0.290984   0.107647   0.225920  0.933834     79.562165   20.269861        126.4               NaN                   NaN        NaN
+     CO2        GTNNWR  test    10        6957    0.898625   0.089367   0.679706  0.433166     41.324451   18.341492        210.6               NaN                   NaN        NaN
+     CO2 GeoAggregator  test    10        6957    0.689701   0.018222   0.506431  0.668834     80.797875   17.891838        170.1               NaN                   NaN        NaN
+     GVI          DLAN  test    10        6957    0.098476   0.003758   0.076046  0.330595      5.164004    1.018985         56.6               NaN                   NaN        NaN
+     GVI        GCNNWR  test    10        6957    0.118508   0.000145   0.094370  0.031814      0.649259    0.252954         32.1               NaN                   NaN        NaN
+     GVI         GNNWR  test    10        6957    0.125844   0.025467   0.098693 -0.132007      9.245716    3.182681        219.0               NaN                   NaN        NaN
+     GVI GeoAggregator  test    10        6957    0.106551   0.005051   0.083078  0.215744      6.407289    1.102102         75.2               NaN                   NaN        NaN
+OD-Wuhan          DLAN  test    10        6957  919.923195 424.903179  79.699137  0.719298    150.259455   38.042504        205.4               NaN              0.976991  83.776148
+OD-Wuhan         GNNWR  test    10        6957 3254.053951 740.916956 207.167132 -2.084026     42.508622   12.248275        261.3               NaN              0.997739 145.996223
+OD-Wuhan GeoAggregator  test    10        6957  662.084584 348.936702  56.346975  0.847527    124.403570   22.554486        259.8               NaN              0.988063  60.017536
+ WuhanHP          DLAN  test    10        6957    0.165577   0.004095   0.125359  0.608029     33.900313    4.301429         40.3          0.162917                   NaN        NaN
+ WuhanHP        GCNNWR  test    10        6957    0.171761   0.001909   0.128906  0.578388     13.166800    1.399107         88.0          0.172248                   NaN        NaN
+ WuhanHP         GNNWR  test    10        6957    0.170246   0.002014   0.130050  0.585786     32.407018   12.093563        120.5          0.169539                   NaN        NaN
+ WuhanHP GeoAggregator  test    10        6957    0.170684   0.002981   0.131000  0.583588     45.454485    9.315859         62.2          0.169932                   NaN        NaN
     case    comparator  dlan_wins  mean_reduction_pct  mean_paired_difference
+     CO2        GTNNWR         10           67.619016               -0.607642
      CO2 GeoAggregator         10           57.810180               -0.398718
      GVI        GCNNWR         10           16.903864               -0.020032
+     GVI         GNNWR         10           21.748048               -0.027369
      GVI GeoAggregator         10            7.579198               -0.008076
+OD-Wuhan         GNNWR         10           71.729934            -2334.130757
 OD-Wuhan GeoAggregator          4          -38.943455              257.838611
  WuhanHP        GCNNWR          9            3.600484               -0.006184
+ WuhanHP         GNNWR          9            2.742692               -0.004669
  WuhanHP GeoAggregator          8            2.992464               -0.005108
 GVI fitted OLS buffer: {'rmse': 0.11863696232973961, 'mae': 0.09437095945342466, 'r2': 0.029707208557608666}
-Audited 100 fits and 200 held-out prediction arrays. No training.
+Audited 140 main-comparison fits and 280 held-out prediction arrays. No training.
