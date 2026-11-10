@@ -594,7 +594,47 @@ the positional encodings used in the attention mechanisms of \DLAN and \GAgg may
 
 \subsection{Residual analysis}
 
-\subsection{Future-year \texorpdfstring{\COO}{CO2} prediction}
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{matched_co2_predictions.pdf}
+  \caption{
+    \COO test predictions and residuals for seed 1,
+    on the same 1,625 held-out observations from 2021.
+    Dashed lines indicate perfect prediction and zero residual.
+  }\label{fig:co2pred}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{matched_od_tail.pdf}
+  \caption{
+    Response-tail diagnostics for the reported WuhanOD configurations:
+    DLAN width 12 with K512 and the 7,069-parameter comparators.
+    Top: squared-error share from the largest 1\% of observed counts.
+    Bottom: seed-1 predictions on logarithmic axes.
+  }\label{fig:odtail}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{matched_hp_groups.pdf}
+  \caption{
+    WuhanHP ten-seed mean residuals at held-out communities
+    and mean within-community RMSE against community size.
+    Marker size in the maps represents the number of houses.
+  }\label{fig:hpgroups}
+\end{figure}
+
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{matched_gvi_response.pdf}
+  \caption{GVI seed-1 prediction diagnostics for all four planar models
+    and the recovered OLS predictor,
+    with ten-seed mean predictions summarised by observed-response quintile.
+    The quintiles are descriptive and do not enter training.}
+  \label{fig:gvi}
+\end{figure}
+
 DLAN's mean RMSE is 0.2910,
 compared with 0.6897 for \GAgg and 0.8986 for GTNNWR.
 Mean $R^2$ is 0.9338, 0.6688 and 0.4332, respectively.
@@ -606,12 +646,6 @@ in any run of this experiment.
 Figure~\ref{fig:co2pred} shows seed-1 predictions and residuals,
 using the same identifier-fixed example for every model.
 
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_co2_predictions.pdf}
-\caption{\COO test predictions and residuals for seed 1,
-on the same 1,625 held-out observations from 2021.
-Dashed lines indicate perfect prediction and zero residual.}\label{fig:co2pred}
-\end{figure}
 
 The mean DLAN bandwidths are 0.0683 for spatial $x$,
 0.0793 for spatial $y$ and 0.1860 for time
@@ -624,7 +658,6 @@ DLAN additionally retains a nonlinear covariate predictor conditioned on labelle
 The results establish a predictive difference between these complete constructions;
 they do not isolate one information path as the cause of the improvement.
 
-\subsection{WuhanOD: restored attention width and selected candidate support}\label{sec:odcapacity}
 The reported WuhanOD DLAN uses attention width 12,
 prediction-head widths $(10,8)$ and 512 actual training-reference candidates.
 Its 7,069 trainable parameters are unchanged by candidate count.
@@ -695,15 +728,6 @@ throughout the response distribution.
 Figure~\ref{fig:odtail} uses the selected K512 predictions
 and the corresponding 7,069-parameter baseline records.
 
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_od_tail.pdf}
-\caption{Response-tail diagnostics for the reported WuhanOD configurations:
-DLAN width 12 with K512 and the 7,069-parameter comparators.
-Top: squared-error share from the largest 1\% of observed counts.
-Bottom: seed-1 predictions on logarithmic axes.}\label{fig:odtail}
-\end{figure}
-
-\subsection{WuhanHP: prediction at unseen communities}
 DLAN has mean RMSE 0.1656,
 compared with 0.1702 for GNNWR, 0.1707 for \GAgg
 and 0.1718 for GCNNWR.
@@ -725,13 +749,6 @@ with individual housing attributes,
 so dwellings sharing coordinates can still receive different predictions.
 Test communities have no labelled observations in the training-reference bank.
 
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_hp_groups.pdf}
-\caption{WuhanHP ten-seed mean residuals at held-out communities
-and mean within-community RMSE against community size.
-Marker size in the maps represents the number of houses.}\label{fig:hpgroups}
-\end{figure}
-
 The fitted planar DLAN retains coordinate-specific projections and adaptive retrieval,
 with $D=2$ and $K=512$.
 The two mean bandwidths, 0.0859 and 0.0861, are nearly equal,
@@ -739,7 +756,6 @@ which is compatible with an approximately isotropic Gaussian prior.
 This is not an imposed restriction of the completed experiment;
 content and learnt geographical biases remain active.
 
-\subsection{GVI: nonlinear prediction and the added month coordinate}\label{sec:gvi3d}
 For planar GVI, DLAN achieves RMSE $0.0985\pm0.0038$,
 compared with $0.1066\pm0.0051$ for \GAgg,
 $0.1185\pm0.0001$ for GCNNWR
@@ -758,14 +774,6 @@ with the larger gain obtained by DLAN.
 Figure~\ref{fig:gvi} compares prediction behaviour across the response range.
 The results support flexible reference-conditioned prediction of visible greenery,
 without isolating the nonlinear head from the remaining architecture.
-
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_gvi_response.pdf}
-\caption{GVI seed-1 prediction diagnostics for all four planar models
-and the recovered OLS predictor,
-with ten-seed mean predictions summarised by observed-response quintile.
-The quintiles are descriptive and do not enter training.}\label{fig:gvi}
-\end{figure}
 
 Adding elapsed capture month produces small mean improvements
 (Table~\ref{tab:gvi3d}).
