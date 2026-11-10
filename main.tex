@@ -1,4 +1,5 @@
 \documentclass[]{interact}
+
 \usepackage{setspace}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -8,6 +9,8 @@
 \usepackage[authoryear,round]{natbib}
 \bibpunct[, ]{(}{)}{;}{a}{}{,}
 \usepackage[hidelinks]{hyperref}
+\usepackage{xspace}
+
 \usepackage[acronym,nonumberlist,shortcuts]{glossaries}
 \newcommand{\glscite}[1]{\glsentrylong{#1} \ifglshasfield{useri}{#1}{\citep[\glsentryshort{#1};][]{\glscurrentfieldvalue}}{}\glsunset{#1}}
 \newcommand{\Glscite}[1]{\Glsentrylong{#1} \ifglshasfield{useri}{#1}{\citep[\glsentryshort{#1};][]{\glscurrentfieldvalue}}{}\glsunset{#1}}
@@ -21,8 +24,9 @@
 \newacronym[user1={LuHu-2025}]{gtdr}{GTDR}{geographical and temporal density regression}
 \newacronym[user1={HuHarris-2024}]{hgwr}{HGWR}{hierarchical and geographically weighted regression}
 \newacronym[user1={KordiFotheringham-2016}]{swim}{SWIM}{Spatially Weighted Interaction Models}
-\newacronym{gnnwr}{GNNWR}{geographically neural network weighted regression}
-\newacronym{gcnnwr}{GCNNWR}{geographically convolutional neural network weighted regression}
+\newacronym[user1={WuDu-2020}]{gnnwr}{GNNWR}{geographically neural network weighted regression}
+\newacronym[user1={WuWang-2021}]{gtnnwr}{GTNNWR}{geographically and temporally neural network weighted regression}
+\newacronym[user1={LiuLi-2024}]{gcnnwr}{GCNNWR}{geographically convolutional neural network weighted regression}
 \newacronym{film}{FiLM}{feature-wise linear modulation}
 \newacronym{gvi}{GVI}{green view index}
 \newacronym{od}{OD}{origin--destination}
@@ -35,6 +39,7 @@
 \newacronym{kde}{KDE}{kernel density estimation}
 \newacronym{poi}{POI}{point of interest}
 \newacronym{sd}{SD}{standard deviation}
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\train}{\mathcal{T}}
 \newcommand{\cand}{\mathcal{C}}
@@ -42,6 +47,14 @@
 \newcommand{\gelu}{\operatorname{GeLU}}
 \newcommand{\lnorm}{\operatorname{LN}}
 \newcommand{\pending}[1]{\par\smallskip\noindent\textbf{Draft completion item.} #1\par\smallskip}
+
+\newcommand{\DLAN}{\gls{dlan}\xspace}
+\newcommand{\GNNWR}{\gls{gnnwr}\xspace}
+\newcommand{\GTNNWR}{\gls{gtnnwr}\xspace}
+\newcommand{\GCNNWR}{\gls{gcnnwr}\xspace}
+\newcommand{\GAgg}{GeoAggregator\xspace}
+\newcommand{\COO}{CO\textsubscript{2}}
+
 \graphicspath{{figures/}}
 
 \begin{document}
@@ -109,7 +122,7 @@ Nevertheless, these models still assume a linear relationship between the respon
 Some nonlinearity extensions based on machine learning have been proposed, such as geographically weighted random forest~\citep{LuoYan-2022} and Geographical-XGBoost~\citep{Grekousis-2025}.
 
 With the prevalence of deep learning, neural network-based models have also been proposed to capture the nonlinear relationships in geographical data, such as \glscite{gnnwr}, \glscite{gcnnwr} and GeoAggregator~\citep{DengLi-2025a}.
-\Gls{gnnwr} uses a neural network to learn the spatial distribution of relationships between the response and covariates to replace pre-defined kernel functions.
+\Gls{gnnwr} and its extension \glscite{gtnnwr} uses a neural network to learn the spatial distribution of relationships between the response and covariates to replace pre-defined kernel functions.
 It uncompresses the global regression coefficients to each sample to obtain spatially varying coefficients.
 \Gls{gcnnwr} constructs a regular spatial grid and represents each prediction location by a distance map containing its distances to the grid points.
 A convolutional neural network extracts spatial features from this map and generates location-specific multipliers for the global OLS intercept and regression coefficients.
@@ -311,11 +324,15 @@ Query microbatching limits transient memory and gradient accumulation preserves 
 Computational scalability is therefore evaluated through both measured fit cost and these explicit algorithmic properties.
 
 \section{Data and experimental design}\label{sec:data}
-The empirical comparison comprises CO$_2$, WuhanOD, WuhanHP and GVI (Table~\ref{tab:data}).
-The cases represent space--time observations, geographical flows and two planar prediction tasks.
-They also span repeated regional observations, houses nested within communities and high-dimensional environmental features.
-All results in the main comparison come from one completed experiment version,
-with identical training controls and exactly 6,957 trainable parameters for every evaluated configuration.
+
+We use four cases to evaluate the proposed \DLAN and its competitors including \GNNWR, \GCNNWR, and \GAgg.
+The empirical comparison comprises \COO, WuhanOD, WuhanHP and GVI representing spatio-temporal data, spatial flow data, multilevel geographical data, and planar geographical data with remote sensing observations.
+Importantly, all the competitors cannot originally cover all four cases as they are mainly designed for planar geographical data.
+To enable a fair comparison, \GNNWR actually represents \GNNWR and \GTNNWR for the spatio-temporal data and spatial flow data, respectively.
+\GCNNWR has not been extended to spatial data, it only works on the geographical datasets, i.e., WuhanHP and GVI.
+Both models did not work on the spatial flow data, i.e., WuhanOD, due to the lack of a proper design for the flow data.
+\GAgg is connected to an adaptor for the spatio-temporal and spatial flow data, which simply extends distance computation from planar coordinates to multidimensional coordinates.
+Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
 
 \begin{table}[tb]
   \centering
