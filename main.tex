@@ -39,6 +39,10 @@
 \newacronym{kde}{KDE}{kernel density estimation}
 \newacronym{poi}{POI}{point of interest}
 \newacronym{sd}{SD}{standard deviation}
+\newacronym{ce}{CE}{carbon emissions in China}
+\newacronym{wuhanod}{SIC}{subdistrict-level spatial interaction counts in Wuhan, China}
+\newacronym{wuhanhp}{SHP}{second-hand housing prices in Wuhan, China}
+\newacronym{gvid}{GVI}{green view index in Shanghai, China}
 
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\train}{\mathcal{T}}
@@ -53,7 +57,10 @@
 \newcommand{\GTNNWR}{\gls{gtnnwr}\xspace}
 \newcommand{\GCNNWR}{\gls{gcnnwr}\xspace}
 \newcommand{\GAgg}{GeoAggregator\xspace}
-\newcommand{\COO}{CO\textsubscript{2}}
+\newcommand{\COO}{\gls{ce}\xspace}
+\newcommand{\WuhanOD}{\gls{wuhanod}\xspace}
+\newcommand{\WuhanHP}{\gls{wuhanhp}\xspace}
+\newcommand{\GVI}{\gls{gvid}\xspace}
 
 \graphicspath{{figures/}}
 
@@ -77,14 +84,14 @@ This study proposes a dimension-specific local attention network (DLAN),
 linking coordinate-specific bandwidths to reference retrieval and a Gaussian product prior.
 A FiLM-modulated predictor combines local context with query covariates.
 Four case studies use ten training seeds per reported configuration.
-Regressors have 6,957 trainable parameters in CO$_2$, WuhanHP and GVI,
+Regressors have 6,957 trainable parameters in \COO, WuhanHP and GVI,
 and 7,069 in the reported WuhanOD comparison.
 The WuhanOD DLAN restores attention width 12
 and uses 512 reference candidates,
 achieving mean test root mean squared error 565.28.
-Relative to GeoAggregator, the reported DLAN configurations reduce mean error
+Relative to \GAgg, the reported DLAN configurations reduce mean error
 by 57.81\%, 26.85\%, 2.99\% and 7.58\%
-on CO$_2$, WuhanOD, WuhanHP and planar GVI, respectively.
+on \COO, WuhanOD, WuhanHP and planar GVI, respectively.
 The WuhanOD mean advantage coexists with a higher median
 and fewer paired seed wins;
 its candidate-count experiment spans two machines.
@@ -128,17 +135,17 @@ Some nonlinearity extensions based on machine learning have been proposed,
 such as geographically weighted random forest~\citep{LuoYan-2022} and Geographical-XGBoost~\citep{Grekousis-2025}.
 
 With the prevalence of deep learning, neural network-based models have also been proposed to capture the nonlinear relationships in geographical data,
-such as \glscite{gnnwr}, \glscite{gcnnwr} and GeoAggregator~\citep{DengLi-2025a}.
+such as \glscite{gnnwr}, \glscite{gcnnwr} and \GAgg~\citep{DengLi-2025a}.
 \Gls{gnnwr} and its extension \glscite{gtnnwr} uses a neural network to learn the spatial distribution of relationships between the response and covariates to replace pre-defined kernel functions.
 It uncompresses the global regression coefficients to each sample to obtain spatially varying coefficients.
 \Gls{gcnnwr} constructs a regular spatial grid and represents each prediction location by a distance map containing its distances to the grid points.
 A convolutional neural network extracts spatial features from this map and generates location-specific multipliers for the global OLS intercept and regression coefficients.
 The resulting local coefficients are combined with the explanatory variables to produce predictions.
 These two methods retain the linear form of the model, but learn complicated non-linear mapping to approximate the spatial heterogeneous relationships.
-GeoAggregator further extends the framework for tabular spatial data by a Transformer architecture.
+\GAgg further extends the framework for tabular spatial data by a Transformer architecture.
 It uses Cartesian product attention to combine covariate and response representations,
 incorporating a distance-based Gaussian bias to aggregate reference information into a local context for the query,
-which is concatenated with the query’s own attributes and passed through a nonlinear feed-forward network to predict the response directly.
+which is concatenated with the query's own attributes and passed through a nonlinear feed-forward network to predict the response directly.
 All these approaches form part of a broader movement towards spatially explicit artificial intelligence and location representation~\citep{JanowiczGao-2020,MaiJanowicz-2022,ReichsteinCamps-Valls-2019}.
 However, they do not explicitly consider the spatio-temporal data and the scale difference between dimensions.
 
@@ -358,149 +365,88 @@ Computational scalability is therefore evaluated through both measured fit cost 
 
 \section{Data and experimental design}\label{sec:data}
 
-We use four cases to evaluate \DLAN against \GNNWR, \GTNNWR, \GCNNWR and \GAgg.
-The cases comprise \COO, WuhanOD, WuhanHP and GVI,
-representing space--time observations, geographical flows,
-grouped housing data and planar environmental prediction.
-GTNNWR is the spatio-temporal baseline for CO$_2$;
-GNNWR uses the full four-dimensional endpoint distance for WuhanOD
-and planar distances for WuhanHP and GVI.
-GCNNWR is evaluated on the two planar cases supported by its implemented grid.
-GeoAggregator uses a coordinate-preserving rotary adaptor for the non-planar cases.
-A supplementary GVI experiment additionally includes elapsed capture month.
+We use four cases to evaluate the proposed \DLAN and its competitors including \GNNWR, \GCNNWR, and \GAgg.
+The empirical comparison comprises: 
+(a) \COO;
+(b) \WuhanOD;
+(c) \WuhanHP;
+and (d) \GVI.
+They represent spatio-temporal data, spatial flow data, multilevel geographical data, and planar geographical data with remote sensing observations.
+Importantly, \DLAN is able to cover all four cases, while all the competitors cannot under their originally implementations as they are mainly designed for planar geographical data.
+To enable a fair comparison, \GNNWR actually represents \GNNWR and \GTNNWR for the spatio-temporal data and spatial flow data, respectively.
+\GCNNWR has not been extended to spatial data, it only works on the geographical datasets, i.e., \WuhanHP and \GVI.
+Both models did not work on the spatial flow data, i.e., \WuhanOD, due to the lack of a proper design for the flow data.
+\GAgg is connected to an adaptor for the spatio-temporal and spatial flow data, which simply extends distance computation from planar coordinates to multidimensional coordinates to avoid essential changes to the original model.
 Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
 
 \begin{table}[tb]
-  \centering
-  \caption{
-    Data and fixed evaluation partitions. 
-    All observations are retained.
-    The coordinate dimension $D$ is distinct from the covariate dimension $p$.
-  }\label{tab:data}
-  \small
+  \centering\small
+  \caption{Data and fixed evaluation partitions.}
+  \label{tab:data}
   \begin{tabular}{lrrrrrr}
     \toprule
-    Case    & $N$    & $p$ & $D$ & Training & validation & test \\
+    Case    & Samples & Covariates & Dimensions & Training & Validation & Test  \\
     \midrule
-    CO$_2$  & 13,000 & 8   & 3   & 9,732 & 1,643 & 1,625 \\
-    WuhanOD & 13,807 & 35  & 4   & 9,618 & 2,104 & 2,085 \\
-    WuhanHP & 19,599 & 17  & 2   & 15,475 & 2,196 & 1,928 \\
-    GVI     & 2,122  & 176 & 2   & 1,696 & 213 & 213 \\
+    \COO  & 13,000  & 8          & 3          & 9,732    & 1,643      & 1,625 \\
+    WuhanOD & 13,807  & 35         & 4          & 9,618    & 2,104      & 2,085 \\
+    WuhanHP & 19,599  & 17         & 2          & 15,475   & 2,196      & 1,928 \\
+    GVI     & 2,122   & 176        & 2          & 1,696    & 213        & 213   \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \subsection{Data descriptions}
 
-\subsubsection{\texorpdfstring{CO$_2$}{CO2}: repeated observations and future-year prediction}
-The CO$_2$ case uses the supplied 13,000-row file in the MGTWR data package.
-The source contains 15 columns without a header.
-Following the accompanying MATLAB mapping,
-columns 5 and 6 provide planar coordinates, column 2 provides year,
-columns 7--14 supply eight covariates, and column 15 supplies the response.
-The region identifier in column 1 is retained as metadata.
-Longitude and latitude in columns 3 and 4 are not added again as predictors or coordinates.
-Variable names and original physical units are absent from the supplied file;
-covariates are labelled $x_1,\ldots,x_8$, and errors use the stored response scale.
-
-Observations from 2014--2019 form the training set;
+The \COO case use dataset collected from the repository of \citet{WuDu-2026} that provides a panel of 13,000 observations during 2014–2021 with 8 covariates covering population, economic growth, industrialization, and other aspects of county-level administrative units in China.
+The whole data were divided into training, validation and test sets according to the year of observation:
+observations from 2014--2019 form the training set,
 2020 provides validation, and 2021 provides the test set.
-All 13,000 observations are retained.
 Regions can occur in several years,
 so the task is subsequent-year prediction for a panel of regions.
 Coordinate, covariate and response transformations introduced by this experiment use training statistics.
-The source file does not document its upstream covariate transformations.
+The samples are located by $(x,y,t)$, where $x$ and $y$ are geographical coordinates and $t$ is the year.
+This case compares models with a three-dimensional spatio-temporal regression problem.
 
-\subsubsection{WuhanOD: geographical interactions}
-WuhanOD contains positive interactions between subdistricts during 20--26 July 2020.
-Each flow is located by $(x_o,y_o,x_d,y_d)$,
-retaining both origin and destination coordinates.
-Seventeen \gls{poi} categories at each endpoint and average interaction length provide 35 covariates.
-The response is the interaction count.
-Training minimises error on a standardised $\log(1+y)$ target;
+The \WuhanOD case uses taxi-trajectory data collected in Wuhan from 20 to 26 July 2020.
+The study area was restricted to subdistricts belonging to Wuchang, Hongshan and Qingshan districts.
+Each passenger trip was assigned to its origin and destination subdistricts, and trips with the same ordered origin--destination (OD) pair were aggregated into an interaction count, forming a 4-D spatial dataset located by $(x_o,y_o,x_d,y_d)$,
+In addition, seventeen \gls{poi} categories at each endpoint and average interaction length provide 35 covariates.
+During the training, the model minimises error on a standardised $\log(1+y)$ target but
 predictions are transformed back by $\max\{\exp(\hat y)-1,0\}$ before count-scale assessment.
-
-Unordered endpoint pairs follow the fixed 70/15/15 grouped allocation.
-This keeps reverse directions of a pair together when assigning partitions.
-Individual origins and destinations can still occur in several partitions.
+The whole dataset are divided into training, validation and test sets with unordered endpoint pairs following the 70/15/15 grouped allocation.
 The test therefore concerns held-out positive interactions within the observed geographical system.
-Zero-count pairs are absent from this data package.
 
-\subsubsection{WuhanHP: houses nested within communities}
-WuhanHP contains 19,599 second-hand housing observations at 776 locations.
-Its 17 attributes describe floor category, decoration, building form, building area,
-fees and access to schools, transport, retail, water and green land.
-The target is the supplied \texttt{Price} field,
-with evaluation on its stored scale.
-
-The fixed partition allocates entire communities:
-620 locations to training, 78 to validation and 78 to testing,
-using split seed 20260926.
-Every house is retained.
+The \WuhanHP case focus on a multilevel dataset, collected by \citet{HuHarris-2026}, that contains 19,599 second-hand housing observations at 776 communities in Wuhan, China.
 Houses within one location share coordinates but have different attributes and responses.
+It has 17 attributes describe floor category, decoration, building form, building area,
+fees and access to schools, transport, retail, water and green land.
+The dataset is divided into training, validation and test sets at the community level, with 15,475, 2196 and 1928 observations in each partition.
 The test requires the geographical condition to transfer to unseen communities,
 whilst the direct covariate path distinguishes individual dwellings.
-No labelled house at a test community enters the training-reference bank.
 
-\subsubsection{GVI: nonlinear environmental relationships}
-The \gls{gvi} measures the visible share of greenery in street-level scenes and provides a human-scale description of the urban environment~\citep{LiZhang-2015,BiljeckiIto-2021}.
+The \GVI case focus on predicting \gls{gvi} that measures the visible share of greenery in street-level scenes and provides a human-scale description of the urban environment~\citep{LiZhang-2015,BiljeckiIto-2021}.
 Its relationship with built-environment attributes can involve thresholds,
 saturation and interactions that are poorly represented by a single linear response surface.
-This case is intended to examine the nonlinear prediction component separately from the advantages of additional coordinate dimensions.
-The data comprise 2,122 Shanghai-area observations captured during 2019--2022,
-with four-view GVI fractions and planar coordinates in EPSG:32651.
-The month-augmented experiment retains the same observations and spatial split.
+We collected street-view images in Shanghai, China and computed the \gls{gvi} via a model trained on manually labelled images.
+Then, at the location where street-view images were taken, we downloaded the on-site remote sensing data from Sentinel-1 and Sentinel-2 satellites and cut them into patches.
+We further collected the building-height, road-network density, categorical \gls{poi} counts, sky-view factors and canopy features from the same area.
+It comprise 2,122 Shanghai-area observations captured during 2019--2022.
+All the features are processed by a encoder to produce 176 covariates as model inputs.
+This case is intended to examine the nonlinear prediction component related to features learnt from remote sensing data.
 
+\subsection{Model settings}
 
-All models receive the same 176 fixed features:
-128 Sentinel-derived features, 16 sky-view-factor features and 32 canopy features.
-The Sentinel representation combines optical and radar information;
-the sky-view factors derive from building-height information,
-and the canopy features represent height and valid-data coverage.
-The fixed feature package records training-only preprocessing.
-No image encoder is trained in the present comparison,
-and its parameters are outside the 6,957-parameter regression-model budget.
-This design tests prediction from a common environmental representation,
-rather than differences in image-feature learning.
-
-The original 1-km spatial groups define 1,696 training, 213 validation and 213 test observations.
-Repeated locations remain within one partition;
-all observations are retained, including 292 excess rows at repeated positions.
-The split has no spatial buffer,
-and the inherited feature package records 319 cross-partition pairs with overlapping 224-m image footprints.
-It is the original exploratory evaluation partition.
-These properties define the spatial separation of this comparison;
-the test is not a newly collected sample with independent image footprints.
-
-\subsection{Reported configurations and controlled training protocol}
-The reported comparison contains fourteen case--model configurations,
-each evaluated with seeds 1--10,
-for 140 reported fits (Table~\ref{tab:availability}).
-CO$_2$, WuhanHP and GVI retain the 6,957-parameter configurations.
-WuhanOD reports the restored-width DLAN at 7,069 parameters and K512,
-with GeoAggregator and GNNWR at the same 7,069-parameter budget.
+\COO, \WuhanHP and \GVI retain the 6,957-parameter configurations.
+\WuhanOD reports the restored-width \DLAN at 7,069 parameters and K512,
+with \GAgg and \GNNWR at the same 7,069-parameter budget.
 The complete earlier 6,957-parameter WuhanOD group remains archived
 and is used only in the allocation diagnostic.
-DLAN and GeoAggregator are evaluated on all four cases;
+DLAN and \GAgg are evaluated on all four cases;
 GCNNWR is evaluated on WuhanHP and GVI,
 where its two-dimensional proximity grid applies.
-The completed PyTorch baselines use GTNNWR for the three-coordinate CO$_2$ case
+The completed PyTorch baselines use GTNNWR for the three-coordinate \COO case
 and GNNWR for WuhanOD, WuhanHP and GVI.
 WuhanOD GNNWR retains all four endpoint coordinates in its distance input.
-
-\begin{table}[tb]\centering
-\caption{Completed main comparison.
-Every supported cell contains ten seeds.
-The per-case budget is 6,957 parameters, except WuhanOD at 7,069.
-GTNNWR supplies the CO$_2$ spatio-temporal baseline;
-GCNNWR has no supported three- or four-coordinate implementation in this study.}\label{tab:availability}
-\small\begin{tabular}{lrrrr}\toprule
-Case & GNNWR / GTNNWR & GCNNWR & GeoAggregator & DLAN\\\midrule
-CO$_2$ & 10 (GTNNWR) & -- & 10 & 10\\
-WuhanOD & 10 (GNNWR) & -- & 10 & 10\\
-WuhanHP & 10 (GNNWR) & 10 & 10 & 10\\
-GVI & 10 (GNNWR) & 10 & 10 & 10\\\bottomrule
-\end{tabular}\end{table}
 
 The GNNWR and GTNNWR networks are taken from the upstream PyTorch implementation,
 pinned to commit \texttt{2711bdee9821bfe242992d2eb885a78be1cf2628}.
@@ -511,7 +457,7 @@ GNNWR receives distances to fixed training-coordinate reference points;
 GTNNWR receives separate spatial Euclidean distances and absolute year differences,
 which its proximity network combines before coefficient modulation.
 The four reported configurations use 128, 119, 134 and 134 references
-for CO$_2$, WuhanOD, WuhanHP and GVI, respectively.
+for \COO, WuhanOD, WuhanHP and GVI, respectively.
 References are chosen by deterministic coordinate-only farthest-point coverage
 within the training partition.
 Distances are standardised using training pairs or reference columns,
@@ -531,14 +477,14 @@ internal parameter allocation or access to reference information.
 \begin{table}[tb]\centering
 \caption{Widths of the reported configurations.
 WuhanOD uses 7,069 parameters; the other cases use 6,957.
-DLAN and GeoAggregator entries give token width and two prediction-head widths.
+DLAN and \GAgg entries give token width and two prediction-head widths.
 GCNNWR entries give two convolution widths, pooled-grid side and hidden width.
 The last column gives the two spatial-weight-network hidden widths;
-CO$_2$ additionally uses a $2\to7\to1$ proximity network.}\label{tab:widths}
+\COO additionally uses a $2\to7\to1$ proximity network.}\label{tab:widths}
 \small\setlength{\tabcolsep}{4pt}
 \begin{tabular}{lrrrr}\toprule
-Case & DLAN & GeoAggregator & GCNNWR & GNNWR / GTNNWR\\\midrule
-CO$_2$ & $(13,12,24)$ & $(48,14,22)$ & -- & $(40,32)$\\
+Case & DLAN & \GAgg & GCNNWR & GNNWR / GTNNWR\\\midrule
+\COO & $(13,12,24)$ & $(48,14,22)$ & -- & $(40,32)$\\
 WuhanOD & $(12,10,8)$ & $(48,6,16)$ & -- & $(51,9)$\\
 WuhanHP & $(14,20,17)$ & $(32,62,14)$ & $(5,16,2,73)$ & $(44,14)$\\
 GVI & $(7,12,58)$ & $(32,7,11)$ & $(8,17,2,22)$ & $(31,12)$\\\bottomrule
@@ -557,16 +503,16 @@ GNNWR and GTNNWR retain the upstream PReLU, batch normalisation and dropout cons
 
 DLAN retains bandwidth-adaptive retrieval, coordinate-specific projections,
 one joint candidate softmax and the FiLM nonlinear predictor in all cases.
-The reported DLAN candidate limits are 768 for CO$_2$,
+The reported DLAN candidate limits are 768 for \COO,
 512 for WuhanOD and 512 for each planar case.
 The restored-width K1024 and K2048 records remain separate sensitivity configurations.
-GeoAggregator uses 256 joint-Euclidean neighbours,
+\GAgg uses 256 joint-Euclidean neighbours,
 Cartesian product attention and coordinate-preserving rotary encoding.
 GCNNWR uses a $16\times16$ grid fitted to training-coordinate bounds,
 training-reference distance statistics and training-only global OLS coefficients.
 
 The inference information conditions differ by construction.
-DLAN and GeoAggregator aggregate training-reference attributes, coordinates and responses,
+DLAN and \GAgg aggregate training-reference attributes, coordinates and responses,
 excluding the focal row during training.
 GNNWR and GTNNWR use reference coordinates and fitted training OLS coefficients;
 GCNNWR uses its fitted proximity grid and OLS coefficients.
@@ -577,7 +523,7 @@ The comparison evaluates these complete systems under common data and optimisati
 The WuhanOD capacity experiment has a separate 7,069-parameter budget.
 DLAN uses attention width 12 and hidden prediction widths $(10,8)$,
 in place of width 10 and $(36,3)$ in the archived 6,957-parameter group.
-GeoAggregator is separately matched to 7,069 parameters,
+\GAgg is separately matched to 7,069 parameters,
 with width 48 and prediction widths $(6,16)$.
 The GNNWR comparison uses 119 training-coordinate references
 and hidden widths $(51,9)$ at the same budget.
@@ -601,7 +547,7 @@ The GVI three-coordinate experiment adds elapsed capture month since January 201
 as a third coordinate.
 All 2,122 observations, 176 fixed features, responses and spatial partitions
 remain identical to the planar experiment.
-DLAN and GeoAggregator each have ten completed seeds and 6,957 parameters.
+DLAN and \GAgg each have ten completed seeds and 6,957 parameters.
 To retain the budget, their widths change to $(6,16,33)$ and $(24,14,31)$;
 DLAN's reference limit also increases from 512 to 768.
 This is a parameter-matched configuration comparison on a fixed spatial split,
@@ -652,8 +598,8 @@ The reported comparison uses the restored WuhanOD DLAN configuration
 and the corresponding 7,069-parameter baseline group
 (Table~\ref{tab:accuracy}).
 DLAN has the lowest mean RMSE on all four cases in these reported configurations.
-Relative to GeoAggregator,
-mean RMSE falls by 57.81\% for CO$_2$,
+Relative to \GAgg,
+mean RMSE falls by 57.81\% for \COO,
 26.85\% for WuhanOD, 2.99\% for WuhanHP and 7.58\% for GVI.
 The WuhanOD result is K512 with attention width 12;
 it is not the superseded 6,957-parameter configuration.
@@ -669,28 +615,28 @@ K512 was trained on the second machine.
 RMSE is mean $\pm$ sample SD; MAE and $R^2$ are seed means.}\label{tab:accuracy}
 \small\setlength{\tabcolsep}{3.3pt}\begin{tabular}{llrrrr}\toprule
 Case & Model & Parameters & RMSE & MAE & $R^2$\\\midrule
-CO$_2$ & DLAN & 6,957 & $0.2910\pm0.1076$ & 0.2259 & 0.9338\\
- & GeoAggregator & 6,957 & $0.6897\pm0.0182$ & 0.5064 & 0.6688\\
+\COO & DLAN & 6,957 & $0.2910\pm0.1076$ & 0.2259 & 0.9338\\
+ & \GAgg & 6,957 & $0.6897\pm0.0182$ & 0.5064 & 0.6688\\
  & GTNNWR & 6,957 & $0.8986\pm0.0894$ & 0.6797 & 0.4332\\
 \midrule
 WuhanOD & DLAN & 7,069 & $565.28\pm154.31$ & 50.28 & 0.9051\\
- & GeoAggregator & 7,069 & $772.73\pm835.04$ & 60.19 & 0.6592\\
+ & \GAgg & 7,069 & $772.73\pm835.04$ & 60.19 & 0.6592\\
  & GNNWR & 7,069 & $3568.80\pm969.21$ & 210.94 & -2.7794\\
 \midrule
 WuhanHP & DLAN & 6,957 & $0.1656\pm0.0041$ & 0.1254 & 0.6080\\
- & GeoAggregator & 6,957 & $0.1707\pm0.0030$ & 0.1310 & 0.5836\\
+ & \GAgg & 6,957 & $0.1707\pm0.0030$ & 0.1310 & 0.5836\\
  & GNNWR & 6,957 & $0.1702\pm0.0020$ & 0.1300 & 0.5858\\
  & GCNNWR & 6,957 & $0.1718\pm0.0019$ & 0.1289 & 0.5784\\
 \midrule
 GVI & DLAN & 6,957 & $0.0985\pm0.0038$ & 0.0760 & 0.3306\\
- & GeoAggregator & 6,957 & $0.1066\pm0.0051$ & 0.0831 & 0.2157\\
+ & \GAgg & 6,957 & $0.1066\pm0.0051$ & 0.0831 & 0.2157\\
  & GNNWR & 6,957 & $0.1258\pm0.0255$ & 0.0987 & -0.1320\\
  & GCNNWR & 6,957 & $0.1185\pm0.0001$ & 0.0944 & 0.0318\\\bottomrule\end{tabular}\end{table}
 
 \begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_relative_accuracy.pdf}
 \caption{Distributions of test RMSE (left column) and MAE (right column) across ten training seeds.
-Rows correspond to CO$_2$, WuhanOD, WuhanHP and GVI.
+Rows correspond to \COO, WuhanOD, WuhanHP and GVI.
 Boxes show the interquartile range,
 with the median marked by the central line
 and whiskers extending to the most extreme observations within 1.5 interquartile ranges of the box.
@@ -702,11 +648,11 @@ The DLAN WuhanOD results use attention width 12 and K512.}\label{fig:relative}
 \end{figure}
 
 The added baselines preserve DLAN's leading mean ranking in the three previously favourable cases.
-Its RMSE is 67.62\% below GTNNWR on CO$_2$,
+Its RMSE is 67.62\% below GTNNWR on \COO,
 2.74\% below GNNWR on WuhanHP and 21.75\% below GNNWR on GVI.
-DLAN wins all ten paired seeds against GTNNWR on CO$_2$,
+DLAN wins all ten paired seeds against GTNNWR on \COO,
 nine against GNNWR on WuhanHP and all ten against GNNWR on GVI.
-Against GeoAggregator it wins ten, eight and ten seeds in these cases,
+Against \GAgg it wins ten, eight and ten seeds in these cases,
 and four of ten WuhanOD seeds.
 The reported 7,069-parameter GNNWR has negative test $R^2$ in every WuhanOD seed
 and in four GVI seeds under the controlled reference budget.
@@ -721,13 +667,13 @@ WuhanOD K512 spans an execution environment different from its comparators;
 y-axis response scales differ across cases.}\label{fig:seeds}
 \end{figure}
 
-\subsection{Future-year \texorpdfstring{CO$_2$}{CO2} prediction}
+\subsection{Future-year \texorpdfstring{\COO}{CO2} prediction}
 DLAN's mean RMSE is 0.2910,
-compared with 0.6897 for GeoAggregator and 0.8986 for GTNNWR.
+compared with 0.6897 for \GAgg and 0.8986 for GTNNWR.
 Mean $R^2$ is 0.9338, 0.6688 and 0.4332, respectively.
 DLAN improves on both alternatives in every paired seed.
 Its RMSE range is 0.1610--0.5055,
-compared with 0.6690--0.7271 for GeoAggregator.
+compared with 0.6690--0.7271 for \GAgg.
 Thus the larger DLAN seed variation does not reverse the ordering
 in any run of this experiment.
 Figure~\ref{fig:co2pred} shows seed-1 predictions and residuals,
@@ -735,7 +681,7 @@ using the same identifier-fixed example for every model.
 
 \begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_co2_predictions.pdf}
-\caption{CO$_2$ test predictions and residuals for seed 1,
+\caption{\COO test predictions and residuals for seed 1,
 on the same 1,625 held-out observations from 2021.
 Dashed lines indicate perfect prediction and zero residual.}\label{fig:co2pred}
 \end{figure}
@@ -771,7 +717,7 @@ not 565.28.
 The reported DLAN configuration is therefore the completed $K=512$ experiment.
 
 Against the separately matched 7,069-parameter comparators,
-DLAN's mean RMSE is 26.85\% below GeoAggregator's 772.73
+DLAN's mean RMSE is 26.85\% below \GAgg's 772.73
 and 84.16\% below GNNWR's 3,568.80.
 This corrects the earlier presentation of the superseded width-10,
 6,957-parameter result of 919.92 as the main DLAN score.
@@ -780,9 +726,9 @@ not the reported final model.
 
 The lower mean does not imply better prediction in most seed pairs.
 For the reported $K=512$ model, median RMSE is 556.20,
-compared with 478.91 for GeoAggregator;
+compared with 478.91 for \GAgg;
 DLAN wins four of ten pairs.
-GeoAggregator has one severe run with RMSE 3,110.57,
+\GAgg has one severe run with RMSE 3,110.57,
 whereas the selected DLAN's worst run is 827.76.
 The reported mean advantage therefore coexists with a higher median
 and a smaller observed extreme error.
@@ -808,7 +754,7 @@ The reported DLAN model instead uses K512, as shown in Table~\ref{tab:accuracy}.
 \small\begin{tabular}{lrrrr}\toprule
 Model & RMSE & Median RMSE & MAE & $R^2$\\\midrule
 DLAN, K1024 & $608.73\pm252.45$ & 552.52 & 52.08 & 0.8809\\
-GeoAggregator & $772.73\pm835.04$ & 478.91 & 60.19 & 0.6592\\
+\GAgg & $772.73\pm835.04$ & 478.91 & 60.19 & 0.6592\\
 GNNWR & $3568.80\pm969.21$ & 3171.19 & 210.94 & -2.7794\\
 \bottomrule\end{tabular}\end{table}
 
@@ -829,9 +775,9 @@ The selected K512 DLAN is evaluated separately in the primary results.}\label{fi
 
 For the reported model, the largest 1\% of observed test flows
 contribute on average 97.43\% of DLAN's squared error,
-compared with 98.28\% for GeoAggregator.
+compared with 98.28\% for \GAgg.
 After excluding this tail,
-DLAN's remaining-count RMSE is 85.39 versus 65.88 for GeoAggregator.
+DLAN's remaining-count RMSE is 85.39 versus 65.88 for \GAgg.
 Thus its smaller overall mean RMSE does not represent uniformly lower error
 throughout the response distribution.
 Figure~\ref{fig:odtail} uses the selected K512 predictions
@@ -847,18 +793,18 @@ Bottom: seed-1 predictions on logarithmic axes.}\label{fig:odtail}
 
 \subsection{WuhanHP: prediction at unseen communities}
 DLAN has mean RMSE 0.1656,
-compared with 0.1702 for GNNWR, 0.1707 for GeoAggregator
+compared with 0.1702 for GNNWR, 0.1707 for \GAgg
 and 0.1718 for GCNNWR.
 Its error reductions are 2.74\%, 2.99\% and 3.60\%, respectively.
 It wins nine paired seeds against GNNWR,
-eight against GeoAggregator and nine against GCNNWR.
+eight against \GAgg and nine against GCNNWR.
 Mean MAE and $R^2$ give the same ordering.
-The added GNNWR baseline performs similarly to GeoAggregator,
+The added GNNWR baseline performs similarly to \GAgg,
 but does not change DLAN's leading mean accuracy.
 
 DLAN's equal-community RMSE is 0.1629,
 compared with 0.1695 for GNNWR,
-0.1699 for GeoAggregator and 0.1722 for GCNNWR.
+0.1699 for \GAgg and 0.1722 for GCNNWR.
 The ranking persists when each held-out community receives equal weight.
 Figure~\ref{fig:hpgroups} shows community residuals and errors by group size,
 averaged over ten seeds.
@@ -883,7 +829,7 @@ content and learnt geographical biases remain active.
 
 \subsection{GVI: nonlinear prediction and the added month coordinate}\label{sec:gvi3d}
 For planar GVI, DLAN achieves RMSE $0.0985\pm0.0038$,
-compared with $0.1066\pm0.0051$ for GeoAggregator,
+compared with $0.1066\pm0.0051$ for \GAgg,
 $0.1185\pm0.0001$ for GCNNWR
 and $0.1258\pm0.0255$ for GNNWR.
 DLAN wins every paired seed against all three baselines.
@@ -895,7 +841,7 @@ The OLS predictor recovered from GCNNWR's fitted coefficient buffers
 has RMSE 0.1186 and $R^2=0.0297$.
 GCNNWR's corresponding values of 0.1185 and 0.0318
 show little improvement over this global linear reference.
-DLAN and GeoAggregator have lower errors,
+DLAN and \GAgg have lower errors,
 with the larger gain obtained by DLAN.
 Figure~\ref{fig:gvi} compares prediction behaviour across the response range.
 The results support flexible reference-conditioned prediction of visible greenery,
@@ -912,9 +858,9 @@ The quintiles are descriptive and do not enter training.}\label{fig:gvi}
 Adding elapsed capture month produces small mean improvements
 (Table~\ref{tab:gvi3d}).
 DLAN's RMSE falls from 0.09848 to 0.09613, a 2.39\% reduction;
-GeoAggregator's falls from 0.10655 to 0.10498, a 1.47\% reduction.
+\GAgg's falls from 0.10655 to 0.10498, a 1.47\% reduction.
 The three-coordinate configuration wins six paired seeds for DLAN
-and five for GeoAggregator (Figure~\ref{fig:gvi3d}).
+and five for \GAgg (Figure~\ref{fig:gvi3d}).
 The change is therefore not consistently beneficial across initialisations.
 It is also accompanied by width adjustments,
 and by a larger DLAN candidate budget.
@@ -927,7 +873,7 @@ The last column counts seeds with lower three-coordinate test RMSE.}\label{tab:g
 \small\begin{tabular}{lrrr}\toprule
 Model & Planar RMSE & Month-augmented RMSE & Wins\\\midrule
 DLAN & $0.09848\pm0.00376$ & $0.09613\pm0.00563$ & 6/10\\
-GeoAggregator & $0.10655\pm0.00505$ & $0.10498\pm0.00621$ & 5/10\\\bottomrule\end{tabular}\end{table}
+\GAgg & $0.10655\pm0.00505$ & $0.10498\pm0.00621$ & 5/10\\\bottomrule\end{tabular}\end{table}
 
 \begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{gvi_2d_3d.pdf}
@@ -1014,14 +960,14 @@ in the frozen evidence snapshot and supplies no final attribution here.
 \subsection{Computational cost and dimensional extensibility}
 The expanded fit-cost table includes the completed GNNWR/GTNNWR baselines
 (Table~\ref{tab:cost}).
-DLAN and GeoAggregator have similar mean CO$_2$ fit times,
+DLAN and \GAgg have similar mean \COO fit times,
 79.56 and 80.80 seconds;
 GTNNWR is faster at 41.32 seconds, with higher error.
 For WuhanHP, GNNWR and DLAN have comparable mean costs,
 32.41 and 33.90 seconds,
 whilst GCNNWR is faster at 13.17 seconds.
 On GVI, DLAN takes 5.16 seconds,
-below GeoAggregator's 6.41 and GNNWR's 9.25,
+below \GAgg's 6.41 and GNNWR's 9.25,
 but above GCNNWR's 0.65.
 The accuracy--cost trade-off depends on the task
 (Figure~\ref{fig:cost}).
@@ -1032,21 +978,21 @@ WuhanOD DLAN K512 was trained on another machine;
 its 804.63-second time is not a same-hardware comparison with the baselines.}\label{tab:cost}
 \small\begin{tabular}{llrr}\toprule
 Case & Model & Fit seconds & Epochs\\\midrule
-CO$_2$ & DLAN & 79.56 & 126.4\\
- & GeoAggregator & 80.80 & 170.1\\
+\COO & DLAN & 79.56 & 126.4\\
+ & \GAgg & 80.80 & 170.1\\
  & GTNNWR & 41.32 & 210.6\\
 \midrule
 WuhanOD & DLAN & 804.63 & 230.4\\
- & GeoAggregator & 305.22 & 268.7\\
+ & \GAgg & 305.22 & 268.7\\
  & GNNWR & 33.83 & 262.2\\
 \midrule
 WuhanHP & DLAN & 33.90 & 40.3\\
- & GeoAggregator & 45.45 & 62.2\\
+ & \GAgg & 45.45 & 62.2\\
  & GNNWR & 32.41 & 120.5\\
  & GCNNWR & 13.17 & 88.0\\
 \midrule
 GVI & DLAN & 5.16 & 56.6\\
- & GeoAggregator & 6.41 & 75.2\\
+ & \GAgg & 6.41 & 75.2\\
  & GNNWR & 9.25 & 219.0\\
  & GCNNWR & 0.65 & 32.1\\\bottomrule\end{tabular}\end{table}
 
@@ -1061,7 +1007,7 @@ Case-specific axes retain the different response scales.}\label{fig:cost}
 Fit cost includes the stopping trajectory,
 so it is distinct from computation per epoch.
 In the retained K1024 diagnostic at 7,069 parameters,
-DLAN, GeoAggregator and GNNWR take means of 269.36, 305.22 and 33.83 seconds,
+DLAN, \GAgg and GNNWR take means of 269.36, 305.22 and 33.83 seconds,
 respectively.
 The rapid coefficient-modulation baseline is also the least accurate in that group.
 Some flow runs reach the 300-epoch cap;
@@ -1089,7 +1035,7 @@ these curves are not empirical timing measurements.}\label{fig:complexity}
 \section{Discussion}\label{sec:discussion}
 \subsection{Predictive scope under controlled capacity}
 The completed baselines strengthen the evidence for DLAN
-on subsequent-year CO$_2$, community-held-out housing and planar GVI prediction.
+on subsequent-year \COO, community-held-out housing and planar GVI prediction.
 Its advantage on these cases persists against GNNWR/GTNNWR,
 whose learned proximity functions retain coefficient-wise OLS modulation.
 The distinction is in the response construction:
@@ -1101,7 +1047,7 @@ They do not isolate nonlinearity or reference labels as the sole source of the g
 
 The WuhanOD results show why a single total parameter count is insufficient
 to characterise a neural spatial predictor.
-The superseded narrow-allocation model is inferior to GeoAggregator;
+The superseded narrow-allocation model is inferior to \GAgg;
 restoring attention width and reporting the completed K512 configuration
 yields the lower mean RMSE of 565.28.
 Its median and paired seed wins still do not favour DLAN.
@@ -1113,7 +1059,7 @@ The distribution across seeds, the target scale and the allocation of parameters
 all affect the practical comparison.
 
 \subsection{Coordinate scales and geometric meaning}
-The CO$_2$ checkpoints learn a wider temporal scale than spatial scales,
+The \COO checkpoints learn a wider temporal scale than spatial scales,
 providing a fitted description of the geographical prior used for this panel.
 These are coordinate-, head- and block-specific parameters,
 rather than MGWR covariate-specific coefficient bandwidths.
@@ -1160,9 +1106,9 @@ The inherited exploratory split and overlapping image footprints apply to both v
 A buffered spatial evaluation or future-month holdout would test different prediction supports.
 
 \subsection{FiLM conditioning and evidence for individual modules}\label{sec:ablations}
-DLAN and GeoAggregator both use training-reference information,
+DLAN and \GAgg both use training-reference information,
 but introduce the resulting context into prediction differently.
-GeoAggregator concatenates the aggregated representation with query attributes
+\GAgg concatenates the aggregated representation with query attributes
 before its nonlinear readout.
 DLAN uses the local condition to generate layer-wise scaling and translation,
 modulating the intermediate query-attribute representation through FiLM.
@@ -1233,7 +1179,7 @@ Partial selection, batched distance kernels or dynamic metric indexing
 could reduce its cost,
 but require a common-hardware benchmark including retrieval,
 training, prediction and peak memory.
-Rolling CO$_2$ evaluation, endpoint-held-out flows and buffered GVI partitions
+Rolling \COO evaluation, endpoint-held-out flows and buffered GVI partitions
 would extend the assessment to new inference supports
 \citep{RobertsBahn-2017,ValaviElith-2019}.
 These follow from the current protocol differences,
@@ -1248,15 +1194,15 @@ The resulting condition modulates query attributes through FiLM.
 The construction accommodates planar, space--time and geographical-flow coordinates.
 
 The reported comparison contains fourteen configurations with ten seeds each.
-Regressors use 6,957 parameters for CO$_2$, WuhanHP and GVI,
+Regressors use 6,957 parameters for \COO, WuhanHP and GVI,
 and 7,069 for the restored-width WuhanOD comparison.
 The selected WuhanOD DLAN uses 512 reference candidates,
 with mean RMSE $565.28\pm154.31$.
 The corresponding K2048 experiment yields $587.60\pm171.15$;
 the earlier 919.92 score describes a superseded narrow-allocation configuration.
-Relative to the stated GeoAggregator baselines,
+Relative to the stated \GAgg baselines,
 DLAN reduces mean RMSE by 57.81\%, 26.85\%, 2.99\% and 7.58\%
-on CO$_2$, WuhanOD, WuhanHP and planar GVI, respectively.
+on \COO, WuhanOD, WuhanHP and planar GVI, respectively.
 The WuhanOD mean advantage coexists with a higher median,
 four wins in ten paired seeds and a cross-machine execution difference.
 Thus the result supports the reported mean prediction performance,
