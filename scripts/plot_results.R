@@ -20,13 +20,26 @@ p<-ggplot(te,aes(factor(seed),rmse,colour=model_label,group=model_label))+geom_l
  facet_wrap(~case,scales='free_y',ncol=2)+scale_colour_manual(values=cols)+
  labs(x='Training seed',y='Test RMSE (case-specific response scale)',colour=NULL,title='Reported configurations: WuhanOD width 12 / K512 / 7,069 parameters')
 save(p,'matched_seed_accuracy',7,5.3)
-# Ratios remove response-unit differences without pooling observations across cases.
-baseline<-su[su$model_label=='GeoAggregator',c('case','rmse_mean')];names(baseline)[2]<-'geo_rmse'
-su<-merge(su,baseline,by='case');su$relative_rmse<-su$rmse_mean/su$geo_rmse
-p<-ggplot(su,aes(model_label,relative_rmse,colour=model_label))+geom_hline(yintercept=1,linetype=2,colour='#888888')+
- geom_point(size=3)+facet_wrap(~case,nrow=1)+scale_colour_manual(values=cols)+coord_flip()+
- labs(x=NULL,y='Mean test RMSE / GeoAggregator mean test RMSE',title='Predictive accuracy relative to the same-case baseline')+theme(legend.position='none')
-save(p,'matched_relative_accuracy',7,3.3)
+# Figure 2: seed-level distributions, with one dataset per row and metric per column.
+accuracy_long <- rbind(
+ transform(te, metric='RMSE', value=rmse),
+ transform(te, metric='MAE', value=mae))
+accuracy_long$metric <- factor(accuracy_long$metric, levels=c('RMSE','MAE'))
+accuracy_long$model_label <- factor(accuracy_long$model_label,
+ levels=c('DLAN','GeoAggregator','GTNNWR','GNNWR','GCNNWR'))
+case_labels <- c('CO2'='CO[2]','OD-Wuhan'='WuhanOD','WuhanHP'='WuhanHP','GVI'='GVI')
+p <- ggplot(accuracy_long,aes(model_label,value,colour=model_label,fill=model_label)) +
+ geom_boxplot(width=.55,alpha=.18,outlier.shape=NA,linewidth=.45) +
+ geom_point(position=position_jitter(width=.10,height=0,seed=20261110),
+            size=1.25,alpha=.8) +
+ facet_grid(case ~ metric,scales='free_y',
+            labeller=labeller(case=as_labeller(case_labels,default=label_parsed))) +
+ scale_colour_manual(values=cols) + scale_fill_manual(values=cols) +
+ scale_y_continuous(expand=expansion(mult=c(.04,.09))) +
+ labs(x='Model',y='Test metric value') +
+ theme(legend.position='none',axis.text.x=element_text(angle=25,hjust=1),
+       strip.text=element_text(size=10),panel.spacing=unit(.75,'lines'))
+save(p,'matched_relative_accuracy',7,8.5)
 p<-ggplot(te,aes(seconds,rmse,colour=model_label))+geom_point(size=2)+facet_wrap(~case,scales='free',ncol=2)+
  scale_colour_manual(values=cols)+labs(x='Fit time (seconds)',y='Test RMSE',colour=NULL,title='Recorded accuracy and fit cost; WuhanOD runs span two machines')
 save(p,'matched_accuracy_cost',7,5.2)

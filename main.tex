@@ -275,7 +275,7 @@ Residual connections, layer normalisation and a feed-forward network update the 
 yielding a local condition $\bm{h}_i$ after the final block~\citep{BaKiros-2016}.
 Figure~\ref{fig:architecture} summarises the information paths.
 
-\begin{figure}[tb]
+\begin{figure}[tp]
 \centering\includegraphics[width=\linewidth]{architecture.pdf}
 \caption{The implemented DLAN architecture.
 Bandwidths influence both candidate retrieval and Gaussian scoring.
@@ -657,8 +657,9 @@ mean RMSE falls by 57.81\% for CO$_2$,
 26.85\% for WuhanOD, 2.99\% for WuhanHP and 7.58\% for GVI.
 The WuhanOD result is K512 with attention width 12;
 it is not the superseded 6,957-parameter configuration.
-Figure~\ref{fig:relative} expresses each result relative to its same-case GeoAggregator baseline,
-without comparing response units across cases.
+Figure~\ref{fig:relative} shows the seed-level distributions of test RMSE and MAE,
+with each case occupying one row
+and the two metrics displayed in separate columns.
 
 \begin{table}[tb]\centering
 \caption{Reported test results, ten seeds per configuration.
@@ -686,11 +687,18 @@ GVI & DLAN & 6,957 & $0.0985\pm0.0038$ & 0.0760 & 0.3306\\
  & GNNWR & 6,957 & $0.1258\pm0.0255$ & 0.0987 & -0.1320\\
  & GCNNWR & 6,957 & $0.1185\pm0.0001$ & 0.0944 & 0.0318\\\bottomrule\end{tabular}\end{table}
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_relative_accuracy.pdf}
-\caption{Mean test RMSE relative to GeoAggregator within each case.
+\caption{Distributions of test RMSE (left column) and MAE (right column) across ten training seeds.
+Rows correspond to CO$_2$, WuhanOD, WuhanHP and GVI.
+Boxes show the interquartile range,
+with the median marked by the central line
+and whiskers extending to the most extreme observations within 1.5 interquartile ranges of the box.
+Points show all ten seeds for each model.
+The two metrics share a vertical scale within each row,
+with separate vertical scales across datasets.
 WuhanOD uses 7,069 parameters and the other cases use 6,957.
-The DLAN WuhanOD points correspond to K512.}\label{fig:relative}
+The DLAN WuhanOD results use attention width 12 and K512.}\label{fig:relative}
 \end{figure}
 
 The added baselines preserve DLAN's leading mean ranking in the three previously favourable cases.
@@ -705,7 +713,7 @@ and in four GVI seeds under the controlled reference budget.
 These are outcomes of the evaluated reference counts and common training protocol,
 rather than estimates of each model family's fully tuned performance limit.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_seed_accuracy.pdf}
 \caption{Test RMSE for the 140 reported fits.
 Models share the same partition within each case;
@@ -725,7 +733,7 @@ in any run of this experiment.
 Figure~\ref{fig:co2pred} shows seed-1 predictions and residuals,
 using the same identifier-fixed example for every model.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_co2_predictions.pdf}
 \caption{CO$_2$ test predictions and residuals for seed 1,
 on the same 1,625 held-out observations from 2021.
@@ -743,7 +751,7 @@ DLAN additionally retains a nonlinear covariate predictor conditioned on labelle
 The results establish a predictive difference between these complete constructions;
 they do not isolate one information path as the cause of the improvement.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_bandwidths.pdf}
 \caption{Coordinate-specific scales from all 40 reported DLAN checkpoints.
 WuhanOD uses the width-12 K512 checkpoints.
@@ -812,7 +820,7 @@ but changes both head structure and attention width.
 Figure~\ref{fig:odcapacity} retains the two complete historical allocation groups;
 it is not the primary selected-support ranking.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{od_capacity_stability.pdf}
 \caption{Historical WuhanOD allocation comparison at K1024,
 with separately matched budgets of 6,957 and 7,069 parameters.
@@ -829,7 +837,7 @@ throughout the response distribution.
 Figure~\ref{fig:odtail} uses the selected K512 predictions
 and the corresponding 7,069-parameter baseline records.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_od_tail.pdf}
 \caption{Response-tail diagnostics for the reported WuhanOD configurations:
 DLAN width 12 with K512 and the 7,069-parameter comparators.
@@ -859,7 +867,7 @@ with individual housing attributes,
 so dwellings sharing coordinates can still receive different predictions.
 Test communities have no labelled observations in the training-reference bank.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_hp_groups.pdf}
 \caption{WuhanHP ten-seed mean residuals at held-out communities
 and mean within-community RMSE against community size.
@@ -893,7 +901,7 @@ Figure~\ref{fig:gvi} compares prediction behaviour across the response range.
 The results support flexible reference-conditioned prediction of visible greenery,
 without isolating the nonlinear head from the remaining architecture.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_gvi_response.pdf}
 \caption{GVI seed-1 prediction diagnostics for all four planar models
 and the recovered OLS predictor,
@@ -921,7 +929,7 @@ Model & Planar RMSE & Month-augmented RMSE & Wins\\\midrule
 DLAN & $0.09848\pm0.00376$ & $0.09613\pm0.00563$ & 6/10\\
 GeoAggregator & $0.10655\pm0.00505$ & $0.10498\pm0.00621$ & 5/10\\\bottomrule\end{tabular}\end{table}
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{gvi_2d_3d.pdf}
 \caption{Planar versus month-augmented GVI prediction on identical spatial partitions.
 Lines connect paired seeds;
@@ -982,7 +990,7 @@ their relative times are not a candidate-count speed benchmark.
 The experiments do not automatically change the default configuration
 according to the reused test set.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{od_width_neighbours.pdf}
 \caption{Completed WuhanOD width and candidate-support comparisons.
 Top: paired width-12 and width-16 results at $K=1,024$.
@@ -1042,7 +1050,7 @@ GVI & DLAN & 5.16 & 56.6\\
  & GNNWR & 9.25 & 219.0\\
  & GCNNWR & 0.65 & 32.1\\\bottomrule\end{tabular}\end{table}
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=\linewidth]{matched_accuracy_cost.pdf}
 \caption{Recorded fit cost and test RMSE for the 140 reported fits.
 WuhanOD K512 uses the second machine, so its time is not directly comparable.
@@ -1070,7 +1078,7 @@ with $N_{\train}D$ coordinate-distance work per query, block and head
 Restricted attention controls subsequent attention activation size;
 it does not establish subquadratic end-to-end training in sample size.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=.94\linewidth]{retrieval_complexity.pdf}
 \caption{Analytical distance work per query, $N_{\train}D$,
 for one block and head.
@@ -1181,7 +1189,7 @@ The increases are 1.79\% and 3.50\%
 This supports retaining the prior in that tested configuration,
 without making it an isolated ablation of current DLAN retrieval.
 
-\begin{figure}[tb]\centering
+\begin{figure}[tp]\centering
 \includegraphics[width=.94\linewidth]{historical_gaussian_ablation.pdf}
 \caption{Historical joint-attention Gaussian-prior ablation,
 with three seeds and its original neighbourhood configuration.
