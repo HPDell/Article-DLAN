@@ -635,69 +635,40 @@ the positional encodings used in the attention mechanisms of \DLAN and \GAgg may
   \label{fig:gvi}
 \end{figure}
 
-DLAN's mean RMSE is 0.2910,
-compared with 0.6897 for \GAgg and 0.8986 for GTNNWR.
-Mean $R^2$ is 0.9338, 0.6688 and 0.4332, respectively.
-DLAN improves on both alternatives in every paired seed.
-Its RMSE range is 0.1610--0.5055,
-compared with 0.6690--0.7271 for \GAgg.
-Thus the larger DLAN seed variation does not reverse the ordering
-in any run of this experiment.
-Figure~\ref{fig:co2pred} shows seed-1 predictions and residuals,
-using the same identifier-fixed example for every model.
+For \COO, \DLAN's seed-1 predictions follow the identity line closely,
+with residuals concentrated near zero across the observed response range
+(Figure~\ref{fig:co2pred}).
+\GAgg and GTNNWR show greater dispersion
+and a stronger tendency to overpredict low responses and underpredict high responses.
+\DLAN substantially reduces this response-dependent error,
+with ten-seed mean RMSE of 0.2910
+compared with 0.6897 for \GAgg and 0.8986 for GTNNWR,
+and mean $R^2$ of 0.9338.
+It outperforms both baselines in every paired seed,
+so the tighter residual distribution in the illustrated run
+is consistent with the repeated-run advantage in future-year prediction.
 
-
-The mean DLAN bandwidths are 0.0683 for spatial $x$,
-0.0793 for spatial $y$ and 0.1860 for time
-(Figure~\ref{fig:bandwidths}).
-The Gaussian prior therefore decays more slowly in the transformed temporal coordinate
-than in either spatial direction.
-GTNNWR also learns a nonlinear combination of spatial and temporal proximity,
-but its response remains an OLS coefficient-modulation construction.
-DLAN additionally retains a nonlinear covariate predictor conditioned on labelled training references.
-The results establish a predictive difference between these complete constructions;
-they do not isolate one information path as the cause of the improvement.
-
-The reported WuhanOD DLAN uses attention width 12,
-prediction-head widths $(10,8)$ and 512 actual training-reference candidates.
-Its 7,069 trainable parameters are unchanged by candidate count.
-Across ten seeds, mean test RMSE is 565.2762909669982 counts,
-with sample SD 154.3069,
-mean MAE 50.2819 and mean $R^2=0.9051$.
-The corresponding $K=2,048$ result is $587.60\pm171.15$,
-not 565.28.
-The reported DLAN configuration is therefore the completed $K=512$ experiment.
-
-Against the separately matched 7,069-parameter comparators,
-DLAN's mean RMSE is 26.85\% below \GAgg's 772.73
-and 84.16\% below GNNWR's 3,568.80.
-This corrects the earlier presentation of the superseded width-10,
-6,957-parameter result of 919.92 as the main DLAN score.
-That earlier allocation remains a configuration diagnostic,
-not the reported final model.
-
-The lower mean does not imply better prediction in most seed pairs.
-For the reported $K=512$ model, median RMSE is 556.20,
-compared with 478.91 for \GAgg;
-DLAN wins four of ten pairs.
-\GAgg has one severe run with RMSE 3,110.57,
-whereas the selected DLAN's worst run is 827.76.
-The reported mean advantage therefore coexists with a higher median
-and a smaller observed extreme error.
-No seed is omitted.
-These configurations also span execution environments:
-the K512 model was trained on the second computer,
-whilst the comparator runs were recorded on the original machine.
-
-The retained capacity experiment explains the sequence of model configurations
+For WuhanOD, \DLAN's main advantage is lower mean error
+and a smaller extreme error across training seeds.
+The width-12, $K=512$ configuration achieves mean RMSE of 565.28
+and MAE of 50.28,
+reducing mean RMSE by 26.85\% relative to \GAgg
+and 84.16\% relative to \GNNWR.
+Its worst-seed RMSE is 827.76,
+compared with 3,110.57 for \GAgg,
+although its median RMSE is higher
+and it wins four of ten paired seeds.
+The response-tail diagnostics show that the largest 1\% of observed flows
+account for 97.43\% of \DLAN's squared error
+and 98.28\% of \GAgg's
+(Figure~\ref{fig:odtail}).
+Excluding these flows gives RMSE of 85.39 for \DLAN
+and 65.88 for \GAgg,
+locating \DLAN's overall advantage in the error behaviour associated with large flows
+rather than uniformly smaller errors across the response distribution.
+The retained $K=1,024$ comparison also gives \DLAN a lower mean RMSE
+than either baseline
 (Table~\ref{tab:odcapacity}).
-At $K=1,024$, restoring attention width from 10 to 12
-and changing the prediction head from $(36,3)$ to $(10,8)$
-reduces mean RMSE from 919.92 to 608.73.
-The subsequent completed support experiment yields 565.28 at $K=512$.
-These are three distinct records;
-608.73 is the restored-width K1024 diagnostic,
-and 919.92 is the historical narrower-allocation score.
 
 \begin{table}[tb]\centering
 \caption{Restored-width WuhanOD comparison at K1024 and 7,069 parameters,
@@ -710,82 +681,43 @@ Model & RMSE & Median RMSE & MAE & $R^2$\\\midrule
 \GNNWR & $3568.80\pm969.21$ & 3171.19 & 210.94 & -2.7794\\
 \bottomrule\end{tabular}\end{table}
 
-The capacity reallocation increases attention-block parameters
-from 3,268 to 4,368,
-whilst reducing nonlinear-head parameters from 2,269 to 925.
-It improves mean RMSE in eight of ten paired seeds,
-but changes both head structure and attention width.
-Figure~\ref{fig:odcapacity} retains the two complete historical allocation groups;
-it is not the primary selected-support ranking.
-
-For the reported model, the largest 1\% of observed test flows
-contribute on average 97.43\% of DLAN's squared error,
-compared with 98.28\% for \GAgg.
-After excluding this tail,
-DLAN's remaining-count RMSE is 85.39 versus 65.88 for \GAgg.
-Thus its smaller overall mean RMSE does not represent uniformly lower error
-throughout the response distribution.
-Figure~\ref{fig:odtail} uses the selected K512 predictions
-and the corresponding 7,069-parameter baseline records.
-
-DLAN has mean RMSE 0.1656,
-compared with 0.1702 for GNNWR, 0.1707 for \GAgg
-and 0.1718 for GCNNWR.
-Its error reductions are 2.74\%, 2.99\% and 3.60\%, respectively.
-It wins nine paired seeds against GNNWR,
-eight against \GAgg and nine against GCNNWR.
-Mean MAE and $R^2$ give the same ordering.
-The added GNNWR baseline performs similarly to \GAgg,
-but does not change DLAN's leading mean accuracy.
-
-DLAN's equal-community RMSE is 0.1629,
-compared with 0.1695 for GNNWR,
-0.1699 for \GAgg and 0.1722 for GCNNWR.
-The ranking persists when each held-out community receives equal weight.
-Figure~\ref{fig:hpgroups} shows community residuals and errors by group size,
-averaged over ten seeds.
-The model combines a reference-derived geographical condition
+For WuhanHP, \DLAN improves prediction both across individual dwellings
+and when each held-out community receives equal weight
+(Figure~\ref{fig:hpgroups}).
+Its mean observation-level RMSE is 0.1656,
+compared with 0.1702 for \GNNWR,
+0.1707 for \GAgg and 0.1718 for \GCNNWR.
+Equal-community RMSE is also lowest at 0.1629,
+versus 0.1695, 0.1699 and 0.1722, respectively,
+showing that its advantage persists when large communities no longer dominate the metric.
+\DLAN wins nine paired seeds against \GNNWR and \GCNNWR,
+and eight against \GAgg.
+Its reference-conditioned predictor combines geographical context
 with individual housing attributes,
-so dwellings sharing coordinates can still receive different predictions.
-Test communities have no labelled observations in the training-reference bank.
+allowing dwellings at the same coordinates to receive different predictions
+while predicting communities absent from the labelled training-reference bank.
 
-The fitted planar DLAN retains coordinate-specific projections and adaptive retrieval,
-with $D=2$ and $K=512$.
-The two mean bandwidths, 0.0859 and 0.0861, are nearly equal,
-which is compatible with an approximately isotropic Gaussian prior.
-This is not an imposed restriction of the completed experiment;
-content and learnt geographical biases remain active.
-
-For planar GVI, DLAN achieves RMSE $0.0985\pm0.0038$,
-compared with $0.1066\pm0.0051$ for \GAgg,
-$0.1185\pm0.0001$ for GCNNWR
-and $0.1258\pm0.0255$ for GNNWR.
-DLAN wins every paired seed against all three baselines.
-Mean MAE is 0.0760 and mean $R^2$ is 0.3306,
-compared with GNNWR's 0.0987 and $-0.1320$.
-The fixed features, labels and spatial partitions are common to these models.
-
-The OLS predictor recovered from GCNNWR's fitted coefficient buffers
-has RMSE 0.1186 and $R^2=0.0297$.
-GCNNWR's corresponding values of 0.1185 and 0.0318
-show little improvement over this global linear reference.
-DLAN and \GAgg have lower errors,
-with the larger gain obtained by DLAN.
-Figure~\ref{fig:gvi} compares prediction behaviour across the response range.
-The results support flexible reference-conditioned prediction of visible greenery,
-without isolating the nonlinear head from the remaining architecture.
-
-Adding elapsed capture month produces small mean improvements
-(Table~\ref{tab:gvi3d}).
-DLAN's RMSE falls from 0.09848 to 0.09613, a 2.39\% reduction;
-\GAgg's falls from 0.10655 to 0.10498, a 1.47\% reduction.
-The three-coordinate configuration wins six paired seeds for DLAN
-and five for \GAgg (Figure~\ref{fig:gvi3d}).
-The change is therefore not consistently beneficial across initialisations.
-It is also accompanied by width adjustments,
-and by a larger DLAN candidate budget.
-The completed result is an equal-parameter three-coordinate configuration comparison,
-not a pure intervention on temporal information.
+For \GVI, \DLAN reduces prediction error relative to all three neural baselines
+in every paired seed,
+with mean RMSE of 0.0985 and MAE of 0.0760.
+The prediction diagnostics show less overprediction in the lower response quintiles
+than \GAgg and \GNNWR,
+although high-GVI observations remain underpredicted by all models
+(Figure~\ref{fig:gvi}).
+\GCNNWR achieves RMSE of 0.1185,
+close to the recovered global OLS predictor's 0.1186,
+whereas \DLAN achieves a larger reduction from the global linear reference
+and lowers RMSE by 7.58\% relative to \GAgg.
+These results support \DLAN's nonlinear, reference-conditioned prediction
+for visible greenery from the shared frozen features.
+Adding capture month further lowers its mean RMSE to 0.09613,
+a 2.39\% reduction
+(Table~\ref{tab:gvi3d}; Figure~\ref{fig:gvi3d}),
+with improvements in six of ten seeds.
+This augmented configuration also changes network widths and candidate support,
+and retains the exploratory spatial split with overlapping image footprints;
+it evaluates spatial prediction with an additional temporal coordinate
+rather than future-period extrapolation.
 
 \begin{table}[tb]\centering
 \caption{GVI month augmentation under the same spatial split and 6,957-parameter budget.
@@ -803,12 +735,6 @@ black diamonds indicate means.
 All regressors have 6,957 parameters,
 with architecture and candidate-count adjustments described in the text.}\label{fig:gvi3d}
 \end{figure}
-
-Both GVI experiments retain the original exploratory spatial split
-and its overlapping image footprints.
-The three-coordinate experiment does not predict a held-out future period.
-Its smaller mean error supplies evidence for this particular augmented configuration,
-rather than temporal extrapolation.
 
 \subsection{Attention width and candidate support}\label{sec:odsensitivity}
 Increasing WuhanOD attention width from 12 to 16,
