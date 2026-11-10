@@ -10,6 +10,8 @@
 \bibpunct[, ]{(}{)}{;}{a}{}{,}
 \usepackage[hidelinks]{hyperref}
 \usepackage{xspace}
+\usepackage{multirow}
+\usepackage{makecell}
 
 \usepackage[acronym,nonumberlist,shortcuts]{glossaries}
 \newcommand{\glscite}[1]{\glsentrylong{#1} \ifglshasfield{useri}{#1}{\citep[\glsentryshort{#1};][]{\glscurrentfieldvalue}}{}\glsunset{#1}}
@@ -61,6 +63,8 @@
 \newcommand{\WuhanOD}{\gls{wuhanod}\xspace}
 \newcommand{\WuhanHP}{\gls{wuhanhp}\xspace}
 \newcommand{\GVI}{\gls{gvid}\xspace}
+\DeclareMathOperator{\RMSE}{RMSE}
+\DeclareMathOperator{\MAE}{MAE}
 
 \graphicspath{{figures/}}
 
@@ -365,7 +369,7 @@ Computational scalability is therefore evaluated through both measured fit cost 
 
 \section{Data and experimental design}\label{sec:data}
 
-We use four cases to evaluate the proposed \DLAN and its competitors including \GNNWR, \GCNNWR, and \GAgg.
+We use four cases to evaluate the proposed \DLAN and its competitors including \GNNWR, \GCNNWR, and \GAgg as baselines.
 The empirical comparison comprises: 
 (a) \COO;
 (b) \WuhanOD;
@@ -436,236 +440,159 @@ This case is intended to examine the nonlinear prediction component related to f
 
 \subsection{Model settings}
 
-\COO, \WuhanHP and \GVI retain the 6,957-parameter configurations.
-\WuhanOD reports the restored-width \DLAN at 7,069 parameters and K512,
-with \GAgg and \GNNWR at the same 7,069-parameter budget.
-The complete earlier 6,957-parameter WuhanOD group remains archived
-and is used only in the allocation diagnostic.
-DLAN and \GAgg are evaluated on all four cases;
-GCNNWR is evaluated on WuhanHP and GVI,
-where its two-dimensional proximity grid applies.
-The completed PyTorch baselines use GTNNWR for the three-coordinate \COO case
-and GNNWR for WuhanOD, WuhanHP and GVI.
-WuhanOD GNNWR retains all four endpoint coordinates in its distance input.
+The four models have different critical hyperparameters according to their structures.
+Specifically, \DLAN relies on width of the attention blocks and shape of the \gls{film} predictor.
+\GNNWR uses the spatially weighted neural network to construct the nonstationary weight matrix.
+\GCNNWR depends on the shape of the convolutional kernel and pooling layers.
+\GAgg is affected by sizes of the latent dimension and decoder.
+Besides, neighbourhood size could also significantly impact the model's performance.
+These parameters varies on different cases, as shown in \autoref{tbl:model-parameters}.
 
-The GNNWR and GTNNWR networks are taken from the upstream PyTorch implementation,
-pinned to commit \texttt{2711bdee9821bfe242992d2eb885a78be1cf2628}.
-The adapters retain its spatially weighted neural network,
-its spatio-temporal proximity network for GTNNWR,
-and coefficient-wise modulation of fixed training-only OLS estimates.
-GNNWR receives distances to fixed training-coordinate reference points;
-GTNNWR receives separate spatial Euclidean distances and absolute year differences,
-which its proximity network combines before coefficient modulation.
-The four reported configurations use 128, 119, 134 and 134 references
-for \COO, WuhanOD, WuhanHP and GVI, respectively.
-References are chosen by deterministic coordinate-only farthest-point coverage
-within the training partition.
-Distances are standardised using training pairs or reference columns,
-following the corresponding upstream input construction.
-The reference counts and real network widths enforce the fixed parameter budget;
-the experiment does not reproduce an unlimited full-reference configuration
-or the upstream default optimisation schedule.
+\begin{table}
+  \centering\small
+  \caption{Critical parameter configurations for the four competing models.}
+  \label{tbl:model-parameters}
+  \begin{tabularx}{\textwidth}{llXll}
+    \toprule
+    Case & Model & Structural parameters & Neighbour size & Parameters \\\midrule
+    \COO
+    & \DLAN & \makecell[l]{Attention width: 13\\FiLM layers: $(12, 24)$} & 768 candidates & 6,957 \\
+    & \GAgg & \makecell[l]{Latent dimension: 48\\Decoder layers: $(14, 22)$} & 256 neighbours & 6,957 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (40, 32)\\STPNN layers: $(2,7,1)$} & 128 references & 6,957 \\\midrule
+    WuhanOD
+    & \DLAN & \makecell[l]{Attention width: 12\\FiLM shape: $(10, 8)$} & 512 candidates & 7,069 \\
+    & \GAgg & \makecell[l]{Latent dimension: 48\\Decoder shape: $(6, 16)$} & 256 neighbours & 7,069 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (51, 9)} & 119 references & 7,069 \\\midrule
+    WuhanHP
+    & \DLAN & \makecell[l]{Attention width: 14\\FiLM shape: $(20, 17)$} & 768 candidates & 6,957 \\
+    & \GAgg & \makecell[l]{Latent dimension: 32\\Decoder shape: $(62, 14)$} & 256 neighbours & 6,957 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (44, 14)} & 768 references & 6,957 \\
+    & \GCNNWR & \makecell[l]{CNN channels: (5, 16)\\Pooling: $2 \times 2$\\Hidden width: 73} & $16 \times 16$ grids & 6,957 \\\midrule
+    GVI
+    & \DLAN & \makecell[l]{Attention width: 7\\FiLM shape: $(12, 58)$} & 768 candidates & 6,957 \\
+    & \GAgg & \makecell[l]{Latent dimension: 32\\Decoder shape: $(7, 11)$} & 256 neighbours & 6,957 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (31, 12)} & 134 references & 6,957 \\
+    & \GCNNWR & \makecell[l]{CNN channels: (8, 17)\\Pooling: $2 \times 2$\\Hidden width: 22} & $16 \times 16$ grids & 6,957 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
-Architectural widths are selected by parameter arithmetic,
-without validation or test scores determining the allocation
-(Table~\ref{tab:widths}).
-No unused parameters are added to reach the budget.
-The frozen GVI encoder and fitted OLS buffers are outside the trainable count.
-Equal trainable capacity therefore does not imply equal deployment storage,
-internal parameter allocation or access to reference information.
-
-\begin{table}[tb]\centering
-\caption{Widths of the reported configurations.
-WuhanOD uses 7,069 parameters; the other cases use 6,957.
-DLAN and \GAgg entries give token width and two prediction-head widths.
-GCNNWR entries give two convolution widths, pooled-grid side and hidden width.
-The last column gives the two spatial-weight-network hidden widths;
-\COO additionally uses a $2\to7\to1$ proximity network.}\label{tab:widths}
-\small\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrrrr}\toprule
-Case & DLAN & \GAgg & GCNNWR & GNNWR / GTNNWR\\\midrule
-\COO & $(13,12,24)$ & $(48,14,22)$ & -- & $(40,32)$\\
-WuhanOD & $(12,10,8)$ & $(48,6,16)$ & -- & $(51,9)$\\
-WuhanHP & $(14,20,17)$ & $(32,62,14)$ & $(5,16,2,73)$ & $(44,14)$\\
-GVI & $(7,12,58)$ & $(32,7,11)$ & $(8,17,2,22)$ & $(31,12)$\\\bottomrule
-\end{tabular}\end{table}
-
-All configurations minimise training-standardised target \gls{mse} with AdamW,
-learning rate 0.001 and weight decay 0.0001.
-The effective batch size is 1,024,
-with query microbatches of 64 and observation-weighted gradient accumulation.
-Training runs for at most 300 epochs,
-with validation \gls{mse} patience 30, minimum improvement $10^{-5}$,
-a common learning-rate scheduler and gradient clipping.
-Coordinate axes are standardised using training statistics;
-feature and target scalers also use training rows only.
-GNNWR and GTNNWR retain the upstream PReLU, batch normalisation and dropout construction.
-
-DLAN retains bandwidth-adaptive retrieval, coordinate-specific projections,
-one joint candidate softmax and the FiLM nonlinear predictor in all cases.
-The reported DLAN candidate limits are 768 for \COO,
-512 for WuhanOD and 512 for each planar case.
-The restored-width K1024 and K2048 records remain separate sensitivity configurations.
-\GAgg uses 256 joint-Euclidean neighbours,
-Cartesian product attention and coordinate-preserving rotary encoding.
-GCNNWR uses a $16\times16$ grid fitted to training-coordinate bounds,
-training-reference distance statistics and training-only global OLS coefficients.
-
-The inference information conditions differ by construction.
-DLAN and \GAgg aggregate training-reference attributes, coordinates and responses,
-excluding the focal row during training.
-GNNWR and GTNNWR use reference coordinates and fitted training OLS coefficients;
-GCNNWR uses its fitted proximity grid and OLS coefficients.
-Their reference inputs do not carry individual training responses during prediction.
-The comparison evaluates these complete systems under common data and optimisation controls.
-
-\subsection{Supplementary configurations}
-The WuhanOD capacity experiment has a separate 7,069-parameter budget.
-DLAN uses attention width 12 and hidden prediction widths $(10,8)$,
-in place of width 10 and $(36,3)$ in the archived 6,957-parameter group.
-\GAgg is separately matched to 7,069 parameters,
-with width 48 and prediction widths $(6,16)$.
-The GNNWR comparison uses 119 training-coordinate references
-and hidden widths $(51,9)$ at the same budget.
-Each configuration has ten completed seeds.
-This experiment changes capacity allocation as well as total capacity.
-The reported WuhanOD configuration draws its comparators from this budget group,
-and uses the subsequently completed K512 DLAN result.
-
-A further ten-seed DLAN experiment increases attention width from 12 to 16,
-retaining the $(10,8)$ head and $K=1,024$.
-Its 10,773 parameters represent an unmatched increase in capacity.
-The candidate-support experiment retains width 12 and 7,069 parameters,
-with complete ten-seed runs at $K=512$ and $K=2,048$.
-These two runs were executed on another computer with PyTorch 2.14.1;
-the reused $K=1,024$ baseline used PyTorch 2.13.0 on the original machine.
-The results describe exploratory support sensitivity,
-with the cross-machine difference retained in their interpretation.
-The incomplete four-seed $K=256$ record is excluded.
-
-The GVI three-coordinate experiment adds elapsed capture month since January 2019
-as a third coordinate.
-All 2,122 observations, 176 fixed features, responses and spatial partitions
-remain identical to the planar experiment.
-DLAN and \GAgg each have ten completed seeds and 6,957 parameters.
-To retain the budget, their widths change to $(6,16,33)$ and $(24,14,31)$;
-DLAN's reference limit also increases from 512 to 768.
-This is a parameter-matched configuration comparison on a fixed spatial split,
-not a fixed-width temporal ablation or future-month holdout.
+Some other hyperparameters are shared across the four cases.
+\DLAN uses one attention block with one attention head, query microbatches of 64, and a dropout rate of 0.1.
+\GAgg uses one attention layer with the MCPA variant, four inducing points and an attention dropout rate of 0.1.
+\GNNWR and \GTNNWR use PReLU activations initialised at 0.4, batch normalisation and a dropout rate of 0.1.
+\GCNNWR uses two convolutional layers with $3\times3$ kernels. 
+All cases are trained with AdamW, an initial learning rate of $10^{-3}$ and weight decay of $10^{-4}$.
+The loss is the mean squared error of the response standardised using training-set statistics.
+Training runs for a maximum of 300 epochs.
+Early stopping monitors validation mean squared error, with a patience of 30 epochs and a minimum improvement of $10^{-5}$.
+Each configuration is evaluated using random seeds 1--10.
+All standardisation statistics introduced by these experiments are estimated exclusively from the training set.
 
 \subsection{Metrics and saved-output audit}
-Prediction accuracy is measured by
-\begin{align}
- \operatorname{RMSE}&=\sqrt{n^{-1}\sum_i(y_i-\hat y_i)^2},&
- \operatorname{MAE}&=n^{-1}\sum_i|y_i-\hat y_i|,\\
- R^2&=1-\frac{\sum_i(y_i-\hat y_i)^2}{\sum_i(y_i-\bar y)^2}.&&
+
+Given the strong predictive performance of deep learning models and the strengths of traditional geographically weighted regression in model fit and interpretability, we focus on prediction errors to evaluate model performance.
+Prediction accuracy is measured by $\RMSE$, $\MAE$, and $R^2$ as shown in \autoref{eq:accuracy},
+\begin{align}\label{eq:accuracy}
+  \begin{split}
+    \RMSE & =\sqrt{\frac{\sum_i(y_i-\hat y_i)^2}{n}}, \\
+    \MAE & =\frac{\sum_i|y_i-\hat y_i|}{n}, \\
+    R^2&=1-\frac{\sum_i(y_i-\hat y_i)^2}{\sum_i(y_i-\bar y)^2}.
+  \end{split}
 \end{align}
-Values are means of run-specific metrics;
-$\pm$ denotes sample standard deviation across ten training seeds.
-Medians, worst-seed errors and paired win counts accompany comparisons
-where seed-sensitive outliers change the ordering.
-The partitions are fixed within a case,
-so seed variation describes optimisation sensitivity rather than independent geographical replication
-\citep{RobertsBahn-2017,ValaviElith-2019,Brenning-2012}.
-For WuhanHP, equal-community error is
+where $n$ is the number of observations in the test set, $\hat y_i$ is the predicted response, $y_i$ is the true response, and $\bar y$ is the mean of the true responses.
+For the \WuhanHP case, equal-community error is
 \begin{equation}
- \operatorname{RMSE}_{\rm community}
- =\left\{G^{-1}\sum_{g=1}^{G}n_g^{-1}
-           \sum_{i\in g}(y_i-\hat y_i)^2\right\}^{1/2}.
+  \RMSE_{\rm community}
+  =\left\{G^{-1}\sum_{g=1}^{G} \frac{1}{n_g} \sum_{i\in g}(y_i-\hat y_i)^2\right\}^{1/2}.
 \end{equation}
+where $G$ is the number of communities, $n_g$ is the number of observations in community $g$, and $i\in g$ indicates that observation $i$ belongs to community $g$.
+Each model was trained and evaluated ten times for each case study.
+Unless otherwise stated, all metric values reported below are averages across these ten runs to avoid the influence of random initialisation.
 
-The reported comparison comprises 140 completed fits and 280 saved validation/test prediction arrays.
-It selects the stated configurations from the audited historical and supplementary records;
-this selection does not represent an additional set of fits.
-The completed supplementary configurations add 80 fits and 160 arrays.
-For this revision, every array was checked against the fixed row identifiers,
-responses, configuration digest and reported RMSE, MAE and $R^2$.
-Checkpoint state and saved reload-audit records were also checked.
-Twenty prediction arrays from ten historical HPC fits were audited separately,
-retaining their distinct preprocessing and execution environment.
-The analysis reads existing results without retraining.
+\section{Results}\label{sec:results}
 
-For GVI, a nonspatial linear diagnostic is recovered from the OLS coefficients
-already fitted and stored in GCNNWR checkpoints.
-It is identical across seeds and is not counted as another neural configuration.
-All quantitative figures are generated in R from the audited records.
-Historical joint-attention Gaussian ablations remain separate
-from the final-model configuration experiments.
-
-\section{Experimental results}\label{sec:results}
 \subsection{Accuracy across the four cases}
-The reported comparison uses the restored WuhanOD DLAN configuration
-and the corresponding 7,069-parameter baseline group
-(Table~\ref{tab:accuracy}).
-DLAN has the lowest mean RMSE on all four cases in these reported configurations.
-Relative to \GAgg,
-mean RMSE falls by 57.81\% for \COO,
-26.85\% for WuhanOD, 2.99\% for WuhanHP and 7.58\% for GVI.
-The WuhanOD result is K512 with attention width 12;
-it is not the superseded 6,957-parameter configuration.
-Figure~\ref{fig:relative} shows the seed-level distributions of test RMSE and MAE,
-with each case occupying one row
-and the two metrics displayed in separate columns.
 
-\begin{table}[tb]\centering
-\caption{Reported test results, ten seeds per configuration.
-WuhanOD uses restored attention width 12 and K512 for DLAN,
-with the separately matched 7,069-parameter comparator group.
-K512 was trained on the second machine.
-RMSE is mean $\pm$ sample SD; MAE and $R^2$ are seed means.}\label{tab:accuracy}
-\small\setlength{\tabcolsep}{3.3pt}\begin{tabular}{llrrrr}\toprule
-Case & Model & Parameters & RMSE & MAE & $R^2$\\\midrule
-\COO & DLAN & 6,957 & $0.2910\pm0.1076$ & 0.2259 & 0.9338\\
- & \GAgg & 6,957 & $0.6897\pm0.0182$ & 0.5064 & 0.6688\\
- & GTNNWR & 6,957 & $0.8986\pm0.0894$ & 0.6797 & 0.4332\\
-\midrule
-WuhanOD & DLAN & 7,069 & $565.28\pm154.31$ & 50.28 & 0.9051\\
- & \GAgg & 7,069 & $772.73\pm835.04$ & 60.19 & 0.6592\\
- & GNNWR & 7,069 & $3568.80\pm969.21$ & 210.94 & -2.7794\\
-\midrule
-WuhanHP & DLAN & 6,957 & $0.1656\pm0.0041$ & 0.1254 & 0.6080\\
- & \GAgg & 6,957 & $0.1707\pm0.0030$ & 0.1310 & 0.5836\\
- & GNNWR & 6,957 & $0.1702\pm0.0020$ & 0.1300 & 0.5858\\
- & GCNNWR & 6,957 & $0.1718\pm0.0019$ & 0.1289 & 0.5784\\
-\midrule
-GVI & DLAN & 6,957 & $0.0985\pm0.0038$ & 0.0760 & 0.3306\\
- & \GAgg & 6,957 & $0.1066\pm0.0051$ & 0.0831 & 0.2157\\
- & GNNWR & 6,957 & $0.1258\pm0.0255$ & 0.0987 & -0.1320\\
- & GCNNWR & 6,957 & $0.1185\pm0.0001$ & 0.0944 & 0.0318\\\bottomrule\end{tabular}\end{table}
+\begin{table}[tb]
+  \centering\small
+  \caption{Prediction accuracy across the four cases. RMSE is mean $\pm$ sample SD; MAE and $R^2$ are seed means.}
+  \label{tab:accuracy}
+    \begin{tabular}{lrrrr}\toprule
+    Case & Model   & RMSE                       & MAE             & $R^2$\\\midrule
+    \multirow{3}{*}{\COO}
+         & \DLAN   & $\mathbf{0.2910}\pm0.1076$ & \textbf{0.2259} & \textbf{0.9338}\\
+         & \GAgg   & $0.6897\pm0.0182$          & 0.5064          & 0.6688\\
+         & \GTNNWR & $0.8986\pm0.0894$          & 0.6797          & 0.4332\\
+    \midrule
+    \multirow{3}{*}{\WuhanOD}
+         & \DLAN   & $\mathbf{565.28}\pm154.31$ & \textbf{50.28}  & \textbf{0.9051}\\
+         & \GAgg   & $772.73\pm835.04$          & 60.19           & 0.6592\\
+         & \GNNWR  & $3568.80\pm969.21$         & 210.94          & -2.7794\\
+    \midrule
+    \multirow{4}{*}{\WuhanHP}
+         & \DLAN   & $\mathbf{0.1656}\pm0.0041$ & \textbf{0.1254} & \textbf{0.6080}\\
+         & \GAgg   & $0.1707\pm0.0030$          & 0.1310          & 0.5836\\
+         & \GNNWR  & $0.1702\pm0.0020$          & 0.1300          & 0.5858\\
+         & \GCNNWR & $0.1718\pm0.0019$          & 0.1289          & 0.5784\\
+    \midrule
+    \multirow{4}{*}{\GVI}
+         & \DLAN   & $\mathbf{0.0985}\pm0.0038$ & \textbf{0.0760} & \textbf{0.3306}\\
+         & \GAgg   & $0.1066\pm0.0051$          & 0.0831          & 0.2157\\
+         & \GNNWR  & $0.1258\pm0.0255$          & 0.0987          & -0.1320\\
+         & \GCNNWR & $0.1185\pm0.0001$          & 0.0944          & 0.0318\\\bottomrule
+  \end{tabular}
+\end{table}
 
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_relative_accuracy.pdf}
-\caption{Distributions of test RMSE (left column) and MAE (right column) across ten training seeds.
-Rows correspond to \COO, WuhanOD, WuhanHP and GVI.
-Boxes show the interquartile range,
-with the median marked by the central line
-and whiskers extending to the most extreme observations within 1.5 interquartile ranges of the box.
-Points show all ten seeds for each model.
-The two metrics share a vertical scale within each row,
-with separate vertical scales across datasets.
-WuhanOD uses 7,069 parameters and the other cases use 6,957.
-The DLAN WuhanOD results use attention width 12 and K512.}\label{fig:relative}
+\begin{figure}[tp]
+  \centering
+  \includegraphics[width=\linewidth]{matched_relative_accuracy.pdf}
+  \caption[Distributions of test RMSE and MAE across ten training seeds.]{
+    Distributions of test $\RMSE$ (left column) and $\MAE$ (right column) across ten training seeds.
+    Rows correspond to \COO, \WuhanOD, \WuhanHP and \GVI.
+    Boxes show the interquartile range,
+    with the median marked by the central line
+    and whiskers extending to the most extreme observations within 1.5 interquartile ranges of the box.
+    Points show all ten seeds for each model.
+    The two metrics share a vertical scale within each row,
+    with separate vertical scales across datasets.
+  }\label{fig:relative}
 \end{figure}
 
-The added baselines preserve DLAN's leading mean ranking in the three previously favourable cases.
-Its RMSE is 67.62\% below GTNNWR on \COO,
-2.74\% below GNNWR on WuhanHP and 21.75\% below GNNWR on GVI.
-DLAN wins all ten paired seeds against GTNNWR on \COO,
-nine against GNNWR on WuhanHP and all ten against GNNWR on GVI.
-Against \GAgg it wins ten, eight and ten seeds in these cases,
-and four of ten WuhanOD seeds.
-The reported 7,069-parameter GNNWR has negative test $R^2$ in every WuhanOD seed
-and in four GVI seeds under the controlled reference budget.
-These are outcomes of the evaluated reference counts and common training protocol,
-rather than estimates of each model family's fully tuned performance limit.
+The prediction accuracy across the four cases is summarised in \autoref{tab:accuracy} and \autoref{fig:relative}.
+\DLAN has the lowest mean $\RMSE$ on all four cases in these reported configurations,
+with the mean RMSE falls by 57.81\%, 26.85\%, 2.99\% and 7.58\% for \COO, \WuhanOD, \WuhanHP, and \GVI cases relative to \GAgg, respectively.
+Among the four cases, \DLAN in \COO has the largest improvement.
+We attribute this advantage to learning dimension-specific scales and attention projections, followed by joint aggregation.
+As shown in \autoref{fig:bandwidths}, \DLAN learns a spatio-temporal scale of $0.06834, 0.07927, 0.18604$ for $x,y,t$ dimensions in this case.
+Note that the temporal scale is larger than the spatial scales, indicating that the model learns a slower decay of temporal influence than spatial influence.
+By contrast, differences in scale across dimensions are relatively small in the \WuhanHP case, 
+which are $0.08592, 0.08615$ for the two spatial dimensions,
+resulting in a more limited improvement in predictive accuracy with \DLAN.
 
 \begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_seed_accuracy.pdf}
-\caption{Test RMSE for the 140 reported fits.
-Models share the same partition within each case;
-WuhanOD K512 spans an execution environment different from its comparators;
-y-axis response scales differ across cases.}\label{fig:seeds}
+  \includegraphics[width=\linewidth]{matched_bandwidths.pdf}
+  \caption{
+    Coordinate-specific scales from all 40 reported \DLAN checkpoints.
+    Lines connect scales within a seed;
+    black diamonds indicate means in model-coordinate units.
+  }\label{fig:bandwidths}
 \end{figure}
+
+The \GVI case is distinctive in that the relationship between the predictors and the response is strongly nonlinear.
+Nonlinearity is less pronounced in the other cases,
+most of which originate from studies using \gls{gwr} or its extensions under linearity assumptions.
+\DLAN's nonlinear parameter modulation enables it to better predict such strongly nonlinear relationships, outperforming \GNNWR and \GCNNWR,
+whose predictions remain linear in the covariates conditional on location.
+\GAgg also incorporates nonlinearity into its prediction process,
+which contributes to its comparatively strong performance.
+
+The modest improvement on WuhanHP also suggests that the current model does not adequately capture hierarchical data structures, despite some gains in predictive accuracy.
+Inspired by \gls{hgwr}, a module with shared group-level parameters may help address this limitation.
+On the other hand, although none of the four models compared here explicitly represents hierarchical structure,
+the positional encodings used in the attention mechanisms of \DLAN and \GAgg may partially mitigate this limitation.
+
+\subsection{Residual analysis}
 
 \subsection{Future-year \texorpdfstring{\COO}{CO2} prediction}
 DLAN's mean RMSE is 0.2910,
@@ -696,14 +623,6 @@ but its response remains an OLS coefficient-modulation construction.
 DLAN additionally retains a nonlinear covariate predictor conditioned on labelled training references.
 The results establish a predictive difference between these complete constructions;
 they do not isolate one information path as the cause of the improvement.
-
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_bandwidths.pdf}
-\caption{Coordinate-specific scales from all 40 reported DLAN checkpoints.
-WuhanOD uses the width-12 K512 checkpoints.
-Lines connect scales within a seed;
-black diamonds indicate means in model-coordinate units.}\label{fig:bandwidths}
-\end{figure}
 
 \subsection{WuhanOD: restored attention width and selected candidate support}\label{sec:odcapacity}
 The reported WuhanOD DLAN uses attention width 12,
@@ -753,9 +672,9 @@ retained as a capacity diagnostic.
 The reported DLAN model instead uses K512, as shown in Table~\ref{tab:accuracy}.}\label{tab:odcapacity}
 \small\begin{tabular}{lrrrr}\toprule
 Model & RMSE & Median RMSE & MAE & $R^2$\\\midrule
-DLAN, K1024 & $608.73\pm252.45$ & 552.52 & 52.08 & 0.8809\\
+\DLAN, K1024 & $608.73\pm252.45$ & 552.52 & 52.08 & 0.8809\\
 \GAgg & $772.73\pm835.04$ & 478.91 & 60.19 & 0.6592\\
-GNNWR & $3568.80\pm969.21$ & 3171.19 & 210.94 & -2.7794\\
+\GNNWR & $3568.80\pm969.21$ & 3171.19 & 210.94 & -2.7794\\
 \bottomrule\end{tabular}\end{table}
 
 The capacity reallocation increases attention-block parameters
@@ -765,13 +684,6 @@ It improves mean RMSE in eight of ten paired seeds,
 but changes both head structure and attention width.
 Figure~\ref{fig:odcapacity} retains the two complete historical allocation groups;
 it is not the primary selected-support ranking.
-
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{od_capacity_stability.pdf}
-\caption{Historical WuhanOD allocation comparison at K1024,
-with separately matched budgets of 6,957 and 7,069 parameters.
-The selected K512 DLAN is evaluated separately in the primary results.}\label{fig:odcapacity}
-\end{figure}
 
 For the reported model, the largest 1\% of observed test flows
 contribute on average 97.43\% of DLAN's squared error,
