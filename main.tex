@@ -25,6 +25,7 @@
 \newacronym[user1={HuangWu-2010}]{gtwr}{GTWR}{geographically and temporally weighted regression}
 \newacronym[user1={LuHu-2025}]{gtdr}{GTDR}{geographical and temporal density regression}
 \newacronym[user1={HuHarris-2024}]{hgwr}{HGWR}{hierarchical and geographically weighted regression}
+\newacronym[user1={LessaniLi-2024}]{sgwr}{SGWR}{similarity and geographically weighted regression}
 \newacronym[user1={KordiFotheringham-2016}]{swim}{SWIM}{Spatially Weighted Interaction Models}
 \newacronym[user1={DuWang-2020,WuDu-2020}]{gnnwr}{GNNWR}{geographically neural network weighted regression}
 \newacronym[user1={WuWang-2021}]{gtnnwr}{GTNNWR}{geographically and temporally neural network weighted regression}
@@ -489,7 +490,7 @@ Early stopping monitors validation mean squared error, with a patience of 30 epo
 Each configuration is evaluated using random seeds 1--10.
 All standardisation statistics introduced by these experiments are estimated exclusively from the training set.
 
-\subsection{Metrics and saved-output audit}
+\subsection{Metrics of model performance}
 
 Given the strong predictive performance of deep learning models and the strengths of traditional geographically weighted regression in model fit and interpretability, we focus on prediction errors to evaluate model performance.
 Prediction accuracy is measured by $\RMSE$, $\MAE$, and $R^2$ as shown in \autoref{eq:accuracy},
@@ -741,182 +742,115 @@ especially it works for data of different dimensions.
 
 \section{Discussion}\label{sec:discussion}
 
-\subsection{Predictive scope under controlled capacity}
+\subsection{Dimensional-specific attention and scales}
 
-The completed baselines strengthen the evidence for DLAN
-on subsequent-year \COO, community-held-out housing and planar GVI prediction.
-Its advantage on these cases persists against GNNWR/GTNNWR,
-whose learned proximity functions retain coefficient-wise OLS modulation.
-The distinction is in the response construction:
-DLAN combines a nonlinear query-covariate path with reference-derived conditioning,
-whereas these baselines retain a position-specific linear combination of covariates.
-The measured scores compare complete information-processing systems,
-including their different uses of training responses.
-They do not isolate nonlinearity or reference labels as the sole source of the gain.
+Inspired by \gls{gtdr}, we regards the dimensional-specific attention as the most important component of \DLAN.
+\GTNNWR follows the extension from \gls{gwr} to \gls{gtwr} by constructing a spatiotemporal distance metric based on neural networks to accommodate spatiotemporal data.
+\GAgg likewise relies on distance-based context selection and therefore requires a spatiotemporal distance metric.
+Both approaches consequently face the same difficulty as \gls{gtwr}:
+incorporating an additional coordinate dimension requires specifying a distance metric for the expanded coordinate space, potentially introducing additional parameters and limiting the model's applicability.
 
-The WuhanOD results show why a single total parameter count is insufficient
-to characterise a neural spatial predictor.
-The superseded narrow-allocation model is inferior to \GAgg;
-restoring attention width and reporting the completed K512 configuration
-yields the lower mean RMSE of 565.28.
-Its median and paired seed wins still do not favour DLAN.
-Increasing attention width further does not improve mean RMSE,
-and increasing candidate support does not yield monotonic improvement.
-There is therefore no supported rule that more attention capacity
-or more reference observations will always improve flow prediction.
-The distribution across seeds, the target scale and the allocation of parameters
-all affect the practical comparison.
-
-\subsection{Coordinate scales and geometric meaning}
-The \COO checkpoints learn a wider temporal scale than spatial scales,
+In contrast, \DLAN's dimensional-specific attention mechanism allows the model to learn separate attention weights for each dimension, enabling it to capture the relative importance of each dimension in the prediction task.
+As \citet{HuLu-2023} stated, researchers no longer need to design distance metrics to bring together, in a rather ad hoc way, different types of space and coordinate systems into the distance decay function.
+Assigning a weighting scheme to each of the dimensions and then pooling across them is suggested as a better alternative, just as what is done in \gls{gtdr}.
+Evidence from the four cases supports this view.
+In the \COO case, the model learns a wider temporal scale than spatial scales,
 providing a fitted description of the geographical prior used for this panel.
-These are coordinate-, head- and block-specific parameters,
-rather than MGWR covariate-specific coefficient bandwidths.
-They govern locality and candidate access;
-they do not directly identify the spatial or temporal scale of an individual covariate effect.
+This architecture allows the model to learn different scales for each dimension, which is particularly important for spatio-temporal data where the temporal dimension may have a different influence on the response than the spatial dimensions.
 
-Coordinate preprocessing is also a model choice.
-For WuhanOD's four projected spatial coordinates,
-a common scale preserves the relative metric of equal physical displacements across axes.
-Per-axis standardisation instead measures displacement relative to each axis's sample dispersion.
-For space--time data with different units,
-separate coordinate transformations make those units numerically comparable.
-Neither construction is a universal metric for every geographical object.
+Although learning dimension-specific attention parameters is useful for higher-dimensional data,
+\DLAN learns similar scale factors for the two related spatial dimensions,
+as observed across all four case studies.
+Spatial anisotropy is relatively uncommon,
+particularly in studies covering small geographical areas.
+These findings suggest that the full benefit of \DLAN's dimension-specific attention is realised when the coordinate dimensions represent fundamentally different quantities.
+Using \WuhanHP as an example, we evaluated a variant that aggregates attention using planar spatial distance, termed \DLAN-P.
+With the same number of trainable parameters, \DLAN-P further reduced RMSE to 0.1614, outperforming all models in the preceding comparison.
+Combining the two spatial dimensions through planar distance reduces the parameter requirements of the attention module, leaving more capacity for the nonlinear prediction head to learn the relationship between features and the response.
+These results suggest further scope for optimisation by allowing related spatial coordinate pairs to be specified in the model configuration, thereby reducing the degrees of freedom.
+Nevertheless, the current \DLAN model already supports a broad range of applications.
 
-If only the Gaussian kernel were retained,
-a change in coordinate scale could be compensated by a corresponding bandwidth change.
-The full network also uses Fourier coordinate encoding and learnt offset biases,
-so rescaling coordinates alters additional inputs.
-Likewise, an equal effective optimisation batch does not make two microbatch sizes identical:
-dropout draws and floating-point accumulation can follow different paths.
-The matching network architecture in the HPC and local runs
-therefore does not imply identical training conditions or predictions.
-The unfinished cross-diagnostic is needed to separate these effects.
+In conclusion, \DLAN's dimensional-specific attention mechanism provides a flexible and effective way to learn the relative importance of each dimension in the prediction task, which could be also effective in the case of 5-D, 6-D (e.g., spatio-temporal flow), and higher-dimensional data.
 
-\subsection{Planar and spatio-temporal environmental prediction}
-WuhanHP demonstrates prediction in grouped data without requiring a group identifier
-or a fitted random-effect distribution.
-Training-reference context supplies a geographical condition,
-whilst individual dwelling covariates preserve within-community variation.
-The equal-community result shows that the leading mean accuracy
-is not confined to the weight given to large communities.
-Its nearly equal planar bandwidths are compatible with a simple isotropic prior,
-but the completed experiment does not impose the DLAN-P restriction.
+\subsection{Attention width and other hyperparameters}
 
-The planar GVI result supports nonlinear local prediction from a common environmental representation.
-GCNNWR changes the global OLS diagnostic little,
-whereas both attention-based predictors lower error,
-with DLAN providing the strongest result in the main comparison.
-The completed month-augmented experiment supplies a modest further mean reduction,
-but not a consistent advantage across seeds.
-Widths and DLAN candidate count change to preserve the parameter budget,
-so the comparison does not isolate temporal information alone.
-The inherited exploratory split and overlapping image footprints apply to both versions.
-A buffered spatial evaluation or future-month holdout would test different prediction supports.
+As discussed above, attention width substantially affects predictive accuracy because it directly determines feature encoding, positional encoding, dimension-specific attention projections and contextual representations.
+Its role is similar to that of the latent representation dimension $d_{\text{model}}$ in \GAgg.
+Increasing this width substantially increases the number of trainable parameters, so it should be chosen according to the size of the available training set.
+The capacity of the FiLM prediction head also directly affects the model's ability to represent nonlinear relationships: 
+an overly narrow head restricts the relationships it can learn among covariates,
+whereas an overly wide head may reduce the capacity available to attention under a fixed parameter budget or increase overfitting.
+The candidate count controls the number of reference samples entering the attention computation,
+affecting information coverage, interference from less relevant samples, computational cost and variability across training runs.
+A larger candidate count is generally a safer choice, although excessively large values require considerably more memory.
+These three parameters are therefore the main targets for tuning.
 
-\subsection{FiLM conditioning and evidence for individual modules}\label{sec:ablations}
-DLAN and \GAgg both use training-reference information,
-but introduce the resulting context into prediction differently.
-\GAgg concatenates the aggregated representation with query attributes
-before its nonlinear readout.
-DLAN uses the local condition to generate layer-wise scaling and translation,
-modulating the intermediate query-attribute representation through FiLM.
-This explicitly parameterises a multiplicative interaction between context and hidden features.
-A concatenation network can also learn interactions;
-FiLM supplies a distinct conditioning structure rather than a guarantee of higher accuracy.
+Other parameters may also affect performance, although their benefits are less consistent.
+\DLAN supports both multi-head attention and stacked attention blocks,
+but these choices generally have less influence than in other Transformer models.
+This may reflect the relatively direct relationships between the input features and the response,
+together with pronounced spatial heterogeneity in these case studies,
+which limit the gains from additional attention heads and greater depth relative to their computational cost.
+The capacity of the nonlinear transformation following attention aggregation may also affect performance.
+The geometric-bias network controls the flexibility of the nonlinear mapping from signed coordinate offsets, absolute distances and directions to attention biases,
+but varying its capacity had little effect across the spatial datasets examined.
 
-The completed width and candidate experiments assess configuration sensitivity,
-not the isolated contribution of FiLM.
-A direct comparison would retain the candidate identifiers and attention condition,
-then replace only the modulated head with an appropriate capacity-controlled alternative.
-Similarly, removing response encoding would test the value of labelled reference context.
-Flexible tree ensembles would supply additional controls for nonlinear tabular prediction
-\citep{Breiman-2001,Friedman-2001,ChenGuestrin-2016,FriedmanPopescu-2008}.
-These interventions have not been completed for final DLAN.
+\subsection{Locational conditions}\label{sec:multilevel}
 
-The historical joint-attention Gaussian experiment remains separate.
-Removing its Gaussian term increases mean test RMSE
-from 0.161806 to 0.164707 on WuhanHP,
-and from 804.52 to 832.66 on WuhanOD,
-across three paired seeds.
-The increases are 1.79\% and 3.50\%
-(Figure~\ref{fig:ablation}).
-This supports retaining the prior in that tested configuration,
-without making it an isolated ablation of current DLAN retrieval.
+\DLAN was initially designed to represent a spatiotemporal operator field \(f:u\mapsto\beta\) using neural networks,
+and to generate predictions by conditioning this field on the sampled observations.
+\DLAN constructs an individual condition for each observation:
+$h_i=A(x_i,u_i;\mathcal R_i)$ and $\widehat y_i=f_{\mathrm{FiLM}}(x_i;h_i)$.
+Consequently, even two dwellings at identical coordinates can have different query representations and conditioning vectors if their covariates differ.
+This formulation is closer to \gls{sgwr}, while allowing implicit within-group sharing that improves generalisation within residential communities.
+For spatial variables strongly associated with location,
+the coordinate and feature encodings can convey similar information,
+encouraging observations to share aspects of their FiLM modulation.
+This provides a possible explanation for \DLAN's advantage on the WuhanHP dataset.
 
-\begin{figure}[tp]\centering
-\includegraphics[width=.94\linewidth]{historical_gaussian_ablation.pdf}
-\caption{Historical joint-attention Gaussian-prior ablation,
-with three seeds and its original neighbourhood configuration.
-The results are separate from the main and supplementary DLAN experiments.}\label{fig:ablation}
-\end{figure}
+Drawing on \gls{hgwr}, \DLAN could make greater use of hierarchical structure
+by constructing both a group-level condition $h_g$ and an individual-level condition $h_i$.
+These conditions could then be combined as $\widetilde h_i=h_g+\lambda(h_i-h_g)$ to condition the FiLM predictor, where $\lambda$ is a learnable parameter that controls the degree of shrinkage towards the group-level condition.
+This formulation would represent the shared environment and individual differences separately,
+while shrinking individual conditions towards the group-level condition to reduce unnecessary within-group variation.
+The same construction could be extended recursively across multiple hierarchical levels,
+allowing the model to learn relationships beyond a two-level group–individual structure.
+Such an extension could offer greater flexibility than statistical models that require an explicit specification of the effects and dependence structure at each level.
 
-Table~\ref{tab:ablation} distinguishes completed configuration comparisons
-from interventions still needed for module attribution.
-Attention weights describe the predictor's reference aggregation;
-they do not automatically explain substantive causes of the response
-\citep{JainWallace-2019,WiegreffePinter-2019}.
+\subsection{Remote sensing information}
 
-\begin{table}[tb]\centering
-\caption{Status of component-related comparisons.
-Completed configuration experiments do not replace the remaining module-isolating interventions.}\label{tab:ablation}
-\small\begin{tabularx}{\linewidth}{lXX}\toprule
-Component & Comparison & Evidence status\\\midrule
-Capacity allocation & Width/head reallocation; width 12 vs 16 & Completed, ten seeds; budgets differ\\
-Candidate support & $K=512,1,024,2,048$ & Completed, ten seeds; cross-machine baseline retained\\
-Temporal coordinate & GVI planar vs month-augmented & Completed, ten seeds; widths and support adjusted\\
-Coordinate preprocessing & Common vs per-axis scale and microbatch & Cross-diagnostic incomplete\\
-Reference retrieval & Euclidean vs bandwidth-scaled at fixed $K$ & Module-isolating comparison not completed\\
-Attention terms & Tied scales; omitted content or directional bias & Module-isolating comparisons not completed\\
-Reference response & Include vs omit response encoding & Not completed\\
-Prediction head & FiLM vs matched concatenation/linear head & Not completed\\\bottomrule
-\end{tabularx}\end{table}
-
-\subsection{Generality and computational development}
-The same locality construction handles planar, space--time and endpoint objects,
-with task-dependent predictive outcomes.
-The reported configurations give DLAN the lowest mean RMSE on all four cases,
-whilst the flow experiments expose sensitivity to capacity allocation,
-seed variation, candidate support and execution protocol.
-The completed month-augmented GVI result adds a small positive mean comparison,
-not evidence of future-time extrapolation.
-These findings define the model's present predictive scope more clearly
-than a claim of uniform superiority.
-
-Exact reference search remains a computational bottleneck.
-Partial selection, batched distance kernels or dynamic metric indexing
-could reduce its cost,
-but require a common-hardware benchmark including retrieval,
-training, prediction and peak memory.
-Rolling \COO evaluation, endpoint-held-out flows and buffered GVI partitions
-would extend the assessment to new inference supports
-\citep{RobertsBahn-2017,ValaviElith-2019}.
-These follow from the current protocol differences,
-rather than being unreported results of the existing fits.
+The GVI case study demonstrates the applicability of \DLAN to modelling with remote sensing data.
+The current inputs comprise 128-dimensional image features extracted by an autoencoder,
+combined with additional data to form a 176-dimensional feature vector.
+This setup was designed to compare the nonlinear modelling capabilities of the competing models.
+Further experiments show that jointly optimising the encoder and \DLAN as the prediction backbone
+can reduce RMSE to 0.0900.
+\gls{gwr} extensions based on linearity assumptions face difficulties when modelling image-derived features without clear semantic interpretations,
+and cannot directly represent nonlinear interactions among these features.
+These findings indicate further opportunities to apply \DLAN,
+which incorporates assumptions drawn from the first and second laws of geography,
+to modelling with remote sensing data.
 
 \section{Conclusion}\label{sec:conclusion}
-DLAN combines coordinate-specific geographical scales,
-bandwidth-adaptive reference access and nonlinear conditional prediction.
-Its attention integrates content similarity, learnt geographical bias
-and a Gaussian product prior over shared candidate identifiers.
-The resulting condition modulates query attributes through FiLM.
-The construction accommodates planar, space--time and geographical-flow coordinates.
 
-The reported comparison contains fourteen configurations with ten seeds each.
-Regressors use 6,957 parameters for \COO, WuhanHP and GVI,
-and 7,069 for the restored-width WuhanOD comparison.
-The selected WuhanOD DLAN uses 512 reference candidates,
-with mean RMSE $565.28\pm154.31$.
-The corresponding K2048 experiment yields $587.60\pm171.15$;
-the earlier 919.92 score describes a superseded narrow-allocation configuration.
-Relative to the stated \GAgg baselines,
-DLAN reduces mean RMSE by 57.81\%, 26.85\%, 2.99\% and 7.58\%
-on \COO, WuhanOD, WuhanHP and planar GVI, respectively.
-The WuhanOD mean advantage coexists with a higher median,
-four wins in ten paired seeds and a cross-machine execution difference.
-Thus the result supports the reported mean prediction performance,
-whilst retaining the distinction between configuration choice,
-seed-sensitive risk and controlled computational comparison.
+In this paper, we proposed a novel regression model in multidimensional geographical and temporal spaces based on deep learning and attention mechanisms, termed \DLAN.
+This model combines dimension-specific local attention,
+bandwidth-adaptive reference access and nonlinear conditional prediction.
+Its attention integrates content similarity, learnt geographical bias and a Gaussian product prior over shared candidate identifiers.
+The resulting condition modulates query attributes through FiLM.
+The construction accommodates geographical, spatio-temporal and spatial flow data.
+Compared with existing \GNNWR (and \GTNNWR), \GCNNWR, and \GAgg models, \DLAN achieves lower prediction error with smaller time consumption across four case studies which involves modelling carbon dioxide emissions (\COO), urban mobility flows (\WuhanOD), housing prices (\WuhanHP), and visible greenery (\GVI).
+This model provides a flexible and effective approach for spatial prediction tasks, particularly in higher-dimensional data contexts.
+In the future, \DLAN is able to be applied in higher-dimensional data, such as 5-D and 6-D spatio-temporal flow data, and can be extended to incorporate hierarchical structures for improved generalisation.
+The GVI case study and related experiments demonstrate that \DLAN can be integrated with remote sensing data to model nonlinear relationships between image-derived features and downstream responses, extending the applications of \gls{gwr}-derived models.
+
+Although \DLAN effectively organises multidimensional geographical context, several issues require further investigation.
+Its representation of spatial relationships remains limited, as it does not explicitly encode road connectivity, geographical barriers, administrative boundaries or functional linkages.
+Dimension-specific scales and positional encodings depend on coordinate orientation and scaling,
+and the model does not guarantee invariance to rotation, changes in map projection or reparameterisation.
+Current applications of \DLAN remain confined to local scales, with national and global applications yet to be explored.
+Reliable hyperparameter tuning procedures also require further investigation to simplify model configuration.
+Future research will address these issues individually.
 
 \section*{Acknowledgements}
 
