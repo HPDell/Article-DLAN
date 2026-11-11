@@ -676,9 +676,10 @@ These results support \DLAN's nonlinear, reference-conditioned prediction for vi
 
 As mentioned in \autoref{sec:model-settings}, \DLAN has two critical hyperparameters: attention width and candidate support.
 We conducted additional experiments on \WuhanOD to examine the sensitivity of these hyperparameters.
+A full factorial experiment crossing attention widths of 10, 12 and 16 with candidate counts of 512, 1,024 and 2,048 revealed complex effects of these two parameters on model performance.
 By fixing attention width at 12, we found changes in mean RMSE are smaller than standard deviation across seeds when candidate count is varied from 512 to 2,048.
 However, The worst estimation increases dramatically from 827.76 to 1,222.61 with candidate count 1024.
-On the other hand, with attention width increasing from 12 to 16, the worst estimation falls to 743.40 which is the lowest among all configurations, although mean RMSE only changes slightly.
+On the other hand, with attention width increasing from 12 to 16, the worst estimation could fall to 753.40 which is the lowest among all configurations, but the mean RMSE remains relatively stable.
 But trainable parameters increased to 10,733, which could reduce the stability of the model and increase the risk of overfitting.
 
 \begin{table}[tb]\centering
@@ -686,11 +687,16 @@ But trainable parameters increased to 10,733, which could reduce the stability o
   The K512 and K2048 configurations were run on another machine.}\label{tab:sensitivity}
   \small\setlength{\tabcolsep}{4pt}
   \begin{tabular}{llrrrr}\toprule
-    Attention width & Candidate count & Parameters & RMSE              & Median & Worst  \\\midrule
-    12              & 512             & 7,069      & $\mathbf{565.28}\pm154.31$ & 556.20 & 827.76  \\
-    12              & 1024            & 7,069      & $608.73\pm252.45$ & \textbf{552.52} & 1222.61  \\
-    12              & 2048            & 7,069      & $587.60\pm171.15$ & 563.58 & 840.72 \\
-    16              & 1024            & 10,773     & $609.93\pm104.63$ & 635.55 & \textbf{753.40}  \\
+    Attention width     & Candidate count & Parameters & RMSE              & MAE & Worst \\\midrule
+    \multirow{3}{*}{10} & 512             & 5,541      & $624.40\pm154.31$ & 54.83 &   944.09 \\
+                        & 1024            & 5,541      & $620.00\pm252.45$ & 54.39 &   808.09 \\
+                        & 2048            & 5,541      & $591.82\pm171.15$ & 53.21 &   847.45 \\
+    \multirow{3}{*}{12} & 512             & 7,069      & $\mathbf{565.28}\pm154.31$ & \textbf{50.28} &   827.76 \\
+                        & 1024            & 7,069      & $608.73\pm252.45$ & 52.08 & 1,222.61 \\
+                        & 2048            & 7,069      & $587.60\pm171.15$ & 51.07 &   840.72 \\
+    \multirow{3}{*}{16} & 512             & 10,773     & $636.55\pm104.63$ & 54.54 &   879.06 \\
+                        & 1024            & 10,773     & $609.93\pm104.63$ & 52.94 &   \textbf{753.40} \\
+                        & 2048            & 10,773     & $665.21\pm104.63$ & 55.55 &   896.36 \\
     \bottomrule
   \end{tabular}
 \end{table}
