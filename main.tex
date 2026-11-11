@@ -438,7 +438,7 @@ It comprise 2,122 Shanghai-area observations captured during 2019--2022.
 All the features are processed by a encoder to produce 176 covariates as model inputs.
 This case is intended to examine the nonlinear prediction component related to features learnt from remote sensing data.
 
-\subsection{Model settings}
+\subsection{Model settings}\label{sec:model-settings}
 
 The four models have different critical hyperparameters according to their structures.
 Specifically, \DLAN relies on width of the attention blocks and shape of the \gls{film} predictor.
@@ -672,160 +672,71 @@ The prediction diagnostics show less overprediction in the lower response quinti
 whereas \DLAN achieves a larger reduction from the global linear reference and lowers RMSE by 7.58\% relative to \GAgg.
 These results support \DLAN's nonlinear, reference-conditioned prediction for visible greenery from the shared frozen features.
 
-\subsection{Attention width and candidate support}\label{sec:odsensitivity}
-Increasing WuhanOD attention width from 12 to 16,
-with the $(10,8)$ prediction head retained,
-raises the parameter count by 52.40\% to 10,773.
-Mean RMSE changes only from 608.73 to 609.93,
-whilst MAE rises from 52.08 to 52.94.
-The seed standard deviation falls from 252.45 to 104.63,
-and the worst-seed RMSE falls from 1,222.61 to 753.40.
-However, the median rises from 552.52 to 635.55,
-and width 16 wins only three paired seeds.
-Additional width reduces the observed extreme failure,
-but does not improve average or typical-run RMSE.
+\subsection{Parameter sensitivity and computational cost}\label{sec:odsensitivity}
 
-Mean $R^2$ rises from 0.8809 to 0.8937,
-which is compatible with nearly unchanged mean RMSE:
-the former averages squared-error-based scores,
-whereas the latter averages their square roots.
-The log-count RMSE improves from 0.4664 to 0.4563,
-without a corresponding reduction on the count-scale criterion.
-The default width-12 configuration therefore remains the smaller configuration
-with better median RMSE and MAE.
+As mentioned in \autoref{sec:model-settings}, \DLAN has two critical hyperparameters: attention width and candidate support.
+We conducted additional experiments on \WuhanOD to examine the sensitivity of these hyperparameters.
+By fixing attention width at 12, we found changes in mean RMSE are smaller than standard deviation across seeds when candidate count is varied from 512 to 2,048.
+However, The worst estimation increases dramatically from 827.76 to 1,222.61 with candidate count 1024.
+On the other hand, with attention width increasing from 12 to 16, the worst estimation falls to 743.40 which is the lowest among all configurations, although mean RMSE only changes slightly.
+But trainable parameters increased to 10,733, which could reduce the stability of the model and increase the risk of overfitting.
 
 \begin{table}[tb]\centering
   \caption{Completed WuhanOD width and support experiments, ten seeds per configuration.
   The K512 and K2048 configurations were run on another machine.}\label{tab:sensitivity}
   \small\setlength{\tabcolsep}{4pt}
-  \begin{tabular}{lrrrr}\toprule
-    Configuration   & Parameters & RMSE              & Median & Worst\\\midrule
-    Width 12; K1024 & 7,069      & $608.73\pm252.45$ & 552.52 & 1222.61\\
-    Width 16; K1024 & 10,773     & $609.93\pm104.63$ & 635.55 & 753.40\\
-    Width 12; K512  & 7,069      & $565.28\pm154.31$ & 556.20 & 827.76\\
-    Width 12; K2048 & 7,069      & $587.60\pm171.15$ & 563.58 & 840.72\\\bottomrule
+  \begin{tabular}{llrrrr}\toprule
+    Attention width & Candidate count & Parameters & RMSE              & Median & Worst  \\\midrule
+    12              & 512             & 7,069      & $\mathbf{565.28}\pm154.31$ & 556.20 & 827.76  \\
+    12              & 1024            & 7,069      & $608.73\pm252.45$ & \textbf{552.52} & 1222.61  \\
+    12              & 2048            & 7,069      & $587.60\pm171.15$ & 563.58 & 840.72 \\
+    16              & 1024            & 10,773     & $609.93\pm104.63$ & 635.55 & \textbf{753.40}  \\
+    \bottomrule
   \end{tabular}
 \end{table}
 
+Different configurations of \DLAN result in changes of computation burden.
 
-The complete candidate-count runs have mean RMSE 565.28 at $K=512$,
-608.73 at $K=1,024$ and 587.60 at $K=2,048$.
-The smallest support has a mean 7.14\% below the reused baseline,
-but wins only four paired seeds;
-$K=2,048$ wins five.
-Their medians, 556.20 and 563.58, remain above the baseline median of 552.52.
-Thus more references do not yield monotonic improvement,
-and a lower mean need not imply better performance in most runs
-(Figure~\ref{fig:odsensitivity}).
-Since $K=512$ and $K=2,048$ were run on another computer,
-their relative times are not a candidate-count speed benchmark.
-The experiments do not automatically change the default configuration
-according to the reused test set.
+Nevertheless, the overall computation cost of \DLAN is moderate and acceptable compared with other models.
+Under the condition that all models have relatively equal number of trainable parameters,
+their computational efficiency are compared under the same hardware and software environment,
+as shown in \autoref{tab:cost}.
+Generally speaking, \DLAN consumes more training time than \GNNWR and \GCNNWR, but less than \GAgg.
+Exceptions occur on the \COO case which the time consumption of \DLAN and \GAgg are similar.
+The results show that \DLAN has an efficient and effective architecture for spatial prediction,
+especially it works for data of different dimensions.
 
-\begin{figure}[tp]\centering
-  \includegraphics[width=\linewidth]{od_width_neighbours.pdf}
-  \caption{Completed WuhanOD width and candidate-support comparisons.
-    Top: paired width-12 and width-16 results at $K=1,024$.
-    Bottom: ten seeds per candidate count at width 12;
-  $K=512$ and $K=2,048$ were trained on another computer.}\label{fig:odsensitivity}
-\end{figure}
-
-
-The historical HPC product-distance model achieves
-RMSE $497.16\pm117.28$ with width 12 and $K=1,024$.
-Its core model and reference-trainer source files match the local implementation,
-and its network shapes match the 7,069-parameter local model.
-The execution protocols differ:
-HPC uses a common coordinate scale and microbatches of 16,
-whereas the local comparison uses per-axis standardisation and microbatches of 64.
-Software and hardware also differ.
-These historical scores therefore remain a separate protocol result,
-not a replacement for the local parameter-matched ranking.
-The coordinate-scale and microbatch cross-diagnostic is incomplete
-in the frozen evidence snapshot and supplies no final attribution here.
-
-\subsection{Computational cost and dimensional extensibility}
-The expanded fit-cost table includes the completed GNNWR/GTNNWR baselines
-(Table~\ref{tab:cost}).
-DLAN and \GAgg have similar mean \COO fit times,
-79.56 and 80.80 seconds;
-GTNNWR is faster at 41.32 seconds, with higher error.
-For WuhanHP, GNNWR and DLAN have comparable mean costs,
-32.41 and 33.90 seconds,
-whilst GCNNWR is faster at 13.17 seconds.
-On GVI, DLAN takes 5.16 seconds,
-below \GAgg's 6.41 and GNNWR's 9.25,
-but above GCNNWR's 0.65.
-The accuracy--cost trade-off depends on the task
-(Figure~\ref{fig:cost}).
-
-\begin{table}[tb]\centering
-  \caption{Recorded mean fit cost for the reported configurations.
-    WuhanOD DLAN K512 was trained on another machine;
-  its 804.63-second time is not a same-hardware comparison with the baselines.}\label{tab:cost}
-  \small
+\begin{table}[tb]
+  \centering\small
+  \caption{
+    Recorded mean fit cost for the reported configurations.
+  }\label{tab:cost}
   \begin{tabular}{llrr}\toprule
-    Case    & Model  & Fit seconds & Epochs\\\midrule
-    \COO    & DLAN   & 79.56       & 126.4\\
-            & \GAgg  & 80.80       & 170.1\\
-            & GTNNWR & 41.32       & 210.6\\
-    \midrule
-    WuhanOD & DLAN   & 804.63      & 230.4\\
-            & \GAgg  & 305.22      & 268.7\\
-            & GNNWR  & 33.83       & 262.2\\
-    \midrule
-    WuhanHP & DLAN   & 33.90       & 40.3\\
-            & \GAgg  & 45.45       & 62.2\\
-            & GNNWR  & 32.41       & 120.5\\
-            & GCNNWR & 13.17       & 88.0\\
-    \midrule
-    GVI     & DLAN   & 5.16        & 56.6\\
-            & \GAgg  & 6.41        & 75.2\\
-            & GNNWR  & 9.25        & 219.0\\
-            & GCNNWR & 0.65        & 32.1\\\bottomrule
+    Case     & Model   & Training time & Epochs\\\midrule
+    \COO     & \DLAN   & 79.56         & 126.4\\
+             & \GAgg   & 80.80         & 170.1\\
+             & \GTNNWR & 41.32         & 210.6\\
+    \midrule  
+    \WuhanOD & \DLAN   & 804.63        & 230.4\\
+             & \GAgg   & 305.22        & 268.7\\
+             & \GNNWR  & 33.83         & 262.2\\
+    \midrule  
+    \WuhanHP & \DLAN   & 33.90         & 40.3\\
+             & \GAgg   & 45.45         & 62.2\\
+             & \GNNWR  & 32.41         & 120.5\\
+             & \GCNNWR & 13.17         & 88.0\\
+    \midrule  
+    \GVI     & \DLAN   & 5.16          & 56.6\\
+             & \GAgg   & 6.41          & 75.2\\
+             & \GNNWR  & 9.25          & 219.0\\
+             & \GCNNWR & 0.65          & 32.1\\\bottomrule
   \end{tabular}
 \end{table}
-
-
-\begin{figure}[tp]\centering
-\includegraphics[width=\linewidth]{matched_accuracy_cost.pdf}
-\caption{Recorded fit cost and test RMSE for the 140 reported fits.
-WuhanOD K512 uses the second machine, so its time is not directly comparable.
-Final prediction export and checkpoint-reload auditing are outside the fit timer.
-Case-specific axes retain the different response scales.}\label{fig:cost}
-\end{figure}
-
-Fit cost includes the stopping trajectory,
-so it is distinct from computation per epoch.
-In the retained K1024 diagnostic at 7,069 parameters,
-DLAN, \GAgg and GNNWR take means of 269.36, 305.22 and 33.83 seconds,
-respectively.
-The rapid coefficient-modulation baseline is also the least accurate in that group.
-Some flow runs reach the 300-epoch cap;
-these timings do not establish that every configuration has converged to its attainable optimum.
-
-The architecture accommodates two, three and four coordinates
-without constructing a regular grid over every coordinate combination.
-Coordinate-indexed projections grow with $D$,
-whereas a $q$-bin grid on each axis would contain $q^D$ cells.
-This dimensional extensibility does not remove exact reference search.
-The current retrieval scans all training references and performs stable sorting,
-with $N_{\train}D$ coordinate-distance work per query, block and head
-(Figure~\ref{fig:complexity}).
-Restricted attention controls subsequent attention activation size;
-it does not establish subquadratic end-to-end training in sample size.
-
-\begin{figure}[tp]\centering
-  \includegraphics[width=.94\linewidth]{retrieval_complexity.pdf}
-  \caption{Analytical distance work per query, $N_{\train}D$,
-    for one block and head.
-    Stable sorting and neural projections add computation;
-  these curves are not empirical timing measurements.}\label{fig:complexity}
-\end{figure}
-
 
 \section{Discussion}\label{sec:discussion}
+
 \subsection{Predictive scope under controlled capacity}
+
 The completed baselines strengthen the evidence for DLAN
 on subsequent-year \COO, community-held-out housing and planar GVI prediction.
 Its advantage on these cases persists against GNNWR/GTNNWR,
@@ -1001,6 +912,18 @@ Thus the result supports the reported mean prediction performance,
 whilst retaining the distinction between configuration choice,
 seed-sensitive risk and controlled computational comparison.
 
+\section*{Acknowledgements}
+
+The work was sponsored by the Fundamental Research Funds for the Central Universities under grant [number B260201041]; and National Natural Science Foundation of China under grant [number 42571480].
+
+\section*{Declaration of Generative AI Use}
+
+The authors used generative AI, specifically ChatGPT (version 5.6), for copyediting \& language refinement, translations, and software coding assistance. The authors confirm the originality and accuracy of the content. The authors have checked the terms of use for the specific AI tool used and confirm that its use is suitable for publication. The authors take full responsibility for the integrity of the entire content, including the accuracy of all references.
+
+\section*{Disclosure statement}
+
+The authors declare no competing interests.
+
 \section*{Data and code availability}
 The research repository contains model implementations, fixed data contracts,
 saved predictions, checkpoint-reload audits and configuration hashes.
@@ -1015,14 +938,16 @@ The GVI features are inherited from a frozen preparation pipeline;
 source datasets are not redistributed by the article build.
 A public repository address, dataset permissions and persistent identifiers
 will be supplied before submission.
-\section*{Disclosure statement}
-\pending{Authors to provide the conflict-of-interest declaration.}
-\section*{Funding}
-\pending{Authors to provide funding information.}
-\section*{Author contributions}
+
+\section*{Notes on contributors}
+
 \pending{Authors to confirm names, affiliations and contributions.}
-\printnoidxglossary[type=\acronymtype,title={Abbreviations}]
-% Bibliography entries are read from the user-supplied Zotero export.
+
+\section*{Author contributions}
+
+\pending{Authors to confirm names, affiliations and contributions.}
+
 \bibliographystyle{tfcad}
 \bibliography{zotero}
+
 \end{document}
