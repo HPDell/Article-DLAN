@@ -69,6 +69,7 @@
 \newcommand{\GVI}{\gls{gvid}\xspace}
 \DeclareMathOperator{\RMSE}{RMSE}
 \DeclareMathOperator{\MAE}{MAE}
+\DeclareMathOperator{\sfp}{softplus}
 
 \graphicspath{{figures/}}
 
@@ -140,7 +141,7 @@ But these models adopts uniform scale for all covariates.
 Nevertheless, these models still assume a linear relationship between the response and covariates,
 which may be restrictive in many applications.
 Some nonlinearity extensions based on machine learning have been proposed,
-such as geographically weighted random forest~\citep{LuoYan-2022} and Geographical-XGBoost~\citep{Grekousis-2025}.
+such as geographically weighted random forest~\citep{LuoYan-2022,GuoHarris-2026} and Geographical-XGBoost~\citep{Grekousis-2025}.
 
 With the prevalence of deep learning, neural network-based models have also been proposed to capture the nonlinear relationships in geographical data,
 such as \glscite{gnnwr}, \glscite{gcnnwr} and \GAgg~\citep{DengLi-2025a}.
@@ -203,9 +204,9 @@ where $\epsilon_i$ is random error, $\beta(\vu_i)$ is the location-specific regr
 \end{equation}
 Each element $w(\vu_i,\vu_j)$ ($j=1,2,\cdots,n$) in the diagonal spatial weighting matrix $\vW(\vu_i) = \diag(w(\vu_i,\vu_1),w(\vu_i,\vu_2),\cdots,w(\vu_i,\vu_n))$ is computed by kernel functions and bandwidths assigned for every of the dimensions in $\vu_i$ according to
 \begin{equation}
-  w(\vu_i,\vu_j) = \prod_{\ell=1}^h k^{(\ell)}\left(\frac{u^{(\ell)}_{i}-u^{(\ell)}_{j}}{b_\ell}\right) 
+  w(\vu_i,\vu_j) = \prod_{\ell=1}^D K_\ell\left(\frac{u_{i\ell}-u_{j\ell}}{b_\ell}\right) 
 \end{equation}
-where $k^{(\ell)}$, $u^{(\ell)}$, and $b_\ell$ is the kernel function for the $\ell$-th dimension, the $\ell$-th coordinate of $\vu$, and the bandwidth for the $\ell$-th dimension, respectively.
+where $D$ is the total number of dimensions, $K_\ell$, $u$, and $b_\ell$ is the kernel function for the $\ell$-th dimension, the $\ell$-th coordinate of $\vu$, and the bandwidth for the $\ell$-th dimension, respectively.
 Kernel functions are usually chosen from Gaussian, bi-square, tri-cube, and exponential functions \citep{LuHu-2025}.
 
 Although the formulation of \gls{gtdr} looks like that of \gls{gwr}, there is a key difference:
@@ -215,114 +216,23 @@ Nevertheless, \gls{gtdr} is still a linear regression model because the conditio
 In other words, $\vbeta(\vu)$ is parameters of the linear mapping $\vbeta: \vx \mapsto y$, while \gls{gtdr} implements a mapping $\vGamma: \vu \mapsto \vbeta$.
 The proposed \DLAN model aims to learn a nonlinear mapping $\vB: \vx \mapsto y$ under the condition of the location $\vu$.
 
+\subsection{\Glsentrylong{dlan}}
 
-Let an observation be $(\bm{x}_i,\bm{u}_i,y_i)$, where $\bm{x}_i\in\R^p$ contains covariates,
-$\bm{u}_i\in\R^D$ locates the observation in a geographical--temporal space,
+Let an observation be $(\vx_i,\vu_i,y_i)$, where $\vx_i\in\R^p$ contains covariates,
+$\vu_i\in\R^D$ locates the observation in a geographical--temporal space,
 and $y_i\in\R$ is its response.
-A planar point has $D=2$;
-a space--time observation can have $D=3$;
-a flow between planar endpoints has $D=4$.
-Coordinate dimensions describe the support of an observation, whereas covariates describe its attributes.
-Increasing $D$ and increasing $p$ therefore have different meanings.
-
-The model predicts a query response using the query covariates and coordinates, together with a fixed labelled training bank,
+\DLAN predicts a query response using the query covariates and coordinates, together with a fixed labelled training bank,
 \begin{equation}
- \hat y_i=f_\theta\!\left(\bm{x}_i,\bm{z}_i;
-       \{(\bm{x}_j,\bm{z}_j,y_j):j\in\train\}\right),
- \qquad z_{ia}=\frac{u_{ia}-\mu_a}{s_a}.\label{eq:task}
+ \hat y_i=f_\theta\!\left(\vx_i,\vu_i;
+       \{(\vx_j,\vu_j,y_j):j\in\train\}\right),
+ \qquad u_{ia}=\frac{u_{ia}-\mu_a}{s_a}.\label{eq:task}
 \end{equation}
-For newly prepared data, coordinate centres and scales are fitted to training observations.
-Feature and response standardisation also use training data.
-All four main experiments use their recorded training-only coordinate transformations.
-Query responses never enter the reference bank.
-During training, the focal row is excluded from its own candidate set.
-These rules define a labelled-reference prediction task and the information available at deployment.
-
-\subsection{Bandwidth-adaptive reference retrieval}\label{sec:retrieval}
-For attention block $\ell$, head $h$ and coordinate $a$, define a positive scale
-\begin{equation}
- b_{\ell ah}=\operatorname{softplus}(\rho_{\ell ah})+10^{-6}.
-\end{equation}
-For each query--reference pair, the retrieval score uses a coordinate-scaled squared distance,
-\begin{equation}
- d^2_{\ell h}(i,j)=\sum_{a=1}^D
-       \left(\frac{z_{ja}-z_{ia}}{b_{\ell ah}}\right)^2.
- \label{eq:distance}
-\end{equation}
-The candidate set is the deduplicated union of the $K$ closest eligible training references through \gls{knn} under every block--head metric,
-\begin{equation}
- \cand_i=\bigcup_{\ell,h}\operatorname{TopK}_{j\in\train\setminus\{i\}}
-                       \{-d^2_{\ell h}(i,j)\}.\label{eq:candidates}
-\end{equation}
-For an external query the exclusion applies only if a matching training-row identifier is supplied.
-Candidate identifiers remain aligned across all coordinate projections.
-Padding for a batch with variable candidate counts is masked before softmax.
-
-This procedure selects points close under the current joint bandwidth metric.
-It is different from taking a union of separate one-dimensional nearest-neighbour lists.
-A reference close on one axis can remain distant under Equation~\eqref{eq:distance}.
-The implementation refreshes candidates at each query microbatch using the current detached bandwidths.
-Gradients update bandwidths through the attention score;
-discrete candidate membership has no derivative.
-With one block and one head there are at most $K$ candidates.
-With multiple blocks and heads the union can contain up to $\min(N_{\train},LH K)$ distinct references,
-where $L$ and $H$ are the numbers of blocks and heads.
-
-\subsection{Content and response encoding}
-Shared \gls{mlp} feature and coordinate encoders produce an observation token,
-\begin{equation}
- \bm{e}_i=\lnorm\{E_x(\bm{x}_i)+E_z(\bm{z}_i)\}.
-\end{equation}
-The coordinate encoder uses Fourier features followed by a learned projection.
-Fourier representations provide a means of expressing spatial variation at several frequencies~\citep{TancikSrinivasan-2020};
-other location encodings, including rotary representations,
-offer related ways to retain positional information~\citep{SuAhmed-2024,MaiJanowicz-2022}.
-Query and key content are encoded without the query response.
-For a reference, the value token additionally contains an encoding of its observed response,
-\begin{equation}
- \bm{v}^{\rm in}_j=\bm{e}_j+E_y(y_j),\qquad j\in\train.
-\end{equation}
-Consequently, aggregation can convey information about both local attributes and locally observed outcomes.
-Response encoding is a predictive information path;
-it does not introduce a spatial-lag coefficient or a random effect.
-
-\subsection{Dimension-specific scoring and joint attention}
-Write $\delta_{ija}=z_{ja}-z_{ia}$.
-Within one block, each coordinate and attention head has its own query, key and value projections.
-The score is
-\begin{align}
- s_{ihj}={}&\frac{1}{D}\sum_{a=1}^D
- \frac{(Q_{ah}\bm{e}_i)^\mathsf{T}(K_{ah}\bm{e}_j)}{\sqrt{d_h}}
- +\sum_{a=1}^D g_{ah}(\delta_{ija},|\delta_{ija}|,\operatorname{sgn}\delta_{ija})
- \nonumber\\[-2pt]
- &-\frac{1}{2}\sum_{a=1}^D
-       \left(\frac{\delta_{ija}}{b_{ah}}\right)^2,
-       \qquad j\in\cand_i,\label{eq:score}\\
- \alpha_{ihj}={}&\frac{\exp(s_{ihj})}{\sum_{r\in\cand_i}\exp(s_{ihr})}.
- \label{eq:attention}
-\end{align}
-The content scores are averaged across coordinates.
-The log geographical kernels are summed.
-The exponential of the final term is therefore a product of coordinate-specific Gaussian kernels,
-\begin{equation}
- \exp\!\left[-\frac12\sum_a(\delta_{ija}/b_{ah})^2\right]
-   =\prod_a \exp\!\left[-\frac{\delta_{ija}^2}{2b_{ah}^2}\right].\label{eq:product}
-\end{equation}
-The functions $g_{ah}$ represent learnt directional geographical biases.
-Signed offsets allow an asymmetric contribution even though the Gaussian prior is symmetric.
-The resulting attention need not decrease monotonically with distance because its content and bias terms can alter the score.
-
-There is one softmax over the shared candidate identifiers for each query and head.
-Separate coordinate projections do not produce separate coordinate-wise probability distributions.
-The same weights aggregate every coordinate-specific value projection,
-\begin{equation}
- \bm{c}_{iah}=\sum_{j\in\cand_i}\alpha_{ihj}V_{ah}\bm{v}^{\rm in}_j,
- \qquad
- \bm{c}_i=W_o\operatorname{concat}_{a,h}(\bm{c}_{iah})+\bm{b}_o.
-\end{equation}
-Residual connections, layer normalisation and a feed-forward network update the query representation,
-yielding a local condition $\bm{h}_i$ after the final block~\citep{BaKiros-2016}.
-Figure~\ref{fig:architecture} summarises the information paths.
+The whole architecture is illustrated in Figure~\ref{fig:architecture}.
+The attention mechanism first generates a local conditioning representation from the query observation and its neighbouring training references.
+This representation modulates a nonlinear prediction network, which then predicts the response using the query covariates.
+There are two main components in the model: 
+(a) joint attention with dimension-specific scores;
+and (b) FiLM predictor conditioned on the aggregated local context.
 
 \begin{figure}[tp]
   \centering\includegraphics[width=\linewidth]{dlan_architecture.pdf}
@@ -332,70 +242,104 @@ Figure~\ref{fig:architecture} summarises the information paths.
   }\label{fig:architecture}
 \end{figure}
 
-The reference-pooling operation is also related to attention over graphs and unordered sets,
-where learned weights combine contextual representations
-\citep{VelickovicCucurull-2018,LeeLee-2019}.
+For newly prepared data, coordinate centres and scales are fitted to training observations.
+Feature and response standardisation also use training data.
+All four main experiments use their recorded training-only coordinate transformations.
+Query responses never enter the reference bank.
+During training, the focal row is excluded from its own candidate set.
+These rules define a labelled-reference prediction task and the information available at deployment.
 
-\subsection{Conditionally modulated nonlinear prediction}
+\subsubsection{Encoding and candidate retrieval}
+
+Before sent to the joint attention block, query and reference observations are encoded into tokens via shared \gls{mlp} encoders, as shown in \eqref{eq:token}
+\begin{equation}\label{eq:token}
+ \ve_i=\lnorm\{E_x(\vx_i)+E_u(\vu_i)\}.
+\end{equation}
+The coordinate encoder uses Fourier features followed by a learned projection
+as Fourier representations provide a means of expressing spatial variation at several frequencies~\citep{TancikSrinivasan-2020}.
+Query and key content are encoded without the query response.
+For a reference, the value token additionally contains an encoding of its observed response,
+\begin{equation}
+ \bv^{\rm in}_j=\ve_j+E_y(y_j),\qquad j\in\train.
+\end{equation}
+Consequently, aggregation can convey information about both local attributes and locally observed outcomes.
+
+To obtain contextual information, DLAN selects neighbouring reference observations for each query.
+As this selection proceeds dimension by dimension, each dimension provides a candidate set according to retrieval scores,
+and the final context observations are selected from the combined candidate sets.
+For attention block $r$, head $h$, and coordinate $\ell$, the retrieval score uses a coordinate-scaled squared distance as shown in \eqref{eq:coordinate-scaled-distance},
+\begin{equation}\label{eq:coordinate-scaled-distance}
+  d_{rh}^2(i,j) = \sum_{\ell=1}^{D} \left( \frac{u_{j\ell} - u_{i\ell}}{b_{r\ell h}} \right)^2
+\end{equation}
+and the candidate set is the deduplicated union of the $k$ closet eligible training references through nearest-neighbour search (KNN) under every block--head metric, as shown in \eqref{eq:candidate-set},
+\begin{equation}\label{eq:candidate-set}
+  \cand_i = \cup_{r,h} \operatorname{TopK}_{j \in \train\setminus\{i\}} \{-d_{rh}^2(i,j)\}.
+\end{equation}
+where $\train$ represents the training set.
+This procedure selects observations close under the current joint bandwidth metric.
+It is different from taking a union of separate one-dimensional nearest-neighbour lists.
+A reference close on one axis can remain distant under Equation~\eqref{eq:coordinate-scaled-distance}.
+The implementation refreshes candidates at each query microbatch using the current detached bandwidths, which are updated by the gradient of the loss function.
+
+\subsubsection{Dimension-specific scoring and joint attention}
+
+In order to make the model compatible with multidimensional coordinates with any combination of spatial and temporal dimensions, the attention score is computed for each coordinate separately.
+Denote the dimensional distance as $\delta_{ij\ell}=u_{jl}-u_{il}$.
+Within one joint attention block, each coordinate and attention head $h$ has its own query ($\vQ_{h\ell}$), key ($\vK_{h\ell}$) and value ($\bv_{h\ell}$) projections.
+The score $\alpha_{ihj}$ is computed according to \eqref{eq:score} and \eqref{eq:attention},
+\begin{align}
+  \label{eq:score}
+  \begin{split}
+    s_{ihj}={}
+    &\frac{1}{D}\sum_{a=1}^D
+    \frac{(\vQ_{h\ell}\ve_i)\T(\vK_{h\ell}\ve_j)}{\sqrt{d_h}}
+    +\sum_{a=1}^D g_{h\ell}(\delta_{ij\ell},|\delta_{ij\ell}|,\operatorname{sgn}\delta_{ij\ell}) \\
+    &-\frac{1}{2}\sum_{a=1}^D
+    \left(\frac{\delta_{ij\ell}}{b_{h\ell}}\right)^2,
+    \qquad j\in\cand_i
+  \end{split} \\
+  \label{eq:attention}
+  \alpha_{ihj}={}&\frac{\exp(s_{ihj})}{\sum_{r\in\cand_i}\exp(s_{ihr})}.
+\end{align}
+where $\ve$ is an observation token by encoding features and coordinates, $g_{h\ell}$ represents learnt directional geographical biases, and $\cand_i$ is the candidate set for query $i$ according to $k$-nearest neighbour retrieval.
+
+There is one softmax over the shared candidate identifiers for each query and head.
+Separate coordinate projections do not produce separate coordinate-wise probability distributions.
+The same weights aggregate every coordinate-specific value projection,
+\begin{equation}
+  \vc_{iah}=\sum_{j\in\cand_i}\alpha_{ihj}V_{ah}\bv^{\rm in}_j,
+  \qquad
+  \vc_i=W_o\operatorname{concat}_{a,h}(\vc_{iah})+\vb_o.
+\end{equation}
+Residual connections, layer normalisation and a feed-forward network update the query representation,
+yielding a local condition $\vh_i$ after the final block~\citep{BaKiros-2016}.
+
+\subsubsection{Conditionally modulated nonlinear prediction}
+
 The response predictor retains a direct path from the query covariates.
-Let $\bm{a}^{(r)}_i=W_r\bm{t}^{(r-1)}_i+\bm{c}_r$ with $\bm{t}^{(0)}_i=\bm{x}_i$.
-The local condition modulates each hidden layer,
+Let $\va^{(r)}_i=W_r\vt^{(r-1)}_i+\vc_r$ with $\vt^{(0)}_i=\vx_i$.
+The local condition modulates each hidden layer according to \eqref{eq:film},
 \begin{equation}
- \bm{t}^{(r)}_i=\gelu\!\left[
- \{1+\tanh(\bm{\gamma}_r(\bm{h}_i))\}\odot\bm{a}^{(r)}_i
-       +\bm{\beta}_r(\bm{h}_i)\right].\label{eq:film}
+ \vt^{(r)}_i=\gelu\!\left[
+ \{1+\tanh(\bm{\gamma}_r(\vh_i))\}\odot\va^{(r)}_i
+       +\bm{\beta}_r(\vh_i)\right].\label{eq:film}
 \end{equation}
-A final linear readout produces $\hat y_i$.
+A final linear readout produces $\hat y_i$ according to $\vt^{(r)}_i$.
 This use of \gls{film} allows the relationship between attributes and response to vary with the reference-derived condition~\citep{PerezStrub-2018}.
-Houses at the same coordinates can receive different predictions because their individual covariates remain in the prediction path.
 Nonlinear activations also permit attribute interactions and curved response functions.
-The model does not estimate a collection of locally linear regression coefficients.
 
-\subsection{Relationship to local regression and the planar configuration}
-For \gls{gwr}, local calibration follows the weighted-regression construction
-\citep{FotheringhamBrunsdon-2002},
-with coefficient stability affected by local covariate collinearity
-\citep{WheelerTiefelsdorf-2005,Wheeler-2007}.
-The local estimate takes the form
-\begin{equation}
- \hat{\bm{\beta}}(\bm{u}_i)
-  =(X^\mathsf{T}W_iX)^{-1}X^\mathsf{T}W_i\bm{y}.
+\subsubsection{Training and computation budget}
+
+To train a \DLAN model, mean squared error is usually chosen as the optimisation target $\mathcal{L}$, as shown in \eqref{eq:loss},
+\begin{equation} \label{eq:loss}
+  \mathcal{L} = \frac{1}{N_{\train}}\sum_{i\in\train}(\hat y_i-y_i)^2
 \end{equation}
-If content and learnt geographical biases in Equation~\eqref{eq:score} are disabled,
-Equation~\eqref{eq:attention} becomes a normalised geographical product kernel on its candidate support.
-Pooling raw responses with those weights yields a local-constant kernel predictor,
-connecting the attention construction to kernel and locally weighted regression
-\citep{Nadaraya-1964,Watson-1964,Cleveland-1979}.
-The product-kernel prior also inherits the coordinate-scale and smoothing choices
-studied in kernel density estimation
-\citep{Parzen-1962,Rosenblatt-1956,JonesMarron-1996}.
-Recovering the \gls{gwr} estimator would additionally require the weighted least-squares solution above.
-Thus shared geographical weighting does not make the estimators identical.
-Similarly, DLAN borrows the coordinate-specific scale principle of \gls{gtdr},
-but its nonlinear predictor is not a conditional density estimator.
-
-For planar data, tying $b_x=b_y=b$ reduces the Gaussian product to
-\begin{equation}
- \exp\!\left[-\frac{(\delta_x)^2+(\delta_y)^2}{2b^2}\right]
-      =\exp[-\|\bm{z}_j-\bm{z}_i\|^2/(2b^2)].\label{eq:planar}
-\end{equation}
-This identity supplies an isotropic spatial prior.
-A planar restriction, denoted \gls{dlanp}, can further tie spatial scales
-and use joint spatial projections and Euclidean candidate retrieval,
-whilst retaining the conditionally modulated nonlinear predictor.
-These restrictions are additional choices;
-setting $D=2$ alone leaves the dimension-specific projections and retrieval rule active.
-The completed main comparison uses that unrestricted $D=2$ construction
-for WuhanHP and GVI.
-The planar restriction therefore explains the connection with conventional spatial locality,
-rather than introducing a separate fitted model into the main results.
-
-\subsection{Training and computation}
-The neural models minimise mean squared error on training-standardised responses,
-using AdamW and validation-based early stopping~\citep{LoshchilovHutter-2019}.
+\DLAN uses AdamW and validation-based early stopping~\citep{LoshchilovHutter-2019}.
 Validation chooses a checkpoint, and the test partition is used for the final assessment.
 This follows the separation between fitting and predictive assessment underlying cross-validation and smoothing-parameter selection~\citep{Stone-1974,HurvichSimonoff-1998}.
+A learning-rate scheduler also halves the learning rate when the validation loss fails to improve for a specified number of epochs.
 
+To formulate the computation budget, let $N_{\train}$ be the number of training references, $L$ the number of attention blocks, $H$ the number of attention heads, $D$ the number of coordinates, and $d$ the dimension of each projected query and key.
 With fixed candidate count $M$, attention on the candidates requires work proportional to $MDd$ per query for coordinate-specific value operations,
 apart from projections and feed-forward processing.
 However, the current candidate implementation evaluates distances to all $N_{\train}$ references for each block--head metric and uses a stable full sorting operation.
@@ -523,7 +467,8 @@ All cases are trained with AdamW, an initial learning rate of $10^{-3}$ and weig
 The loss is the mean squared error of the response standardised using training-set statistics.
 Training runs for a maximum of 300 epochs.
 Early stopping monitors validation mean squared error, with a patience of 30 epochs and a minimum improvement of $10^{-5}$.
-Each configuration is evaluated using random seeds 1--10.
+The experiments are conducted on a high-performance computing platform which has 3 sessions and each session has 8 NVIDIA A800 GPUs.
+Each configuration is allocated a dedicated GPU and evaluates ten random seeds.
 All standardisation statistics introduced by these experiments are estimated exclusively from the training set.
 
 \subsection{Metrics of model performance}
