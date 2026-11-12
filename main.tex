@@ -288,12 +288,11 @@ yielding a local condition $\bm{h}_i$ after the final block~\citep{BaKiros-2016}
 Figure~\ref{fig:architecture} summarises the information paths.
 
 \begin{figure}[tp]
-\centering\includegraphics[width=\linewidth]{architecture.pdf}
-\caption{The implemented DLAN architecture.
-Bandwidths influence both candidate retrieval and Gaussian scoring.
-Query responses are absent;
-observed training responses enter value tokens.
-The candidate union is across block--head metrics, followed by one shared candidate softmax per head.}\label{fig:architecture}
+  \centering\includegraphics[width=\linewidth]{dlan_architecture.pdf}
+  \caption{
+    The implemented DLAN architecture.
+    Bandwidths influence both candidate retrieval and Gaussian scoring.
+  }\label{fig:architecture}
 \end{figure}
 
 The reference-pooling operation is also related to attention over graphs and unordered sets,
