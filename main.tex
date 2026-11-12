@@ -47,6 +47,9 @@
 \newacronym{wuhanhp}{SHP}{second-hand housing prices in Wuhan, China}
 \newacronym{gvid}{GVI}{green view index in Shanghai, China}
 
+\usepackage{mathshortcuts}
+\newcommand{\Exp}{\mathbb{E}}
+
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\train}{\mathcal{T}}
 \newcommand{\cand}{\mathcal{C}}
@@ -188,9 +191,30 @@ Section~\ref{sec:conclusion} concludes.
 
 \section{Methodology}\label{sec:model}
 
+\subsection{\Glsentrylong{gtdr}}
 
+For a sample $i$ among at location $\vu_i$, \gls{gtdr} express the relationship between its dependent variable $y_i$ and a series of independent variable $\vx\T_i$ by \eqref{eq:gtdr},
+\begin{equation}\label{eq:gtdr}
+  y_i = \Exp(Y|\vX=\vx\T_i,\vU=\vu_i) + \epsilon_i = \vx\T_i \vbeta(\vu_i) + \epsilon_i
+\end{equation}
+where $\epsilon_i$ is random error, $\beta(\vu_i)$ is the location-specific regression coefficient which is estimated by \eqref{eq:gtdr-estimator},
+\begin{equation}\label{eq:gtdr-estimator}
+  \hat{\vbeta}(\vu_i) = (\vX\T \vW(\vu_i) \vX)\I (\vX\T \vW(\vu_i) \vy) \;.
+\end{equation}
+Each element $w(\vu_i,\vu_j)$ ($j=1,2,\cdots,n$) in the diagonal spatial weighting matrix $\vW(\vu_i) = \diag(w(\vu_i,\vu_1),w(\vu_i,\vu_2),\cdots,w(\vu_i,\vu_n))$ is computed by kernel functions and bandwidths assigned for every of the dimensions in $\vu_i$ according to
+\begin{equation}
+  w(\vu_i,\vu_j) = \prod_{\ell=1}^h k^{(\ell)}\left(\frac{u^{(\ell)}_{i}-u^{(\ell)}_{j}}{b_\ell}\right) 
+\end{equation}
+where $k^{(\ell)}$, $u^{(\ell)}$, and $b_\ell$ is the kernel function for the $\ell$-th dimension, the $\ell$-th coordinate of $\vu$, and the bandwidth for the $\ell$-th dimension, respectively.
+Kernel functions are usually chosen from Gaussian, bi-square, tri-cube, and exponential functions \citep{LuHu-2025}.
 
-\subsection{Observations and the reference-based prediction task}
+Although the formulation of \gls{gtdr} looks like that of \gls{gwr}, there is a key difference:
+\gls{gwr} can only handle geographical data, while \gls{gtdr} can handle any combination of geographical and temporal dimensions.
+\citet{LuHu-2025} has demonstrated that \gls{gtdr} has equivalent and even better performance than \gls{gwr} in geographical data, \gls{gtwr} in spatio-temporal data, and \gls{swim} in spatial flow data.
+Nevertheless, \gls{gtdr} is still a linear regression model because the conditional expectation of $Y$ under the condition of $\vX$ and $\vU$ is expressed by a linear combination of $\vX$ and $\vbeta(\vu)$.
+In other words, $\vbeta(\vu)$ is parameters of the linear mapping $\vbeta: \vx \mapsto y$, while \gls{gtdr} implements a mapping $\vGamma: \vu \mapsto \vbeta$.
+The proposed \DLAN model aims to learn a nonlinear mapping $\vB: \vx \mapsto y$ under the condition of the location $\vu$.
+
 
 Let an observation be $(\bm{x}_i,\bm{u}_i,y_i)$, where $\bm{x}_i\in\R^p$ contains covariates,
 $\bm{u}_i\in\R^D$ locates the observation in a geographical--temporal space,

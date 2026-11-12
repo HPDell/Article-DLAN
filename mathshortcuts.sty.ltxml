@@ -1,0 +1,141 @@
+# -*- latex -*-
+# LaTeXML binding for mypackage.sty
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+RequirePackage('bm');
+
+DefMacro('\mybm{}', '\bm{#1}');
+DefMacro('\va', '\mybm{a}');
+DefMacro('\vb', '\mybm{b}');
+DefMacro('\vc', '\mybm{c}');
+DefMacro('\vd', '\mybm{d}');
+DefMacro('\ve', '\mybm{e}');
+DefMacro('\vf', '\mybm{f}');
+DefMacro('\vg', '\mybm{g}');
+DefMacro('\vh', '\mybm{h}');
+DefMacro('\vi', '\mybm{i}');
+DefMacro('\vj', '\mybm{j}');
+DefMacro('\vk', '\mybm{k}');
+DefMacro('\vl', '\mybm{l}');
+DefMacro('\vm', '\mybm{m}');
+DefMacro('\vn', '\mybm{n}');
+DefMacro('\vo', '\mybm{o}');
+DefMacro('\vp', '\mybm{p}');
+DefMacro('\vq', '\mybm{q}');
+DefMacro('\vr', '\mybm{r}');
+DefMacro('\vs', '\mybm{s}');
+DefMacro('\vt', '\mybm{t}');
+DefMacro('\vu', '\mybm{u}');
+DefMacro('\bv', '\mybm{v}');
+DefMacro('\vw', '\mybm{w}');
+DefMacro('\vx', '\mybm{x}');
+DefMacro('\vy', '\mybm{y}');
+DefMacro('\vz', '\mybm{z}');
+DefMacro('\vA', '\mybm{A}');
+DefMacro('\vB', '\mybm{B}');
+DefMacro('\vC', '\mybm{C}');
+DefMacro('\vD', '\mybm{D}');
+DefMacro('\vE', '\mybm{E}');
+DefMacro('\vF', '\mybm{F}');
+DefMacro('\vG', '\mybm{G}');
+DefMacro('\vH', '\mybm{H}');
+DefMacro('\vI', '\mybm{I}');
+DefMacro('\vJ', '\mybm{J}');
+DefMacro('\vK', '\mybm{K}');
+DefMacro('\vL', '\mybm{L}');
+DefMacro('\vM', '\mybm{M}');
+DefMacro('\vN', '\mybm{N}');
+DefMacro('\vO', '\mybm{O}');
+DefMacro('\vP', '\mybm{P}');
+DefMacro('\vQ', '\mybm{Q}');
+DefMacro('\vR', '\mybm{R}');
+DefMacro('\vS', '\mybm{S}');
+DefMacro('\vT', '\mybm{T}');
+DefMacro('\vU', '\mybm{U}');
+DefMacro('\vV', '\mybm{V}');
+DefMacro('\vW', '\mybm{W}');
+DefMacro('\vX', '\mybm{X}');
+DefMacro('\vY', '\mybm{Y}');
+DefMacro('\vZ', '\mybm{Z}');
+DefMacro('\valpha', '\mybm{\alpha}');
+DefMacro('\vbeta', '\mybm{\beta}');
+DefMacro('\vchi', '\mybm{\chi}');
+DefMacro('\vdelta', '\mybm{\delta}');
+DefMacro('\vepsilon', '\mybm{\epsilon}');
+DefMacro('\veta', '\mybm{\eta}');
+DefMacro('\vgamma', '\mybm{\gamma}');
+DefMacro('\viota', '\mybm{\iota}');
+DefMacro('\vkappa', '\mybm{\kappa}');
+DefMacro('\vlambda', '\mybm{\lambda}');
+DefMacro('\vmu', '\mybm{\mu}');
+DefMacro('\vomega', '\mybm{\omega}');
+DefMacro('\vphi', '\mybm{\phi}');
+DefMacro('\vpi', '\mybm{\pi}');
+DefMacro('\vpsi', '\mybm{\psi}');
+DefMacro('\vrho', '\mybm{\rho}');
+DefMacro('\vsigma', '\mybm{\sigma}');
+DefMacro('\vtau', '\mybm{\tau}');
+DefMacro('\vtheta', '\mybm{\theta}');
+DefMacro('\vupsilon', '\mybm{\upsilon}');
+DefMacro('\vxi', '\mybm{\xi}');
+DefMacro('\vzeta', '\mybm{\zeta}');
+DefMacro('\vDelta', '\mybm{\Delta}');
+DefMacro('\vGamma', '\mybm{\Gamma}');
+DefMacro('\vLambda', '\mybm{\Lambda}');
+DefMacro('\vOmega', '\mybm{\Omega}');
+DefMacro('\vPhi', '\mybm{\Phi}');
+DefMacro('\vPi', '\mybm{\Pi}');
+DefMacro('\vPsi', '\mybm{\Psi}');
+DefMacro('\vSigma', '\mybm{\Sigma}');
+DefMacro('\vTheta', '\mybm{\Theta}');
+DefMacro('\vUpsilon', '\mybm{\Upsilon}');
+DefMacro('\vXi', '\mybm{\Xi}');
+DefMacro('\vzero', '\mybm{0}');
+DefMacro('\vones', '\mybm{1}');
+
+DefMacro('\diag', '\mathop{\mathrm{diag}}');
+DefMacro('\T', '^\mathrm{T}');
+DefMacro('\I', '^{-1}');
+DefMacro('\IG', '^{-}');
+
+DefMacro('\rvec{}[]', '\left(#1\right)#2');
+DefMacro('\cvec{}[]', '\rvec{#1}[#2]\T');
+
+DefMacro('\var', '\mathop{\mathrm{var}}');
+DefMacro('\cov', '\mathop{\mathrm{cov}}');
+DefMacro('\sd', '\mathop{\mathrm{sd}}');
+DefMacro('\se', '\mathop{\mathrm{se}}');
+DefMacro('\tr', '\mathop{\mathrm{tr}}');
+DefMacro('\NP', '\mathop{\mathrm{N.P.}}');
+DefMacro('\ENP', '\mathop{\mathrm{E.N.P.}}');
+DefMacro('\DF', '\mathop{\mathrm{D.F.}}');
+DefMacro('\EDF', '\mathop{\mathrm{E.D.F.}}');
+
+DefMacro('\cond{}{}', '\left({#1}\middle|{#2}\right)');
+DefMacro('\conde{}{}', 'E\left({#1}\middle|{#2}\right)');
+DefMacro('\condvar{}{}', '\var\left({#1}\middle|{#2}\right)');
+DefMacro('\hfrac{}{}', '\left.{#1}\middle/{#2}\right.');
+
+DefMacro('\diagnostic{}[]{}', sub {
+    my ($gullet, $name, $lab, $value) = @_;
+    my @tokens = (T_BEGIN, $name->unlist);
+    if (defined $lab && !IsEmpty($lab)) {
+        push @tokens, T_SUB, T_BEGIN, $lab->unlist, T_END;
+    }
+    push @tokens, T_END;
+    if ($value->toString =~ /-?\d+(\.\d+)?(e\d+)?/) {
+        push @tokens, T_OTHER('='), $value->unlist;
+    }
+    return (LookupValue('IN_MATH')
+        ? Tokens(@tokens)
+        : Tokens(T_CS('\ensuremath'), T_BEGIN, @tokens, T_END));
+});
+
+DefMacro('\rsquared[]{}', '\diagnostic{R^2}[#1]{#2}');
+DefMacro('\CV[]{}', '\diagnostic{\mathrm{CV}}[#1]{#2}');
+DefMacro('\AIC[]{}', '\diagnostic{\mathrm{AIC}}[#1]{#2}');
+DefMacro('\AICc[]{}', '\diagnostic{\mathrm{AIC}_c}[#1]{#2}');
+
+1;

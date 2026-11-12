@@ -1,0 +1,261 @@
+%%Identification
+%%The package identifies itself and the LaTeX version needed
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathshortcuts}[2022/02/05 Math Shortcuts]
+
+\RequirePackage{forloop}
+\RequirePackage{amsmath}
+\RequirePackage{xparse}
+\RequirePackage{ifthen}
+\RequirePackage{ifthenx}
+
+\@ifpackageloaded{unicode-math}{%
+  \newcommand{\mybm}[1]{\symbf{#1}}%
+}{%
+  \@ifpackageloaded{mathptmx}{
+    \newcommand{\mybm}[1]{\mathbf{#1}}%
+  }{
+    \RequirePackage{bm}%
+    \newcommand{\mybm}[1]{\bm{#1}}%
+  }
+}%
+
+\@ifpackageloaded{physics}{%
+  \DeclareDocumentCommand\va{}{\mybm{a}}%
+  \DeclareDocumentCommand\vb{}{\mybm{b}}%
+  \DeclareDocumentCommand\vu{}{\mybm{u}}%
+  \DeclareDocumentCommand\pva{}{\vectorarrow}%
+  \DeclareDocumentCommand\pvb{}{\vectorbold}%
+  \DeclareDocumentCommand\pvu{}{\vectorunit}%
+}{%
+  \newcommand{\va}{\mybm{a}}%
+  \newcommand{\vb}{\mybm{b}}%
+  \newcommand{\vu}{\mybm{u}}%
+}
+\newcommand{\vc}{\mybm{c}}
+\newcommand{\vd}{\mybm{d}}
+\newcommand{\ve}{\mybm{e}}
+\newcommand{\vf}{\mybm{f}}
+\newcommand{\vg}{\mybm{g}}
+\newcommand{\vh}{\mybm{h}}
+\newcommand{\vi}{\mybm{i}}
+\newcommand{\vj}{\mybm{j}}
+\newcommand{\vk}{\mybm{k}}
+\newcommand{\vl}{\mybm{l}}
+\newcommand{\vm}{\mybm{m}}
+\newcommand{\vn}{\mybm{n}}
+\newcommand{\vo}{\mybm{o}}
+\newcommand{\vp}{\mybm{p}}
+\newcommand{\vq}{\mybm{q}}
+\newcommand{\vr}{\mybm{r}}
+\newcommand{\vs}{\mybm{s}}
+\newcommand{\vt}{\mybm{t}}
+\newcommand{\bv}{\mybm{v}}
+\newcommand{\vw}{\mybm{w}}
+\newcommand{\vx}{\mybm{x}}
+\newcommand{\vy}{\mybm{y}}
+\newcommand{\vz}{\mybm{z}}
+\newcommand{\vA}{\mybm{A}}
+\newcommand{\vB}{\mybm{B}}
+\newcommand{\vC}{\mybm{C}}
+\newcommand{\vD}{\mybm{D}}
+\newcommand{\vE}{\mybm{E}}
+\newcommand{\vF}{\mybm{F}}
+\newcommand{\vG}{\mybm{G}}
+\newcommand{\vJ}{\mybm{J}}
+\newcommand{\vH}{\mybm{H}}
+\newcommand{\vI}{\mybm{I}}
+\newcommand{\vK}{\mybm{K}}
+\newcommand{\vL}{\mybm{L}}
+\newcommand{\vM}{\mybm{M}}
+\newcommand{\vN}{\mybm{N}}
+\newcommand{\vO}{\mybm{O}}
+\newcommand{\vP}{\mybm{P}}
+\newcommand{\vQ}{\mybm{Q}}
+\newcommand{\vR}{\mybm{R}}
+\newcommand{\vS}{\mybm{S}}
+\newcommand{\vT}{\mybm{T}}
+\newcommand{\vU}{\mybm{U}}
+\newcommand{\vV}{\mybm{V}}
+\newcommand{\vW}{\mybm{W}}
+\newcommand{\vX}{\mybm{X}}
+\newcommand{\vY}{\mybm{Y}}
+\newcommand{\vZ}{\mybm{Z}}
+\newcommand{\valpha}{\mybm\alpha}
+\newcommand{\vbeta}{\mybm\beta}
+\newcommand{\vchi}{\mybm\chi}
+\newcommand{\vdelta}{\mybm\delta}
+\newcommand{\vepsilon}{\mybm\epsilon}
+\newcommand{\veta}{\mybm\eta}
+\newcommand{\vgamma}{\mybm\gamma}
+\newcommand{\viota}{\mybm\iota}
+\newcommand{\vkappa}{\mybm\kappa}
+\newcommand{\vlambda}{\mybm\lambda}
+\newcommand{\vmu}{\mybm\mu}
+\newcommand{\vomega}{\mybm\omega}
+\newcommand{\vphi}{\mybm\phi}
+\newcommand{\vpi}{\mybm\pi}
+\newcommand{\vpsi}{\mybm\psi}
+\newcommand{\vrho}{\mybm\rho}
+\newcommand{\vsigma}{\mybm\sigma}
+\newcommand{\vtau}{\mybm\tau}
+\newcommand{\vtheta}{\mybm\theta}
+\newcommand{\vupsilon}{\mybm\upsilon}
+\newcommand{\vxi}{\mybm\xi}
+\newcommand{\vzeta}{\mybm\zeta}
+% \newcommand{\vdigamma}{\mybm\digamma}
+\newcommand{\vDelta}{\mybm\Delta}
+\newcommand{\vGamma}{\mybm\Gamma}
+\newcommand{\vLambda}{\mybm\Lambda}
+\newcommand{\vOmega}{\mybm\Omega}
+\newcommand{\vPhi}{\mybm\Phi}
+\newcommand{\vPi}{\mybm\Pi}
+\newcommand{\vPsi}{\mybm\Psi}
+\newcommand{\vSigma}{\mybm\Sigma}
+\newcommand{\vTheta}{\mybm\Theta}
+\newcommand{\vUpsilon}{\mybm\Upsilon}
+\newcommand{\vXi}{\mybm\Xi}
+\newcommand{\uva}{\mybm{\mathrm{a}}}
+\newcommand{\uvb}{\mybm{\mathrm{b}}}
+\newcommand{\uvc}{\mybm{\mathrm{c}}}
+\newcommand{\uvd}{\mybm{\mathrm{d}}}
+\newcommand{\uve}{\mybm{\mathrm{e}}}
+\newcommand{\uvf}{\mybm{\mathrm{f}}}
+\newcommand{\uvg}{\mybm{\mathrm{g}}}
+\newcommand{\uvh}{\mybm{\mathrm{h}}}
+\newcommand{\uvi}{\mybm{\mathrm{i}}}
+\newcommand{\uvj}{\mybm{\mathrm{j}}}
+\newcommand{\uvk}{\mybm{\mathrm{k}}}
+\newcommand{\uvl}{\mybm{\mathrm{l}}}
+\newcommand{\uvm}{\mybm{\mathrm{m}}}
+\newcommand{\uvn}{\mybm{\mathrm{n}}}
+\newcommand{\uvo}{\mybm{\mathrm{o}}}
+\newcommand{\uvp}{\mybm{\mathrm{p}}}
+\newcommand{\uvq}{\mybm{\mathrm{q}}}
+\newcommand{\uvr}{\mybm{\mathrm{r}}}
+\newcommand{\uvs}{\mybm{\mathrm{s}}}
+\newcommand{\uvt}{\mybm{\mathrm{t}}}
+\newcommand{\uvu}{\mybm{\mathrm{u}}}
+\newcommand{\ubv}{\mybm{\mathrm{v}}}
+\newcommand{\uvw}{\mybm{\mathrm{w}}}
+\newcommand{\uvx}{\mybm{\mathrm{x}}}
+\newcommand{\uvy}{\mybm{\mathrm{y}}}
+\newcommand{\uvz}{\mybm{\mathrm{z}}}
+\newcommand{\uvA}{\mybm{\mathrm{A}}}
+\newcommand{\uvB}{\mybm{\mathrm{B}}}
+\newcommand{\uvC}{\mybm{\mathrm{C}}}
+\newcommand{\uvD}{\mybm{\mathrm{D}}}
+\newcommand{\uvE}{\mybm{\mathrm{E}}}
+\newcommand{\uvF}{\mybm{\mathrm{F}}}
+\newcommand{\uvG}{\mybm{\mathrm{G}}}
+\newcommand{\uvJ}{\mybm{\mathrm{J}}}
+\newcommand{\uvH}{\mybm{\mathrm{H}}}
+\newcommand{\uvI}{\mybm{\mathrm{I}}}
+\newcommand{\uvK}{\mybm{\mathrm{K}}}
+\newcommand{\uvL}{\mybm{\mathrm{L}}}
+\newcommand{\uvM}{\mybm{\mathrm{M}}}
+\newcommand{\uvN}{\mybm{\mathrm{N}}}
+\newcommand{\uvO}{\mybm{\mathrm{O}}}
+\newcommand{\uvP}{\mybm{\mathrm{P}}}
+\newcommand{\uvQ}{\mybm{\mathrm{Q}}}
+\newcommand{\uvR}{\mybm{\mathrm{R}}}
+\newcommand{\uvS}{\mybm{\mathrm{S}}}
+\newcommand{\uvT}{\mybm{\mathrm{T}}}
+\newcommand{\uvU}{\mybm{\mathrm{U}}}
+\newcommand{\uvV}{\mybm{\mathrm{V}}}
+\newcommand{\uvW}{\mybm{\mathrm{W}}}
+\newcommand{\uvX}{\mybm{\mathrm{X}}}
+\newcommand{\uvY}{\mybm{\mathrm{Y}}}
+\newcommand{\uvZ}{\mybm{\mathrm{Z}}}
+\newcommand{\uvalpha}{\mybm{\mathrm{\alpha}}}
+\newcommand{\uvbeta}{\mybm{\mathrm{\beta}}}
+\newcommand{\uvchi}{\mybm{\mathrm{\chi}}}
+\newcommand{\uvdelta}{\mybm{\mathrm{\delta}}}
+\newcommand{\uvepsilon}{\mybm{\mathrm{\epsilon}}}
+\newcommand{\uveta}{\mybm{\mathrm{\eta}}}
+\newcommand{\uvgamma}{\mybm{\mathrm{\gamma}}}
+\newcommand{\uviota}{\mybm{\mathrm{\iota}}}
+\newcommand{\uvkappa}{\mybm{\mathrm{\kappa}}}
+\newcommand{\uvlambda}{\mybm{\mathrm{\lambda}}}
+\newcommand{\uvmu}{\mybm{\mathrm{\mu}}}
+\newcommand{\uvomega}{\mybm{\mathrm{\omega}}}
+\newcommand{\uvphi}{\mybm{\mathrm{\phi}}}
+\newcommand{\uvpi}{\mybm{\mathrm{\pi}}}
+\newcommand{\uvpsi}{\mybm{\mathrm{\psi}}}
+\newcommand{\uvrho}{\mybm{\mathrm{\rho}}}
+\newcommand{\uvsigma}{\mybm{\mathrm{\sigma}}}
+\newcommand{\uvtau}{\mybm{\mathrm{\tau}}}
+\newcommand{\uvtheta}{\mybm{\mathrm{\theta}}}
+\newcommand{\uvupsilon}{\mybm{\mathrm{\upsilon}}}
+\newcommand{\uvxi}{\mybm{\mathrm{\xi}}}
+\newcommand{\uvzeta}{\mybm{\mathrm{\zeta}}}
+\newcommand{\uvDelta}{\mybm{\mathrm{\Delta}}}
+\newcommand{\uvGamma}{\mybm{\mathrm{\Gamma}}}
+\newcommand{\uvLambda}{\mybm{\mathrm{\Lambda}}}
+\newcommand{\uvOmega}{\mybm{\mathrm{\Omega}}}
+\newcommand{\uvPhi}{\mybm{\mathrm{\Phi}}}
+\newcommand{\uvPi}{\mybm{\mathrm{\Pi}}}
+\newcommand{\uvPsi}{\mybm{\mathrm{\Psi}}}
+\newcommand{\uvSigma}{\mybm{\mathrm{\Sigma}}}
+\newcommand{\uvTheta}{\mybm{\mathrm{\Theta}}}
+\newcommand{\uvUpsilon}{\mybm{\mathrm{\Upsilon}}}
+\newcommand{\uvXi}{\mybm{\mathrm{\Xi}}}
+\newcommand{\vzero}{\mybm{0}}
+\newcommand{\vones}{\mybm{1}}
+
+\DeclareMathOperator{\diag}{diag}
+\newcommand{\T}{^\mathrm{T}}
+\newcommand{\I}{^{-1}}
+\newcommand{\IG}{^{-}}
+\newcommand{\Ih}{^{-\frac{1}{2}}}
+\newcommand{\hfrac}[2]{\left.{#1}\middle/{#2}\right.}
+
+\NewDocumentCommand{\rvec}{ m O{} }{%
+\mathchoice{\left(#1\right)#2}%
+  {(#1)#2}%
+  {(#1)#2}%
+  {(#1)#2}%
+}
+\NewDocumentCommand{\cvec}{ m O{} }{{\rvec{#1}[#2]}\T}
+\NewDocumentCommand{\set}{ m O{}}{%
+  \IfNoValueTF{#2}{%
+    \left\{{#1}\right\}%
+  }{%
+    \left\{{#1}\middle|{#2}\right\}%
+  }%
+}%
+
+\@ifpackageloaded{physics}{%
+  \let\var\undefined
+  \DeclareDocumentCommand\dvar{}{\variation}
+}{}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\cov}{cov}
+\DeclareMathOperator{\sd}{sd}
+\DeclareMathOperator{\se}{se}
+\NewDocumentCommand{\cond}{ m m }{%
+  \left( #1 \middle| #2 \right)%
+}%
+\NewDocumentCommand{\conde}{ m m }{%
+  E\left( #1 \middle| #2 \right)%
+}%
+\NewDocumentCommand{\condvar}{ m m }{%
+  \var\left( #1 \middle| #2 \right)%
+}%
+% \NewDocumentCommand{\rsquared}{ O{} m }{%
+%     \ensuremath{R^2_{\mathrm{#1}}\ifthenelse{\ispositiverealnumber{#2}}{={#2}}{}}%
+% }
+
+\NewDocumentCommand{\diagnostic}{ m O{} m }{%
+  \ensuremath{#1_{\mathrm{#2}}\ifthenelse{\isnumber{#3}}{={#3}}{}}%
+}
+\NewDocumentCommand{\rsquared}{O{} m}{\diagnostic{R^2}[#1]{#2}}
+\NewDocumentCommand{\CV}{O{} m}{\diagnostic{{\mathrm{CV}}}[#1]{#2}}
+\NewDocumentCommand{\AIC}{O{} m}{\diagnostic{{\mathrm{AIC}}}[#1]{#2}}
+\NewDocumentCommand{\AICc}{O{} m}{\diagnostic{{\mathrm{AIC}_c}}[#1]{#2}}
+\NewDocumentCommand{\RSSg}{O{} m}{\diagnostic{{\mathrm{RSS}_g}}[#1]{#2}}
+
+\NewDocumentCommand{\DF}{}{\mathcal{D}}
+\NewDocumentCommand{\NP}{}{\mathcal{P}}
+\NewDocumentCommand{\EDF}{}{\mathcal{D}_{e}}
+\NewDocumentCommand{\ENP}{}{\mathcal{P}_{e}}
