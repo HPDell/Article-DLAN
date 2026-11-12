@@ -686,22 +686,24 @@ But trainable parameters increased to 10,733, which could reduce the stability o
   \caption{Completed WuhanOD width and support experiments, ten seeds per configuration.
   The K512 and K2048 configurations were run on another machine.}\label{tab:sensitivity}
   \small\setlength{\tabcolsep}{4pt}
-  \begin{tabular}{llrrrr}\toprule
-    Attention width     & Candidate count & Parameters & RMSE              & MAE & Worst \\\midrule
-    \multirow{3}{*}{10} & 512             & 5,541      & $624.40\pm154.31$ & 54.83 &   944.09 \\
-                        & 1024            & 5,541      & $620.00\pm252.45$ & 54.39 &   808.09 \\
-                        & 2048            & 5,541      & $591.82\pm171.15$ & 53.21 &   847.45 \\
-    \multirow{3}{*}{12} & 512             & 7,069      & $\mathbf{565.28}\pm154.31$ & \textbf{50.28} &   827.76 \\
-                        & 1024            & 7,069      & $608.73\pm252.45$ & 52.08 & 1,222.61 \\
-                        & 2048            & 7,069      & $587.60\pm171.15$ & 51.07 &   840.72 \\
-    \multirow{3}{*}{16} & 512             & 10,773     & $636.55\pm104.63$ & 54.54 &   879.06 \\
-                        & 1024            & 10,773     & $609.93\pm104.63$ & 52.94 &   \textbf{753.40} \\
-                        & 2048            & 10,773     & $665.21\pm104.63$ & 55.55 &   896.36 \\
+  \begin{tabular}{llrrrrr}\toprule
+    \makecell{Attention\\width} & \makecell{Candidate\\count} & Parameters & RMSE                       & MAE            & Worst           & \makecell{Computing\\Time} \\\midrule
+    \multirow{3}{*}{10}         & 512                         & 5,541      & $624.40\pm154.31$          & 54.83          & 944.09          &  \\
+                                & 1024                        & 5,541      & $620.00\pm252.45$          & 54.39          & 808.09          &  \\
+                                & 2048                        & 5,541      & $591.82\pm171.15$          & 53.21          & 847.45          &  \\
+    \multirow{3}{*}{12}         & 512                         & 7,069      & $\mathbf{565.28}\pm154.31$ & \textbf{50.28} & 827.76          &  \\
+                                & 1024                        & 7,069      & $608.73\pm252.45$          & 52.08          & 1,222.61        &  \\
+                                & 2048                        & 7,069      & $587.60\pm171.15$          & 51.07          & 840.72          &  \\
+    \multirow{3}{*}{16}         & 512                         & 10,773     & $636.55\pm104.63$          & 54.54          & 879.06          &  \\
+                                & 1024                        & 10,773     & $609.93\pm104.63$          & 52.94          & \textbf{753.40} &  \\
+                                & 2048                        & 10,773     & $665.21\pm104.63$          & 55.55          & 896.36          &  \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 Different configurations of \DLAN result in changes of computation burden.
+All the configurations shown in \autoref{tab:sensitivity} were trained on a high performance cluster with 8 NVIDIA A800 GPUs per session.
+
 
 Nevertheless, the overall computation cost of \DLAN is moderate and acceptable compared with other models.
 Under the condition that all models have relatively equal number of trainable parameters,
@@ -717,25 +719,14 @@ especially it works for data of different dimensions.
   \caption{
     Recorded mean fit cost for the reported configurations.
   }\label{tab:cost}
-  \begin{tabular}{llrr}\toprule
-    Case     & Model   & Training time & Epochs\\\midrule
-    \COO     & \DLAN   & 79.56         & 126.4\\
-             & \GAgg   & 80.80         & 170.1\\
-             & \GTNNWR & 41.32         & 210.6\\
-    \midrule  
-    \WuhanOD & \DLAN   & 804.63        & 230.4\\
-             & \GAgg   & 305.22        & 268.7\\
-             & \GNNWR  & 33.83         & 262.2\\
-    \midrule  
-    \WuhanHP & \DLAN   & 33.90         & 40.3\\
-             & \GAgg   & 45.45         & 62.2\\
-             & \GNNWR  & 32.41         & 120.5\\
-             & \GCNNWR & 13.17         & 88.0\\
-    \midrule  
-    \GVI     & \DLAN   & 5.16          & 56.6\\
-             & \GAgg   & 6.41          & 75.2\\
-             & \GNNWR  & 9.25          & 219.0\\
-             & \GCNNWR & 0.65          & 32.1\\\bottomrule
+  \begin{tabular}{lrrrr}\toprule
+    \multirow{2}{*}{Case}     & \multicolumn{4}{c}{Time consumption} \\\cmidrule(lr){2-5}
+    & \DLAN & \GAgg & \GNNWR & \GCNNWR \\\midrule
+    \COO     & 79.56  & 80.80  & 41.32 & \\
+    \WuhanOD & 804.63 & 305.22 & 33.83 & \\
+    \WuhanHP & 33.90 & 45.45 & 32.41 & 13.17 \\
+    \GVI     & 5.16 & 6.41 & 9.25 & 0.65 \\
+    \bottomrule
   \end{tabular}
 \end{table}
 
@@ -854,6 +845,7 @@ Future research will address these issues individually.
 \section*{Acknowledgements}
 
 The work was sponsored by the Fundamental Research Funds for the Central Universities under grant [number B260201041]; and National Natural Science Foundation of China under grant [number 42571480].
+The authors acknowledge the High-Performance Computing Platform at Hohai University for providing the computational resources used in this study.
 
 \section*{Declaration of Generative AI Use}
 
