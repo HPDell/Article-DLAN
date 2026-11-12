@@ -132,7 +132,7 @@ Addressing the first issue, \glscite{gtwr}, \glscite{swim},
 and \glscite{gtdr} extend the \gls{gwr} framework to coordinate spaces of any combination of geographical and temporal dimensions.
 In particular, \Gls{gtdr} provides a uniform framework based on dimension-specific bandwidths and density regression theory~\citep{HyndmanBashtannyk-1996} for multidimensional spatio-temporal data without limited to a specific data type,
 thus provides a general but powerful solution.
-but they adopts uniform scale for all covariates.
+But these models adopts uniform scale for all covariates.
 \Glscite{mgwr} solved this problem by assigning different spatial scales to different covariate relationships.
 Nevertheless, these models still assume a linear relationship between the response and covariates,
 which may be restrictive in many applications.
@@ -141,30 +141,39 @@ such as geographically weighted random forest~\citep{LuoYan-2022} and Geographic
 
 With the prevalence of deep learning, neural network-based models have also been proposed to capture the nonlinear relationships in geographical data,
 such as \glscite{gnnwr}, \glscite{gcnnwr} and \GAgg~\citep{DengLi-2025a}.
-\Gls{gnnwr} and its extension \glscite{gtnnwr} uses a neural network to learn the spatial distribution of relationships between the response and covariates to replace pre-defined kernel functions.
+In \gls{gwr}, the kernel function is a pre-defined nonlinear mapping from distance to weight, which is monotone decreasing with distance greater than zero.
+\Gls{gnnwr} replaces the nonlinear mapping with a neural network to learn the spatial distribution of relationships between the response and covariates.
 It uncompresses the global regression coefficients to each sample to obtain spatially varying coefficients.
+The model therefore learns complicated relationship between characteristic and spatial proximity.
+However, locational proximity for spatio-temporal data is not a simple Euclidean distance in a three-dimensional space~\citep{HuangWu-2010,WuLi-2014}.
+For spatio-temporal data, \gls{gtnnwr}~\citep{WuWang-2021} has been proposed, which use a spatio-temporal proximity neural network instead of the geographical distance as the weighting source.
 \Gls{gcnnwr} constructs a regular spatial grid and represents each prediction location by a distance map containing its distances to the grid points.
 A convolutional neural network extracts spatial features from this map and generates location-specific multipliers for the global OLS intercept and regression coefficients.
 The resulting local coefficients are combined with the explanatory variables to produce predictions.
 These two methods retain the linear form of the model, but learn complicated non-linear mapping to approximate the spatial heterogeneous relationships.
-\GAgg further extends the framework for tabular spatial data by a Transformer architecture.
+
+In recent years, large language models and attention-based architectures have been widely used in natural language processing and computer vision~\citep{VaswaniShazeer-2023}.
+\gls{gwr}-family models share many common concepts with the attention mechanism:
+Attention weights are computed from query–key similarity,
+whereas GWR weights are determined by the distance between target and reference observations.
+Furthermore, attention mechanisms also involve a weighted aggregation step,
+which is analogous to weighted least squares estimation in \gls{gwr}.
+However, attention mechanisms tend to represent the conditional distribution of the response \(y\) given the features \(X\), \(f_Y(y\mid X)\),
+whereas geographically weighted regression conditions the response on both the features and spatial location \(U\), \(f_Y(y\mid X,U)\).
+The use of positional encoding to represent positional relationships in Transformer architectures closely parallels this location-dependent formulation of geographically weighted regression.
+\GAgg is an example which extends the framework for tabular spatial data by a Transformer architecture.
 It uses Cartesian product attention to combine covariate and response representations,
 incorporating a distance-based Gaussian bias to aggregate reference information into a local context for the query,
 which is concatenated with the query's own attributes and passed through a nonlinear feed-forward network to predict the response directly.
 All these approaches form part of a broader movement towards spatially explicit artificial intelligence and location representation~\citep{JanowiczGao-2020,MaiJanowicz-2022,ReichsteinCamps-Valls-2019}.
-However, they do not explicitly consider the spatio-temporal data and the scale difference between dimensions.
+However, \GAgg does not explicitly consider the spatio-temporal data and the scale difference between dimensions.
 
-Attention provides a useful connection between these neural models and the weighting principles of \gls{gwr}.
-An attention mechanism computes query-dependent weights over reference observations and aggregates their values~\citep{BahdanauCho-2016,VaswaniShazeer-2023},
-while the weighting scheme in \gls{gwr} also computes weights based on the spatial proximity of observations and aggregates their values by weighted least squares to estimate the outcome.
-A normalised Gaussian geographical kernel is a special case of an attention distribution when its log weight is used as the attention score.
-Considering \gls{gtdr} models coefficients varying across locations,
+\gls{gtdr} provides a general framework for multidimensional spatio-temporal data by allowing unique weighting schemes on each dimension, no matter which dimensions are included.
+Besides \gls{gtdr} models coefficients varying across locations,
 i.e., a field mapping coordinates to regression parameters,
-it is natural to consider whether a neural attention mechanism can be used to learn a nonlinear mapping from coordinates to regression parameters,
-and whether the learned mapping can be used to predict the response at new locations.
-By keeping the dimension-specific scale parameter, the model could be extended to multidimensional coordinate spaces,
-no matter spatio-temporal data, spatial flow, spatial-temporal flow,
-an so on.
+it is natural to consider whether a neural attention mechanism can be used to learn a nonlinear mapping $\Gamma: U \mapsto f_Y(y|X,U)$ from coordinates to regression parameters and whether the learned mapping can be used to predict the response at new locations.
+This mapping should meets the requirements of spatial dependency and spatial heterogeneity.
+By keeping the dimension-specific scale parameter, the model could be extended to multidimensional coordinate spaces, no matter spatio-temporal data, spatial flow, spatial-temporal flow, an so on.
 
 This study proposes \glstitle{dlan}, which combines bandwidth-adaptive reference retrieval,
 coordinate-specific attention and a nonlinear conditional predictor.
@@ -178,7 +187,11 @@ Sections~\ref{sec:results} and~\ref{sec:discussion} present the results and thei
 Section~\ref{sec:conclusion} concludes.
 
 \section{Methodology}\label{sec:model}
+
+
+
 \subsection{Observations and the reference-based prediction task}
+
 Let an observation be $(\bm{x}_i,\bm{u}_i,y_i)$, where $\bm{x}_i\in\R^p$ contains covariates,
 $\bm{u}_i\in\R^D$ locates the observation in a geographical--temporal space,
 and $y_i\in\R$ is its response.
