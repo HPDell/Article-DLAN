@@ -97,7 +97,7 @@ Regressors have 6,957 trainable parameters in \COO, WuhanHP and GVI,
 and 7,069 in the reported WuhanOD comparison.
 The WuhanOD DLAN restores attention width 12
 and uses 512 reference candidates,
-achieving mean test root mean squared error 565.28.
+achieving a mean test root mean squared error of 565.28.
 Relative to \GAgg, the reported DLAN configurations reduce mean error
 by 57.81\%, 26.85\%, 2.99\% and 7.58\%
 on \COO, WuhanOD, WuhanHP and planar GVI, respectively.
@@ -125,8 +125,8 @@ geographical flows
 Spatial dependence and spatial heterogeneity are two well-known properties of geographical data~\citep{Tobler-1970,Anselin-1988,Goodchild-2004},
 indicating that neighbouring observations can share information that is absent from the covariates of an individual record whilst relationships between a response and its covariates may change across locations.
 These properties motivate spatially explicit analysis rather than an assumption of identical relationships throughout a study region.
-\Glscite{gwr}, which estimates spatial heterogeneous relationship for each sample by borrowing information from nearby locations, is a comprehensive reflection of the two properties of geographical data.
-The model generates location-specific regression coefficients via a weighted least-squares estimator with weights determined by distance to geographical neighbours and a pre-defined kernel function.
+\Glscite{gwr}, which estimates spatially heterogeneous relationships for each sample by borrowing information from nearby locations, is a comprehensive reflection of the two properties of geographical data.
+The model generates location-specific regression coefficients via a weighted least-squares estimator with weights determined by distances to geographical neighbours and a pre-defined kernel function.
 In the past decade, the \gls{gwr} model has been widely applied in fields such as environmental science,
 epidemiology, urban planning and transportation~\citep{LuGe-2020a}.
 
@@ -134,50 +134,50 @@ However, the original \gls{gwr} is incompatible with spatio-temporal and spatial
 and it overlooks the scale differences in covariates.
 Addressing the first issue, \glscite{gtwr}, \glscite{swim},
 and \glscite{gtdr} extend the \gls{gwr} framework to coordinate spaces of any combination of geographical and temporal dimensions.
-In particular, \Gls{gtdr} provides a uniform framework based on dimension-specific bandwidths and density regression theory~\citep{HyndmanBashtannyk-1996} for multidimensional spatio-temporal data without limited to a specific data type,
-thus provides a general but powerful solution.
-But these models adopts uniform scale for all covariates.
+In particular, \Gls{gtdr} provides a uniform framework based on dimension-specific bandwidths and density regression theory~\citep{HyndmanBashtannyk-1996} for multidimensional spatio-temporal data without being limited to a specific data type,
+thus providing a general but powerful solution.
+But these models adopt a uniform scale for all covariates.
 \Glscite{mgwr} solved this problem by assigning different spatial scales to different covariate relationships.
 Nevertheless, these models still assume a linear relationship between the response and covariates,
 which may be restrictive in many applications.
-Some nonlinearity extensions based on machine learning have been proposed,
+Some nonlinear extensions based on machine learning have been proposed,
 such as geographically weighted random forest~\citep{LuoYan-2022,GuoHarris-2026} and Geographical-XGBoost~\citep{Grekousis-2025}.
 
 With the prevalence of deep learning, neural network-based models have also been proposed to capture the nonlinear relationships in geographical data,
 such as \glscite{gnnwr}, \glscite{gcnnwr} and \GAgg~\citep{DengLi-2025a}.
 In \gls{gwr}, the kernel function is a pre-defined nonlinear mapping from distance to weight, which is monotone decreasing with distance greater than zero.
 \Gls{gnnwr} replaces the nonlinear mapping with a neural network to learn the spatial distribution of relationships between the response and covariates.
-It uncompresses the global regression coefficients to each sample to obtain spatially varying coefficients.
-The model therefore learns complicated relationship between characteristic and spatial proximity.
+It maps the global regression coefficients to each sample to obtain spatially varying coefficients.
+The model therefore learns complex relationships between characteristics and spatial proximity.
 However, locational proximity for spatio-temporal data is not a simple Euclidean distance in a three-dimensional space~\citep{HuangWu-2010,WuLi-2014}.
-For spatio-temporal data, \gls{gtnnwr}~\citep{WuWang-2021} has been proposed, which use a spatio-temporal proximity neural network instead of the geographical distance as the weighting source.
+For spatio-temporal data, \gls{gtnnwr}~\citep{WuWang-2021} has been proposed, which uses a spatio-temporal proximity neural network instead of geographical distance as the weighting source.
 \Gls{gcnnwr} constructs a regular spatial grid and represents each prediction location by a distance map containing its distances to the grid points.
 A convolutional neural network extracts spatial features from this map and generates location-specific multipliers for the global OLS intercept and regression coefficients.
 The resulting local coefficients are combined with the explanatory variables to produce predictions.
-These two methods retain the linear form of the model, but learn complicated non-linear mapping to approximate the spatial heterogeneous relationships.
+These two methods retain the linear form of the model, but learn complex nonlinear mappings to approximate the spatially heterogeneous relationships.
 
 In recent years, large language models and attention-based architectures have been widely used in natural language processing and computer vision~\citep{VaswaniShazeer-2023}.
 \gls{gwr}-family models share many common concepts with the attention mechanism:
 Attention weights are computed from query–key similarity,
 whereas GWR weights are determined by the distance between target and reference observations.
 Furthermore, attention mechanisms also involve a weighted aggregation step,
-which is analogous to weighted least squares estimation in \gls{gwr}.
+which is analogous to weighted least-squares estimation in \gls{gwr}.
 However, attention mechanisms tend to represent the conditional distribution of the response \(y\) given the features \(X\), \(f_Y(y\mid X)\),
 whereas geographically weighted regression conditions the response on both the features and spatial location \(U\), \(f_Y(y\mid X,U)\).
 The use of positional encoding to represent positional relationships in Transformer architectures closely parallels this location-dependent formulation of geographically weighted regression.
-\GAgg is an example which extends the framework for tabular spatial data by a Transformer architecture.
+\GAgg is an example that extends the framework to tabular spatial data using a Transformer architecture.
 It uses Cartesian product attention to combine covariate and response representations,
 incorporating a distance-based Gaussian bias to aggregate reference information into a local context for the query,
 which is concatenated with the query's own attributes and passed through a nonlinear feed-forward network to predict the response directly.
 All these approaches form part of a broader movement towards spatially explicit artificial intelligence and location representation~\citep{JanowiczGao-2020,MaiJanowicz-2022,ReichsteinCamps-Valls-2019}.
-However, \GAgg does not explicitly consider the spatio-temporal data and the scale difference between dimensions.
+However, \GAgg does not explicitly consider spatio-temporal data or differences in scale between dimensions.
 
-\gls{gtdr} provides a general framework for multidimensional spatio-temporal data by allowing unique weighting schemes on each dimension, no matter which dimensions are included.
-Besides \gls{gtdr} models coefficients varying across locations,
+\gls{gtdr} provides a general framework for multidimensional spatio-temporal data by allowing unique weighting schemes for each dimension, no matter which dimensions are included.
+As \gls{gtdr} models coefficients that vary across locations,
 i.e., a field mapping coordinates to regression parameters,
 it is natural to consider whether a neural attention mechanism can be used to learn a nonlinear mapping $\Gamma: U \mapsto f_Y(y|X,U)$ from coordinates to regression parameters and whether the learned mapping can be used to predict the response at new locations.
-This mapping should meets the requirements of spatial dependency and spatial heterogeneity.
-By keeping the dimension-specific scale parameter, the model could be extended to multidimensional coordinate spaces, no matter spatio-temporal data, spatial flow, spatial-temporal flow, an so on.
+This mapping should meet the requirements of spatial dependence and spatial heterogeneity.
+By keeping the dimension-specific scale parameter, the model could be extended to multidimensional coordinate spaces, including spatio-temporal data, spatial flow, spatio-temporal flow, and so on.
 
 This study proposes \glstitle{dlan}, which combines bandwidth-adaptive reference retrieval,
 coordinate-specific attention and a nonlinear conditional predictor.
@@ -194,27 +194,27 @@ Section~\ref{sec:conclusion} concludes.
 
 \subsection{\Glsentrylong{gtdr}}
 
-For a sample $i$ among at location $\vu_i$, \gls{gtdr} express the relationship between its dependent variable $y_i$ and a series of independent variable $\vx\T_i$ by \eqref{eq:gtdr},
+For a sample $i$ at location $\vu_i$, \gls{gtdr} expresses the relationship between its dependent variable $y_i$ and a set of independent variables $\vx\T_i$ as shown in \eqref{eq:gtdr},
 \begin{equation}\label{eq:gtdr}
   y_i = \Exp(Y|\vX=\vx\T_i,\vU=\vu_i) + \epsilon_i = \vx\T_i \vbeta(\vu_i) + \epsilon_i
 \end{equation}
-where $\epsilon_i$ is random error, $\beta(\vu_i)$ is the location-specific regression coefficient which is estimated by \eqref{eq:gtdr-estimator},
+where $\epsilon_i$ is a random error term, and $\beta(\vu_i)$ is the location-specific regression coefficient estimated using \eqref{eq:gtdr-estimator},
 \begin{equation}\label{eq:gtdr-estimator}
   \hat{\vbeta}(\vu_i) = (\vX\T \vW(\vu_i) \vX)\I (\vX\T \vW(\vu_i) \vy) \;.
 \end{equation}
-Each element $w(\vu_i,\vu_j)$ ($j=1,2,\cdots,n$) in the diagonal spatial weighting matrix $\vW(\vu_i) = \diag(w(\vu_i,\vu_1),w(\vu_i,\vu_2),\cdots,w(\vu_i,\vu_n))$ is computed by kernel functions and bandwidths assigned for every of the dimensions in $\vu_i$ according to
+Each element $w(\vu_i,\vu_j)$ ($j=1,2,\cdots,n$) in the diagonal spatial weighting matrix $\vW(\vu_i) = \diag(w(\vu_i,\vu_1),w(\vu_i,\vu_2),\cdots,w(\vu_i,\vu_n))$ is computed using kernel functions and bandwidths assigned to each of the dimensions in $\vu_i$ according to
 \begin{equation}
   w(\vu_i,\vu_j) = \prod_{\ell=1}^D K_\ell\left(\frac{u_{i\ell}-u_{j\ell}}{b_\ell}\right) 
 \end{equation}
-where $D$ is the total number of dimensions, $K_\ell$, $u$, and $b_\ell$ is the kernel function for the $\ell$-th dimension, the $\ell$-th coordinate of $\vu$, and the bandwidth for the $\ell$-th dimension, respectively.
+where $D$ is the total number of dimensions, and $K_\ell$, $u$, and $b_\ell$ are the kernel function for the $\ell$-th dimension, the $\ell$-th coordinate of $\vu$, and the bandwidth for the $\ell$-th dimension, respectively.
 Kernel functions are usually chosen from Gaussian, bi-square, tri-cube, and exponential functions \citep{LuHu-2025}.
 
 Although the formulation of \gls{gtdr} looks like that of \gls{gwr}, there is a key difference:
 \gls{gwr} can only handle geographical data, while \gls{gtdr} can handle any combination of geographical and temporal dimensions.
-\citet{LuHu-2025} has demonstrated that \gls{gtdr} has equivalent and even better performance than \gls{gwr} in geographical data, \gls{gtwr} in spatio-temporal data, and \gls{swim} in spatial flow data.
-Nevertheless, \gls{gtdr} is still a linear regression model because the conditional expectation of $Y$ under the condition of $\vX$ and $\vU$ is expressed by a linear combination of $\vX$ and $\vbeta(\vu)$.
-In other words, $\vbeta(\vu)$ is parameters of the linear mapping $\vbeta: \vx \mapsto y$, while \gls{gtdr} implements a mapping $\vGamma: \vu \mapsto \vbeta$.
-The proposed \DLAN model aims to learn a nonlinear mapping $\vB: \vx \mapsto y$ under the condition of the location $\vu$.
+\citet{LuHu-2025} has demonstrated that \gls{gtdr} performs as well as or even better than \gls{gwr} on geographical data, \gls{gtwr} on spatio-temporal data, and \gls{swim} on spatial flow data.
+Nevertheless, \gls{gtdr} is still a linear regression model because the expectation of $Y$ conditional on $\vX$ and $\vU$ is expressed as a linear combination of $\vX$ and $\vbeta(\vu)$.
+In other words, $\vbeta(\vu)$ contains the parameters of the linear mapping $\vbeta: \vx \mapsto y$, while \gls{gtdr} implements a mapping $\vGamma: \vu \mapsto \vbeta$.
+The proposed \DLAN model aims to learn a nonlinear mapping $\vB: \vx \mapsto y$ conditional on location $\vu$.
 
 \subsection{\Glsentrylong{dlan}}
 
@@ -232,7 +232,7 @@ The attention mechanism first generates a local conditioning representation from
 This representation modulates a nonlinear prediction network, which then predicts the response using the query covariates.
 There are two main components in the model: 
 (a) joint attention with dimension-specific scores;
-and (b) FiLM predictor conditioned on the aggregated local context.
+and (b) a FiLM predictor conditioned on the aggregated local context.
 
 \begin{figure}[tp]
   \centering\includegraphics[width=\linewidth]{dlan_architecture.pdf}
@@ -251,7 +251,7 @@ These rules define a labelled-reference prediction task and the information avai
 
 \subsubsection{Encoding and candidate retrieval}
 
-Before sent to the joint attention block, query and reference observations are encoded into tokens via shared \gls{mlp} encoders, as shown in \eqref{eq:token}
+Before being sent to the joint attention block, query and reference observations are encoded into tokens via shared \gls{mlp} encoders, as shown in \eqref{eq:token},
 \begin{equation}\label{eq:token}
  \ve_i=\lnorm\{E_x(\vx_i)+E_u(\vu_i)\}.
 \end{equation}
@@ -271,7 +271,7 @@ For attention block $r$, head $h$, and coordinate $\ell$, the retrieval score us
 \begin{equation}\label{eq:coordinate-scaled-distance}
   d_{rh}^2(i,j) = \sum_{\ell=1}^{D} \left( \frac{u_{j\ell} - u_{i\ell}}{b_{r\ell h}} \right)^2
 \end{equation}
-and the candidate set is the deduplicated union of the $k$ closet eligible training references through nearest-neighbour search (KNN) under every block--head metric, as shown in \eqref{eq:candidate-set},
+and the candidate set is the deduplicated union of the $k$ closest eligible training references obtained through nearest-neighbour search (KNN) under each block--head metric, as shown in \eqref{eq:candidate-set},
 \begin{equation}\label{eq:candidate-set}
   \cand_i = \cup_{r,h} \operatorname{TopK}_{j \in \train\setminus\{i\}} \{-d_{rh}^2(i,j)\}.
 \end{equation}
@@ -301,7 +301,7 @@ The score $\alpha_{ihj}$ is computed according to \eqref{eq:score} and \eqref{eq
   \label{eq:attention}
   \alpha_{ihj}={}&\frac{\exp(s_{ihj})}{\sum_{r\in\cand_i}\exp(s_{ihr})}.
 \end{align}
-where $\ve$ is an observation token by encoding features and coordinates, $g_{h\ell}$ represents learnt directional geographical biases, and $\cand_i$ is the candidate set for query $i$ according to $k$-nearest neighbour retrieval.
+where $\ve$ is an observation token obtained by encoding features and coordinates, $g_{h\ell}$ represents learnt directional geographical biases, and $\cand_i$ is the candidate set for query $i$ according to $k$-nearest-neighbour retrieval.
 
 There is one softmax over the shared candidate identifiers for each query and head.
 Separate coordinate projections do not produce separate coordinate-wise probability distributions.
@@ -324,8 +324,8 @@ The local condition modulates each hidden layer according to \eqref{eq:film},
  \{1+\tanh(\bm{\gamma}_r(\vh_i))\}\odot\va^{(r)}_i
        +\bm{\beta}_r(\vh_i)\right].\label{eq:film}
 \end{equation}
-A final linear readout produces $\hat y_i$ according to $\vt^{(r)}_i$.
-This use of \gls{film} allows the relationship between attributes and response to vary with the reference-derived condition~\citep{PerezStrub-2018}.
+A final linear readout produces $\hat y_i$ from $\vt^{(r)}_i$.
+This use of \gls{film} allows the relationship between attributes and the response to vary with the reference-derived condition~\citep{PerezStrub-2018}.
 Nonlinear activations also permit attribute interactions and curved response functions.
 
 \subsubsection{Training and computation budget}
@@ -340,7 +340,7 @@ This follows the separation between fitting and predictive assessment underlying
 A learning-rate scheduler also halves the learning rate when the validation loss fails to improve for a specified number of epochs.
 
 To formulate the computation budget, let $N_{\train}$ be the number of training references, $L$ the number of attention blocks, $H$ the number of attention heads, $D$ the number of coordinates, and $d$ the dimension of each projected query and key.
-With fixed candidate count $M$, attention on the candidates requires work proportional to $MDd$ per query for coordinate-specific value operations,
+With a fixed candidate count $M$, attention on the candidates requires work proportional to $MDd$ per query for coordinate-specific value operations,
 apart from projections and feed-forward processing.
 However, the current candidate implementation evaluates distances to all $N_{\train}$ references for each block--head metric and uses a stable full sorting operation.
 Its distance work is $O(LHN_{\train}D)$ and sorting is $O(LHN_{\train}\log N_{\train})$ per query.
@@ -350,17 +350,17 @@ Computational scalability is therefore evaluated through both measured fit cost 
 
 \section{Data and experimental design}\label{sec:data}
 
-We use four cases to evaluate the proposed \DLAN and its competitors including \GNNWR, \GCNNWR, and \GAgg as baselines.
+We use four cases to evaluate the proposed \DLAN against competing models, including \GNNWR, \GCNNWR, and \GAgg, as baselines.
 The empirical comparison comprises: 
 (a) \COO;
 (b) \WuhanOD;
 (c) \WuhanHP;
 and (d) \GVI.
 They represent spatio-temporal data, spatial flow data, multilevel geographical data, and planar geographical data with remote sensing observations.
-Importantly, \DLAN is able to cover all four cases, while all the competitors cannot under their originally implementations as they are mainly designed for planar geographical data.
+Importantly, \DLAN is able to cover all four cases, while its competitors cannot all do so in their original implementations, as they are mainly designed for planar geographical data.
 To enable a fair comparison, \GNNWR actually represents \GNNWR and \GTNNWR for the spatio-temporal data and spatial flow data, respectively.
-\GCNNWR has not been extended to spatial data, it only works on the geographical datasets, i.e., \WuhanHP and \GVI.
-Both models did not work on the spatial flow data, i.e., \WuhanOD, due to the lack of a proper design for the flow data.
+\GCNNWR has not been extended to spatial data; it only works on the geographical datasets, i.e., \WuhanHP and \GVI.
+Neither model worked on the spatial flow data, i.e., \WuhanOD, due to the lack of a proper design for the flow data.
 \GAgg is connected to an adaptor for the spatio-temporal and spatial flow data, which simply extends distance computation from planar coordinates to multidimensional coordinates to avoid essential changes to the original model.
 Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
 
@@ -382,7 +382,7 @@ Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
 
 \subsection{Data descriptions}
 
-The \COO case use dataset collected from the repository of \citet{WuDu-2026} that provides a panel of 13,000 observations during 2014–2021 with 8 covariates covering population, economic growth, industrialization, and other aspects of county-level administrative units in China.
+The \COO case uses a dataset collected from the repository of \citet{WuDu-2026} that provides a panel of 13,000 observations during 2014–2021 with 8 covariates covering population, economic growth, industrialisation, and other aspects of county-level administrative units in China.
 The whole data were divided into training, validation and test sets according to the year of observation:
 observations from 2014--2019 form the training set,
 2020 provides validation, and 2021 provides the test set.
@@ -394,40 +394,40 @@ This case compares models with a three-dimensional spatio-temporal regression pr
 
 The \WuhanOD case uses taxi-trajectory data collected in Wuhan from 20 to 26 July 2020.
 The study area was restricted to subdistricts belonging to Wuchang, Hongshan and Qingshan districts.
-Each passenger trip was assigned to its origin and destination subdistricts, and trips with the same ordered origin--destination (OD) pair were aggregated into an interaction count, forming a 4-D spatial dataset located by $(x_o,y_o,x_d,y_d)$,
+Each passenger trip was assigned to its origin and destination subdistricts, and trips with the same ordered origin--destination (OD) pair were aggregated into an interaction count, forming a 4-D spatial dataset located by $(x_o,y_o,x_d,y_d)$.
 In addition, seventeen \gls{poi} categories at each endpoint and average interaction length provide 35 covariates.
-During the training, the model minimises error on a standardised $\log(1+y)$ target but
+During training, the model minimises error on a standardised $\log(1+y)$ target but
 predictions are transformed back by $\max\{\exp(\hat y)-1,0\}$ before count-scale assessment.
-The whole dataset are divided into training, validation and test sets with unordered endpoint pairs following the 70/15/15 grouped allocation.
+The whole dataset is divided into training, validation and test sets with unordered endpoint pairs following the 70/15/15 grouped allocation.
 The test therefore concerns held-out positive interactions within the observed geographical system.
 
-The \WuhanHP case focus on a multilevel dataset, collected by \citet{HuHarris-2026}, that contains 19,599 second-hand housing observations at 776 communities in Wuhan, China.
+The \WuhanHP case focuses on a multilevel dataset, collected by \citet{HuHarris-2026}, that contains 19,599 second-hand housing observations in 776 communities in Wuhan, China.
 Houses within one location share coordinates but have different attributes and responses.
-It has 17 attributes describe floor category, decoration, building form, building area,
+It has 17 attributes describing floor category, decoration, building form, building area,
 fees and access to schools, transport, retail, water and green land.
 The dataset is divided into training, validation and test sets at the community level, with 15,475, 2196 and 1928 observations in each partition.
 The test requires the geographical condition to transfer to unseen communities,
 whilst the direct covariate path distinguishes individual dwellings.
 
-The \GVI case focus on predicting \gls{gvi} that measures the visible share of greenery in street-level scenes and provides a human-scale description of the urban environment~\citep{LiZhang-2015,BiljeckiIto-2021}.
+The \GVI case focuses on predicting \gls{gvi}, which measures the visible share of greenery in street-level scenes and provides a human-scale description of the urban environment~\citep{LiZhang-2015,BiljeckiIto-2021}.
 Its relationship with built-environment attributes can involve thresholds,
 saturation and interactions that are poorly represented by a single linear response surface.
 We collected street-view images in Shanghai, China and computed the \gls{gvi} via a model trained on manually labelled images.
-Then, at the location where street-view images were taken, we downloaded the on-site remote sensing data from Sentinel-1 and Sentinel-2 satellites and cut them into patches.
+Then, at the locations where street-view images were taken, we downloaded the on-site remote sensing data from Sentinel-1 and Sentinel-2 satellites and cut them into patches.
 We further collected the building-height, road-network density, categorical \gls{poi} counts, sky-view factors and canopy features from the same area.
-It comprise 2,122 Shanghai-area observations captured during 2019--2022.
-All the features are processed by a encoder to produce 176 covariates as model inputs.
+The dataset comprises 2,122 Shanghai-area observations captured during 2019--2022.
+All the features are processed by an encoder to produce 176 covariates as model inputs.
 This case is intended to examine the nonlinear prediction component related to features learnt from remote sensing data.
 
 \subsection{Model settings}\label{sec:model-settings}
 
 The four models have different critical hyperparameters according to their structures.
-Specifically, \DLAN relies on width of the attention blocks and shape of the \gls{film} predictor.
+Specifically, \DLAN relies on the width of the attention blocks and the shape of the \gls{film} predictor.
 \GNNWR uses the spatially weighted neural network to construct the nonstationary weight matrix.
 \GCNNWR depends on the shape of the convolutional kernel and pooling layers.
-\GAgg is affected by sizes of the latent dimension and decoder.
+\GAgg is affected by the sizes of the latent dimension and decoder.
 Besides, neighbourhood size could also significantly impact the model's performance.
-These parameters varies on different cases, as shown in \autoref{tbl:model-parameters}.
+These parameters vary across cases, as shown in \autoref{tbl:model-parameters}.
 
 \begin{table}
   \centering\small
@@ -467,8 +467,8 @@ All cases are trained with AdamW, an initial learning rate of $10^{-3}$ and weig
 The loss is the mean squared error of the response standardised using training-set statistics.
 Training runs for a maximum of 300 epochs.
 Early stopping monitors validation mean squared error, with a patience of 30 epochs and a minimum improvement of $10^{-5}$.
-The experiments are conducted on a high-performance computing platform which has 3 sessions and each session has 8 NVIDIA A800 GPUs.
-Each configuration is allocated a dedicated GPU and evaluates ten random seeds.
+The experiments are conducted on a high-performance computing platform with 3 sessions, each of which has 8 NVIDIA A800 GPUs.
+Each configuration is allocated a dedicated GPU and evaluated using ten random seeds.
 All standardisation statistics introduced by these experiments are estimated exclusively from the training set.
 
 \subsection{Metrics of model performance}
@@ -543,13 +543,13 @@ Unless otherwise stated, all metric values reported below are averages across th
 
 The prediction accuracy across the four cases is summarised in \autoref{tab:accuracy} and \autoref{fig:relative}.
 \DLAN has the lowest mean $\RMSE$ on all four cases in these reported configurations,
-with the mean RMSE falls by 57.81\%, 26.85\%, 2.99\% and 7.58\% for \COO, \WuhanOD, \WuhanHP, and \GVI cases relative to \GAgg, respectively.
-Among the four cases, \DLAN in \COO has the largest improvement.
+with mean RMSE falling by 57.81\%, 26.85\%, 2.99\% and 7.58\% for the \COO, \WuhanOD, \WuhanHP, and \GVI cases relative to \GAgg, respectively.
+Among the four cases, \DLAN shows the largest improvement in \COO.
 We attribute this advantage to learning dimension-specific scales and attention projections, followed by joint aggregation.
-As shown in \autoref{fig:bandwidths}, \DLAN learns a spatio-temporal scale of $0.06834, 0.07927, 0.18604$ for $x,y,t$ dimensions in this case.
+As shown in \autoref{fig:bandwidths}, \DLAN learns spatio-temporal scales of $0.06834, 0.07927, 0.18604$ for the $x,y,t$ dimensions in this case.
 Note that the temporal scale is larger than the spatial scales, indicating that the model learns a slower decay of temporal influence than spatial influence.
 By contrast, differences in scale across dimensions are relatively small in the \WuhanHP case, 
-which are $0.08592, 0.08615$ for the two spatial dimensions,
+with scales of $0.08592, 0.08615$ for the two spatial dimensions,
 resulting in a more limited improvement in predictive accuracy with \DLAN.
 
 \begin{figure}[tp]\centering
@@ -591,7 +591,7 @@ As shown in the figure, \DLAN's predictions follow the identity line closely,
 with residuals concentrated near zero across the observed response range.
 \GAgg and \GTNNWR show greater dispersion
 and a stronger tendency to overpredict low responses and underpredict high responses.
-\DLAN substantially reduces this response-dependent error, with ten-seed mean RMSE of 0.2910 compared with 0.6897 for \GAgg and 0.8986 for GTNNWR, and mean $R^2$ of 0.9338.
+\DLAN substantially reduces this response-dependent error, with a ten-seed mean RMSE of 0.2910 compared with 0.6897 for \GAgg and 0.8986 for GTNNWR, and a mean $R^2$ of 0.9338.
 It outperforms both baselines in every paired seed, 
 so the tighter residual distribution in the illustrated run 
 is consistent with the repeated-run advantage in future-year prediction.
@@ -608,7 +608,7 @@ is consistent with the repeated-run advantage in future-year prediction.
 \end{figure}
 
 For \WuhanOD, \DLAN's main advantage is lower mean error and a smaller extreme error across training seeds, as shown in \autoref{fig:odtail}.
-With attention width of 12 and nearest-neighbours of 512, \DLAN achieves mean RMSE of 565.28 and MAE of 50.28, reducing mean RMSE by 26.85\% relative to \GAgg and 84.16\% relative to \GNNWR.
+With an attention width of 12 and 512 nearest neighbours, \DLAN achieves a mean RMSE of 565.28 and MAE of 50.28, reducing mean RMSE by 26.85\% relative to \GAgg and 84.16\% relative to \GNNWR.
 Its worst-seed RMSE is 827.76, compared with 3,110.57 for \GAgg.
 The response-tail diagnostics show that the largest 1\% of observed flows
 account for 97.43\% of \DLAN's squared error and 98.28\% of \GAgg's.
@@ -648,7 +648,7 @@ while predicting communities absent from the labelled training-reference bank.
 
 \autoref{fig:gvi} shows the prediction diagnostics for \GVI.
 \DLAN reduces prediction error relative to all three neural baselines in every paired seed,
-with mean RMSE of 0.0985 and MAE of 0.0760. 
+with a mean RMSE of 0.0985 and MAE of 0.0760. 
 The prediction diagnostics show less overprediction in the lower response quintiles than \GAgg and \GNNWR, although high-GVI observations remain underpredicted by all models.
 \GCNNWR achieves RMSE of 0.1185, close to the recovered global OLS predictor's 0.1186,
 whereas \DLAN achieves a larger reduction from the global linear reference and lowers RMSE by 7.58\% relative to \GAgg.
@@ -659,10 +659,10 @@ These results support \DLAN's nonlinear, reference-conditioned prediction for vi
 As mentioned in \autoref{sec:model-settings}, \DLAN has two critical hyperparameters: attention width and candidate support.
 We conducted additional experiments on \WuhanOD to examine the sensitivity of these hyperparameters.
 A full factorial experiment crossing attention widths of 10, 12 and 16 with candidate counts of 512, 1,024 and 2,048 revealed complex effects of these two parameters on model performance.
-By fixing attention width at 12, we found changes in mean RMSE are smaller than standard deviation across seeds when candidate count is varied from 512 to 2,048.
-However, The worst estimation increases dramatically from 827.76 to 1,222.61 with candidate count 1024.
-On the other hand, with attention width increasing from 12 to 16, the worst estimation could fall to 753.40 which is the lowest among all configurations, but the mean RMSE remains relatively stable.
-But trainable parameters increased to 10,733, which could reduce the stability of the model and increase the risk of overfitting.
+By fixing the attention width at 12, we found that changes in mean RMSE are smaller than the standard deviation across seeds when the candidate count is varied from 512 to 2,048.
+However, the worst-seed RMSE increases dramatically from 827.76 to 1,222.61 with a candidate count of 1024.
+On the other hand, as the attention width increases from 12 to 16, the worst-seed RMSE could fall to 753.40, which is the lowest among all configurations, but the mean RMSE remains relatively stable.
+But the number of trainable parameters increased to 10,733, which could reduce the stability of the model and increase the risk of overfitting.
 
 \begin{table}[tb]\centering
   \caption{Completed WuhanOD width and support experiments, ten seeds per configuration.
@@ -683,18 +683,18 @@ But trainable parameters increased to 10,733, which could reduce the stability o
   \end{tabular}
 \end{table}
 
-Different configurations of \DLAN result in changes of computation burden.
-All the configurations shown in \autoref{tab:sensitivity} were trained on a high performance cluster with 8 NVIDIA A800 GPUs per session.
+Different configurations of \DLAN result in changes in computational burden.
+All the configurations shown in \autoref{tab:sensitivity} were trained on a high-performance cluster with 8 NVIDIA A800 GPUs per session.
 
 
-Nevertheless, the overall computation cost of \DLAN is moderate and acceptable compared with other models.
-Under the condition that all models have relatively equal number of trainable parameters,
-their computational efficiency are compared under the same hardware and software environment,
+Nevertheless, the overall computational cost of \DLAN is moderate and acceptable compared with other models.
+With all models having approximately equal numbers of trainable parameters,
+their computational efficiencies are compared under the same hardware and software environment,
 as shown in \autoref{tab:cost}.
 Generally speaking, \DLAN consumes more training time than \GNNWR and \GCNNWR, but less than \GAgg.
-Exceptions occur on the \COO case which the time consumption of \DLAN and \GAgg are similar.
+An exception occurs in the \COO case, where the training times of \DLAN and \GAgg are similar.
 The results show that \DLAN has an efficient and effective architecture for spatial prediction,
-especially it works for data of different dimensions.
+particularly as it works with data of different dimensionalities.
 
 \begin{table}[tb]
   \centering\small
@@ -714,17 +714,17 @@ especially it works for data of different dimensions.
 
 \section{Discussion}\label{sec:discussion}
 
-\subsection{Dimensional-specific attention and scales}
+\subsection{Dimension-specific attention and scales}
 
-Inspired by \gls{gtdr}, we regards the dimensional-specific attention as the most important component of \DLAN.
+Inspired by \gls{gtdr}, we regard the dimension-specific attention as the most important component of \DLAN.
 \GTNNWR follows the extension from \gls{gwr} to \gls{gtwr} by constructing a spatiotemporal distance metric based on neural networks to accommodate spatiotemporal data.
 \GAgg likewise relies on distance-based context selection and therefore requires a spatiotemporal distance metric.
 Both approaches consequently face the same difficulty as \gls{gtwr}:
 incorporating an additional coordinate dimension requires specifying a distance metric for the expanded coordinate space, potentially introducing additional parameters and limiting the model's applicability.
 
-In contrast, \DLAN's dimensional-specific attention mechanism allows the model to learn separate attention weights for each dimension, enabling it to capture the relative importance of each dimension in the prediction task.
+In contrast, \DLAN's dimension-specific attention mechanism allows the model to learn separate attention weights for each dimension, enabling it to capture the relative importance of each dimension in the prediction task.
 As \citet{HuLu-2023} stated, researchers no longer need to design distance metrics to bring together, in a rather ad hoc way, different types of space and coordinate systems into the distance decay function.
-Assigning a weighting scheme to each of the dimensions and then pooling across them is suggested as a better alternative, just as what is done in \gls{gtdr}.
+Assigning a weighting scheme to each of the dimensions and then pooling across them is suggested as a better alternative, as is done in \gls{gtdr}.
 Evidence from the four cases supports this view.
 In the \COO case, the model learns a wider temporal scale than spatial scales,
 providing a fitted description of the geographical prior used for this panel.
@@ -742,7 +742,7 @@ Combining the two spatial dimensions through planar distance reduces the paramet
 These results suggest further scope for optimisation by allowing related spatial coordinate pairs to be specified in the model configuration, thereby reducing the degrees of freedom.
 Nevertheless, the current \DLAN model already supports a broad range of applications.
 
-In conclusion, \DLAN's dimensional-specific attention mechanism provides a flexible and effective way to learn the relative importance of each dimension in the prediction task, which could be also effective in the case of 5-D, 6-D (e.g., spatio-temporal flow), and higher-dimensional data.
+In conclusion, \DLAN's dimension-specific attention mechanism provides a flexible and effective way to learn the relative importance of each dimension in the prediction task, which could also be effective for 5-D, 6-D (e.g., spatio-temporal flow), and higher-dimensional data.
 
 \subsection{Attention width and other hyperparameters}
 
@@ -811,9 +811,9 @@ bandwidth-adaptive reference access and nonlinear conditional prediction.
 Its attention integrates content similarity, learnt geographical bias and a Gaussian product prior over shared candidate identifiers.
 The resulting condition modulates query attributes through FiLM.
 The construction accommodates geographical, spatio-temporal and spatial flow data.
-Compared with existing \GNNWR (and \GTNNWR), \GCNNWR, and \GAgg models, \DLAN achieves lower prediction error with smaller time consumption across four case studies which involves modelling carbon dioxide emissions (\COO), urban mobility flows (\WuhanOD), housing prices (\WuhanHP), and visible greenery (\GVI).
+Compared with existing \GNNWR (and \GTNNWR), \GCNNWR, and \GAgg models, \DLAN achieves lower prediction error with shorter computation times across four case studies that involve modelling carbon dioxide emissions (\COO), urban mobility flows (\WuhanOD), housing prices (\WuhanHP), and visible greenery (\GVI).
 This model provides a flexible and effective approach for spatial prediction tasks, particularly in higher-dimensional data contexts.
-In the future, \DLAN is able to be applied in higher-dimensional data, such as 5-D and 6-D spatio-temporal flow data, and can be extended to incorporate hierarchical structures for improved generalisation.
+In the future, \DLAN can be applied to higher-dimensional data, such as 5-D and 6-D spatio-temporal flow data, and can be extended to incorporate hierarchical structures for improved generalisation.
 The GVI case study and related experiments demonstrate that \DLAN can be integrated with remote sensing data to model nonlinear relationships between image-derived features and downstream responses, extending the applications of \gls{gwr}-derived models.
 
 Although \DLAN effectively organises multidimensional geographical context, several issues require further investigation.
@@ -826,7 +826,7 @@ Future research will address these issues individually.
 
 \section*{Acknowledgements}
 
-The work was sponsored by the Fundamental Research Funds for the Central Universities under grant [number B260201041]; and National Natural Science Foundation of China under grant [number 42571480].
+The work was sponsored by the Fundamental Research Funds for the Central Universities under grant [number B260201041] and the National Natural Science Foundation of China under grant [number 42571480].
 The authors acknowledge the High-Performance Computing Platform at Hohai University for providing the computational resources used in this study.
 
 \section*{Declaration of Generative AI Use}
@@ -858,11 +858,11 @@ will be supplied before submission.
 
 \emph{\textbf{Bohan Liu}} is a PhD student at the School of Geospatial Artificial Intelligence, East China Normal University. Her research interests lie in GeoAI and health informatics.
 
-\emph{\textbf{Zidong Fang}} is lecturer at the College of Geography and Remote Sensing, Hohai University. Her research interests lie in geographical flow analysis.
+\emph{\textbf{Zidong Fang}} is a lecturer at the College of Geography and Remote Sensing, Hohai University. Her research interests lie in geographical flow analysis.
 
-\emph{\textbf{Linfang Ding}} is professor at the School of Geospatial Artificial Intelligence, East China Normal University. Her research interests lie in geographical knowledge graph and geo-visualisation.
+\emph{\textbf{Linfang Ding}} is a professor at the School of Geospatial Artificial Intelligence, East China Normal University. Her research interests lie in geographical knowledge graphs and geo-visualisation.
 
-\emph{\textbf{Binbin Lu}} is an associate professor at Wuhan University. His research interests include geo-computation, spatial statistics and geographically weighted modelling. He conceived and designed this research, drafted and revised this manuscript.
+\emph{\textbf{Binbin Lu}} is an associate professor at Wuhan University. His research interests include geo-computation, spatial statistics and geographically weighted modelling. He conceived and designed this research and drafted and revised this manuscript.
 
 \section*{Author contributions}
 
