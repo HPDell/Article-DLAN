@@ -48,7 +48,7 @@ Historical `matched_` evidence remains unchanged by this selection step.
 python scripts/prepare_evidence.py
 python scripts/prepare_supplement_evidence.py
 python scripts/prepare_reported_results.py
-Rscript scripts/plot_results.R
+jupyter nbconvert --to notebook --execute --inplace scripts/plot_results.ipynb
 python scripts/render_references.py
 ```
 
@@ -56,7 +56,13 @@ These scripts read saved artifacts and do not train networks.
 The main and supplementary audit checks 440 held-out prediction arrays from 220 unique completed fits; 20 additional arrays come from the separate historical HPC experiment.
 The GVI OLS diagnostic is recovered from an existing fitted buffer, not refitted.
 Source hashes, completion records, metrics and the ongoing-diagnostic status snapshot are saved under `evidence/`.
-The R script generates fourteen figures; nine tables remain inline in `main.tex`.
+The R notebook `scripts/plot_results.ipynb` generates fourteen figures; manuscript tables remain inline in `main.tex`.
+All plotting code is written directly in notebook cells, with no custom plotting functions or external script calls.
+Each figure cell displays its result and exports PDF and PNG files under `figures/`.
+Use the R kernel with the existing `ggplot2`, `patchwork` and `grid` packages, then run all cells from top to bottom.
+The notebook reads the saved evidence CSV files and does not launch training.
+The final cell reproduces the historical R architecture schematic; the editable draw.io artwork under `figures/dlan_design/` is maintained separately.
+For verification without replacing existing figure files, set the `ARTICLE_FIGURE_DIR` environment variable to a temporary output directory before launching the kernel.
 The reference validator supports both direct citations and the user's glossary-driven citation macros.
 Current validation finds 53 cited keys and zero missing keys.
 
