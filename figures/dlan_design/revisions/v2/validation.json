@@ -1,0 +1,74 @@
+{
+  "drawio_version": "32.6.10",
+  "checks": {
+    "dlan_architecture": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 38,
+      "edges": 33,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "93443caa22602e8da8d41e395d73129acdfcc7718166163779ffe82a94dd981d"
+    },
+    "dlan_mechanism": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 55,
+      "edges": 42,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "572fa8b782c7bd1a365451362dd801670b7eb6a0ca1f705465d8737c01fb6b19"
+    },
+    "dlan_retrieval": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 11,
+      "edges": 8,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "f4a32fc526d9e10ba5cefff1ef23208531a1a4aace2a8d07f0b6dcbb767b8b08"
+    },
+    "dlan_attention_detail": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 18,
+      "edges": 15,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "772ae0983b36ad82c07501fb5f37ecb37ab4777c684d2abae6daf69d8dcc8d2e"
+    },
+    "dlan_film_detail": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 14,
+      "edges": 10,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "8cdfb7ffdfdc12bd248aefbd52feec6a09a7230c6ea9cbc8c7ab2d54b7168583"
+    }
+  },
+  "publication_profile": {
+    "manuscript_width_pt": 408,
+    "manuscript_width_mm": 143.9333333333333,
+    "minimum_font_pt": 8.16,
+    "minimum_stroke_pt": 0.5192727272727272,
+    "minimum_font_target_pt": 8,
+    "publisher_minimum_stroke_pt": 0.3,
+    "text_outlined_in_print_svg": true,
+    "source_files_unchanged": true,
+    "scope": "Quantitative artwork audit; structural fidelity and visual quality reviewed separately in PUBLICATION_REVIEW.md"
+  },
+  "detail_profiles": {
+    "dlan_attention_detail": {
+      "width_mm": 143.9333333333333,
+      "height_mm": 190.30757575757573,
+      "minimum_font_pt": 8.18181818181818,
+      "minimum_stroke_pt": 0.7636363636363636,
+      "caption_space_reserved_mm": 35,
+      "text_outlined": true
+    },
+    "dlan_film_detail": {
+      "width_mm": 104,
+      "height_mm": 163.5121951219512,
+      "minimum_font_pt": 8.296523910120992,
+      "minimum_stroke_pt": 0.7743422316112926,
+      "caption_space_reserved_mm": 35,
+      "text_outlined": true
+    }
+  }
+}

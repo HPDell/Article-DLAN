@@ -1,0 +1,21 @@
+{
+  "drawio_version": "32.6.10",
+  "checks": {
+    "dlan_architecture": {
+      "editable_shapes": 55,
+      "connected_edges": 42,
+      "embedded_cells_match_source": true,
+      "foreign_objects": 0,
+      "raster_images": 0,
+      "svg_sha256": "8e031ad20fb21a8f8fab08e9b415d1a3eb951054dc37933b886cfa1ef29318d2"
+    },
+    "dlan_retrieval": {
+      "editable_shapes": 11,
+      "connected_edges": 8,
+      "embedded_cells_match_source": true,
+      "foreign_objects": 0,
+      "raster_images": 0,
+      "svg_sha256": "f4a32fc526d9e10ba5cefff1ef23208531a1a4aace2a8d07f0b6dcbb767b8b08"
+    }
+  }
+}

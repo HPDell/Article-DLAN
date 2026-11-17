@@ -1,0 +1,12 @@
+{
+  "checked_on": "2026-11-12",
+  "model": "GTDRDeepGWRTransformer",
+  "attention_mode": "gtdr",
+  "reference_policy": "product_knn",
+  "thread_id": "01a1b5e5-6441-7af2-af9b-042124bdd905",
+  "sources": {
+    "models/DeepGWRTransformer.py": "d0980bcb90db69195627ce176497bb7960cae9ded47d3c833607ec5359a902c2",
+    "models/gtdr_reference_trainer.py": "89973e0fc4d6b772f8bbbf1d3132ed657c20084257f28e2c040c822ea759846d",
+    "article/main.tex": "130a81610b716d543705b3dd04ed3e159b9888a47ba0191ce87b48fc19381f33"
+  }
+}

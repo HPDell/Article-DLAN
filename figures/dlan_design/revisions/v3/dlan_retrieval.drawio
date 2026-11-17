@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="DLAN architecture builder" version="32.6.10" type="device" compressed="false">
+  <diagram id="bandwidth-adaptive-reference-retrieval" name="Bandwidth-adaptive reference retrieval">
+    <mxGraphModel dx="1880" dy="1320" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="870" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="n1" value="DLAN | Bandwidth-adaptive reference retrieval" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#FFFFFF;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=28;fontStyle=1;spacing=8;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;rounded=0;align=center;spacing=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="20" width="1440" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="A shared candidate support for every coordinate projection" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#FFFFFF;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=20;fontStyle=0;spacing=8;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;rounded=0;align=center;spacing=0;" vertex="1" parent="1">
+          <mxGeometry x="30" y="78" width="1440" height="32" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="Query coordinates&#10;zᵢ ∈ ℝᴰ" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#DCEAF6;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=20;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="45" y="180" width="240" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="Eligible training&#10;coordinates&#10;{zⱼ : j ∈ train, j ≠ i}" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#DDEEDC;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=19;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="45" y="335" width="240" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="Learnable scale parameters&#10;bℓₐₕ = softplus(ρℓₐₕ) + 10⁻⁶&#10;For each block ℓ, coordinate a,&#10;head h" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#FFF0C5;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=18;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="45" y="535" width="320" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="n6" value="Joint coordinate-scaled distance&#10;d²ℓₕ(i,j) = Σₐ [(zⱼₐ − zᵢₐ) / bℓₐₕ]²" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#FFF0C5;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=20;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="420" y="250" width="470" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;" edge="1" parent="1" source="n3" target="n6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;" edge="1" parent="1" source="n4" target="n6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="detach(b) for discrete retrieval" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;dashed=1;dashPattern=5 4;" edge="1" parent="1" source="n5" target="n6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="390" y="590" />
+              <mxPoint x="390" y="375" />
+              <mxPoint x="655" y="375" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n10" value="Top-K nearest under each (ℓ,h) metric&#10;Stable sorting; focal training row excluded by&#10;ID" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#FFF0C5;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=19;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="975" y="250" width="470" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="e11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="n6" target="n10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n12" value="Deduplicate the union over blocks and heads&#10;Cᵢ = ⋃ℓ,ₕ TopKⱼ{−d²ℓₕ(i,j)}&#10;Keep aligned reference IDs; mask padding" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#DDEEDC;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=19;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="975" y="445" width="470" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="n10" target="n12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n14" value="Gather xⱼ, zⱼ, yⱼ on the same IDs&#10;All coordinate Q/K/V branches share Cᵢ&#10;ONE softmax per query and head over Cᵢ" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#E9E0F2;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=19;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="975" y="650" width="470" height="115" as="geometry" />
+        </mxCell>
+        <mxCell id="e15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="n12" target="n14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n16" value="Differentiable attention score&#10;Gaussian term: −½ Σₐ (δᵢⱼₐ/bℓₐₕ)²&#10;Backpropagation updates the scales" style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#FFF0C5;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=19;fontStyle=0;spacing=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+          <mxGeometry x="420" y="535" width="470" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="e17" value="b" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="n5" target="n16">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e18" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=0;endArrow=block;endFill=1;strokeWidth=1.5;strokeColor=#283747;fontFamily=Arial;fontSize=15;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="n16" target="n14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n19" value="L = H = 1: |Cᵢ| ≤ K. General case: |Cᵢ| ≤ min(Neligible, LHK).&#10;Reference tokens remain fixed across attention blocks; only the query state is updated." style="rounded=1;arcSize=8;whiteSpace=none;html=0;fillColor=#FFFFFF;strokeColor=#283747;strokeWidth=1.4;fontColor=#283747;fontFamily=Arial;fontSize=18;fontStyle=0;spacing=8;align=center;verticalAlign=middle;fillColor=none;strokeColor=none;rounded=0;align=center;spacing=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="785" width="1410" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

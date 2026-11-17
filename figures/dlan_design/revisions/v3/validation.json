@@ -1,0 +1,96 @@
+{
+  "drawio_version": "32.6.10",
+  "checks": {
+    "dlan_architecture": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 44,
+      "edges": 36,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "70d6c8f9af8dfa12273e915323c4d1b29bef925e53ba963846f1ee9a4543dff3",
+      "joint_attention_topology": {
+        "displayed_dimensions": [
+          "1",
+          "2",
+          "D"
+        ],
+        "one_softmax_after_score_fusion": true,
+        "same_attention_weights_feed_all_dimension_pools": true,
+        "dimension_specific_qk_and_value_projections": true
+      }
+    },
+    "dlan_mechanism": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 55,
+      "edges": 42,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "572fa8b782c7bd1a365451362dd801670b7eb6a0ca1f705465d8737c01fb6b19"
+    },
+    "dlan_retrieval": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 11,
+      "edges": 8,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "f4a32fc526d9e10ba5cefff1ef23208531a1a4aace2a8d07f0b6dcbb767b8b08"
+    },
+    "dlan_attention_detail": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 20,
+      "edges": 16,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "c2096818e7a2689a86875e36588e12aae4ede217dd9e16c97705ab7133f08ad4",
+      "joint_attention_topology": {
+        "displayed_dimensions": [
+          "1",
+          "2",
+          "D"
+        ],
+        "one_softmax_after_score_fusion": true,
+        "same_attention_weights_feed_all_dimension_pools": true,
+        "dimension_specific_qk_and_value_projections": true
+      }
+    },
+    "dlan_film_detail": {
+      "editable_cells_match_embedded_model": true,
+      "shapes": 14,
+      "edges": 10,
+      "raster_images": 0,
+      "foreign_objects": 0,
+      "sha256": "8cdfb7ffdfdc12bd248aefbd52feec6a09a7230c6ea9cbc8c7ab2d54b7168583"
+    }
+  },
+  "publication_profile": {
+    "manuscript_width_pt": 408,
+    "manuscript_width_mm": 143.9333333333333,
+    "height_mm": 156.99419492820044,
+    "caption_space_reserved_mm": 35,
+    "minimum_font_pt": 8.22731439046746,
+    "minimum_stroke_pt": 0.5235563703024748,
+    "minimum_font_target_pt": 8,
+    "publisher_minimum_stroke_pt": 0.3,
+    "text_outlined_in_print_svg": true,
+    "source_files_unchanged": true,
+    "scope": "Quantitative artwork audit; structural fidelity and visual quality reviewed separately in PUBLICATION_REVIEW.md"
+  },
+  "detail_profiles": {
+    "dlan_attention_detail": {
+      "width_mm": 143.9333333333333,
+      "height_mm": 185.4831491712707,
+      "minimum_font_pt": 12.397790055248619,
+      "minimum_stroke_pt": 0.7889502762430938,
+      "caption_space_reserved_mm": 35,
+      "text_outlined": true
+    },
+    "dlan_film_detail": {
+      "width_mm": 104,
+      "height_mm": 163.5121951219512,
+      "minimum_font_pt": 8.296523910120992,
+      "minimum_stroke_pt": 0.7743422316112926,
+      "caption_space_reserved_mm": 35,
+      "text_outlined": true
+    }
+  }
+}
