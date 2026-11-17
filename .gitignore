@@ -336,3 +336,6 @@ auto/*
 
 _out/
 .vscode/
+outputs/
+__pycache__/
+

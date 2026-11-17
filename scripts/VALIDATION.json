@@ -1,0 +1,27 @@
+{
+  "case_notebooks": [
+    "CE.ipynb",
+    "SIC.ipynb",
+    "SHP.ipynb",
+    "GVI.ipynb"
+  ],
+  "ready_data_cases": 4,
+  "configurations": 27,
+  "main_configurations": 14,
+  "saved_fits": 270,
+  "validation_test_prediction_sets": 540,
+  "replay_notebooks_executed": 4,
+  "model_strict_checkpoint_loads": 27,
+  "main_forward_backward_checks": 14,
+  "one_epoch_training_save_reload_smoke_models": 4,
+  "formal_retraining_started": false,
+  "evidence_numeric_compatibility_pass": true,
+  "existing_evidence_published": false,
+  "plot_notebook_modified": false,
+  "plot_notebook_execution_clean": false,
+  "plot_notebook_existing_error_cells": [
+    12,
+    16,
+    31
+  ]
+}

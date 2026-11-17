@@ -1,0 +1,14 @@
+{
+  "validation_environment": {
+    "numpy": "2.2.6",
+    "pandas": "3.0.5",
+    "torch": "2.13.0",
+    "scikit-learn": "1.9.0",
+    "nbformat": "5.10.4",
+    "nbclient": "0.10.4",
+    "ipykernel": "7.2.0"
+  },
+  "gnnwr_tested_distribution": "0.1.17",
+  "R": "See ../evidence/R_sessionInfo.txt; ggplot2, patchwork, IRkernel, grid",
+  "original_environments": "Each reference/configuration.json records Python/PyTorch and training settings; SIC K512/K2048 used another machine."
+}

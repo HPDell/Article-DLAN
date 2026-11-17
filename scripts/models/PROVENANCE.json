@@ -1,0 +1,47 @@
+{
+  "local_models": [
+    {
+      "source": "models/DeepGWRTransformer.py",
+      "destination": "models/DLAN.py",
+      "source_sha256": "d0980bcb90db69195627ce176497bb7960cae9ded47d3c833607ec5359a902c2",
+      "packaged_sha256": "decd534d88c8ad6869b556674147d2c28de11092c6db08b58bd5a64264612664"
+    },
+    {
+      "source": "models/gtdr_reference_trainer.py",
+      "destination": "models/training.py",
+      "source_sha256": "89973e0fc4d6b772f8bbbf1d3132ed657c20084257f28e2c040c822ea759846d",
+      "packaged_sha256": "98d93063b123bdcabf9b9dc3580765831f01552c8f33b07438faea732e36aab9"
+    },
+    {
+      "source": "models/matched_case_comparison.py",
+      "destination": "models/adapters.py",
+      "source_sha256": "a44799e753c50507ef9deac82c2250cd4f7d6511b274d512409bfe226a291c2f",
+      "packaged_sha256": "e010b5addfd4c12ba61d7ad4f121a27f51c0e7b4a0f6ba6ec6adc14a0b79588a"
+    },
+    {
+      "source": "models/GeoAggregator.py",
+      "destination": "models/GeoAggregator.py",
+      "source_sha256": "6efa0ef7b2329326749f3ffe971f859aeb124118608acc713f10732dbe361682",
+      "packaged_sha256": "6efa0ef7b2329326749f3ffe971f859aeb124118608acc713f10732dbe361682"
+    },
+    {
+      "source": "models/GCNNWR.py",
+      "destination": "models/GCNNWR.py",
+      "source_sha256": "dbb60fe029ba97cc1ff55741119f94245185d41b9cb07839f3c6180eba632514",
+      "packaged_sha256": "dbb60fe029ba97cc1ff55741119f94245185d41b9cb07839f3c6180eba632514"
+    },
+    {
+      "source": "models/upstream_gnnwr_comparison.py",
+      "destination": "models/GNNWR.py",
+      "source_sha256": "32b52ae34c81a7902198690b91543645d95f41d5d93fd16d77b13932a54e9273",
+      "packaged_sha256": "5a0e2e6ce6f556d19084349607129958fec111ff8f87639baca4cb71149a3166"
+    }
+  ],
+  "gnnwr": {
+    "dependency": "gnnwr==0.1.17",
+    "upstream_repository": "https://github.com/zjuwss/gnnwr",
+    "original_commit": "2711bdee9821bfe242992d2eb885a78be1cf2628",
+    "verified": "Published 0.1.17 networks.py AST equals original pinned network module; no author networks copied into this package.",
+    "published_networks_sha256": "4eeb8629c0cf81dfc126b356b2d704ae6df7a8dfe7d3a7d5d283ac683e48b3ec"
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "version": "dlan_matched4_10seeds_v1",
+  "case": "CO2",
+  "rows": 13000,
+  "x_dim": 8,
+  "coordinate_dim": 3,
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "splits": {
+    "train": 9732,
+    "validation": 1643,
+    "test": 1625
+  },
+  "split_policy": "forward_year_2014_2019__2020__2021",
+  "target_inverse": null,
+  "scoring": "stored_response",
+  "loss": "train_standardized_MSE",
+  "coordinate_scaling": "train_only_per_axis_std",
+  "coordinate_center": [
+    1215.3128061949928,
+    3668.274058524363,
+    2016.5132552404439
+  ],
+  "coordinate_scale": [
+    608.387261234852,
+    771.6377835534781,
+    1.7057267385894215
+  ],
+  "source_hashes": {
+    "share/CO2/data/co2_temporal_13k_v1/ordinary.npz": "e474edd897e763aae931025ebe6810272114ae69ddcae2f3bba04e2210d1ac1a"
+  },
+  "provenance": {
+    "source_contract": {
+      "version": "co2_temporal_13k_v1",
+      "case": "CO2",
+      "rows": 13000,
+      "dimensions": 3,
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "splits": {
+        "train": 9732,
+        "validation": 1643,
+        "test": 1625
+      },
+      "split_policy": "forward_year_2014_2019__2020__2021",
+      "feature_columns": [
+        "x1",
+        "x2",
+        "x3",
+        "x4",
+        "x5",
+        "x6",
+        "x7",
+        "x8"
+      ],
+      "coordinate_columns": [
+        "u",
+        "v",
+        "year"
+      ],
+      "target": "co2_stored",
+      "scoring": "stored_CSV_response",
+      "loss": "train_standardized_MSE",
+      "data_sha256": "e474edd897e763aae931025ebe6810272114ae69ddcae2f3bba04e2210d1ac1a",
+      "source": "data/MGTWR_2SCALL/data/co2data_13k.csv",
+      "source_sha256": "35a4b4f82c3ce8b3b9302c9c101ecfc13864e79eb2375608268273269040da03",
+      "matlab_sources": {
+        "main_real.m": "4ab3d7aa536ea7a193e4a0f46c6047f6a64ebaeb869061f9e69d968e50ac901b",
+        "realdata_MGTWR.m": "44bf525d8725a7e0fe39d4cbd96c01a8067b07edcbae430c479472039a6f024d"
+      },
+      "coordinate_center": [
+        1215.3128061949928,
+        3668.274058524363,
+        2016.5132552404439
+      ],
+      "coordinate_scale": [
+        608.387261234852,
+        771.6377835534781,
+        1.7057267385894215
+      ],
+      "upstream_covariate_preprocessing": "unknown; no original variable labels/transforms supplied",
+      "target_inverse_transform": null,
+      "reference_policy": "training rows only; exclude self in training"
+    },
+    "fixed_split": true
+  },
+  "data_sha256": "ee55a6c360897c784594b1b13dfaec1fa1cfe08738ea38d731d21a295d487e23",
+  "parameter_budget": 6957,
+  "reference_policy": "training rows only; no held-out covariates in reference bank",
+  "dlan_support": "product_knn, 256 times coordinate_dim, training self excluded",
+  "geo_support": "joint Euclidean KNN256, training self excluded",
+  "gcnn_support": "training-bounds 16x16 grid and training-only global OLS"
+}

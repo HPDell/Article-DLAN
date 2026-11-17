@@ -1,0 +1,89 @@
+{
+  "version": "dlan_matched4_10seeds_v1",
+  "case": "WuhanHP",
+  "rows": 19599,
+  "x_dim": 17,
+  "coordinate_dim": 2,
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
+  "splits": {
+    "train": 15475,
+    "validation": 2196,
+    "test": 1928
+  },
+  "split_policy": "whole_community_disjoint",
+  "target_inverse": null,
+  "scoring": "stored_response",
+  "loss": "train_standardized_MSE",
+  "coordinate_scaling": "train_only_per_axis_std",
+  "coordinate_center": [
+    0.4805322106820509,
+    0.5195058262870558
+  ],
+  "coordinate_scale": [
+    0.17871270620088095,
+    0.21022279079772446
+  ],
+  "source_hashes": {
+    "share/WuhanHP/data/gtdr_product256_10seeds_v1/ordinary.npz": "0d75b91828ca603af8e89efc6f5fa7f440900489e3aa89440d3d264986d076d3"
+  },
+  "provenance": {
+    "source_contract": {
+      "version": "gtdr_product256_10seeds_v1",
+      "case": "WuhanHP",
+      "seeds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "protocol": "ordinary",
+      "rows": 19599,
+      "dimensions": 2,
+      "splits": {
+        "train": 15475,
+        "validation": 2196,
+        "test": 1928
+      },
+      "data_sha256": "0d75b91828ca603af8e89efc6f5fa7f440900489e3aa89440d3d264986d076d3",
+      "source_snapshot": "share/WuhanHP/data/axis_knn256_10seeds_v1/ordinary.npz",
+      "source_contract_sha256": "e73654bddaf3196792988928e05b888c3b2a2a02d541be5978e9ee2bf620db28",
+      "source_hashes": {
+        "share/WuhanHP/data/processed.npz": "b3bf99d8aa196196031a6b2f8ca0a2084a8d8f6548324bcaffee28537a841a47",
+        "share/WuhanHP/data/p21_baselines/wuhan_hp.csv": "b3cb177c33479deab178eaa54a07b22ba7c1521c06d3f088bad90f38c5121fbc",
+        "share/WuhanHP/data/p21_baselines/wuhan_hp_conditional_split.csv": "821c079ec845deffb5c973bfdd624277793f3fa245ad68da01163c3505bf96b2",
+        "share/WuhanHP/data/p21_baselines/wuhan_hp_inductive_split.csv": "de7d73303313d63e303f051d3e8c491e343a1bdaf39a9a7df612ea6821c9a01b"
+      },
+      "target": "raw_response",
+      "scoring": "original_response",
+      "loss": "train_standardized_MSE",
+      "reference_policy": "ID-deduplicated union of per-axis training KNN",
+      "k_per_axis": 256,
+      "geometry": "sum of per-axis log Gaussian kernels; one joint softmax",
+      "capacity_selection": "exact options and parameter count of frozen AxisDeepGWR; no search"
+    },
+    "fixed_split": true
+  },
+  "data_sha256": "fe8252d9951eeac63582c0cdf198a0828d19ab312873df95d9e03dc36ae3ce12",
+  "parameter_budget": 6957,
+  "reference_policy": "training rows only; no held-out covariates in reference bank",
+  "dlan_support": "product_knn, 256 times coordinate_dim, training self excluded",
+  "geo_support": "joint Euclidean KNN256, training self excluded",
+  "gcnn_support": "training-bounds 16x16 grid and training-only global OLS"
+}
