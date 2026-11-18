@@ -351,7 +351,7 @@ Computational scalability is therefore evaluated through both measured fit cost 
 \section{Data and experimental design}\label{sec:data}
 
 We use four cases to evaluate the proposed \DLAN against competing models, including \GNNWR, \GCNNWR, and \GAgg, as baselines.
-The empirical comparison comprises: 
+As shown in The empirical comparison comprises: 
 (a) \COO;
 (b) \WuhanOD;
 (c) \WuhanHP;
@@ -363,6 +363,18 @@ To enable a fair comparison, \GNNWR actually represents \GNNWR and \GTNNWR for t
 Neither model worked on the spatial flow data, i.e., \WuhanOD, due to the lack of a proper design for the flow data.
 \GAgg is connected to an adaptor for the spatio-temporal and spatial flow data, which simply extends distance computation from planar coordinates to multidimensional coordinates to avoid essential changes to the original model.
 Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{data_visualisation.pdf}
+  \caption{
+    Data used in the four case studies:
+    (a) \COO;
+    (b) \WuhanOD;
+    (c) \WuhanHP;
+    and (d) \GVI.
+  }
+\end{figure}
 
 \begin{table}[tb]
   \centering\small

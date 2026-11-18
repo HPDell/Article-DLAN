@@ -113,3 +113,11 @@ GPU 推荐用于完整训练；默认核验可在 CPU 上完成。训练软件�
 SIC 九格敏感性结果的标准差均由该格十个种子重新计算。当前 LaTeX 中部分宽度 10/16 行的标准差与重新计算结果不同；重建结果见 `outputs/replay/evidence/sic_factorial_summary.csv`，本次未改论文表格。
 
 原有 `prepare_evidence.py`、`prepare_supplement_evidence.py` 和 `prepare_reported_results.py` 作为历史入口保留，仍服务旧仓库布局；新复现流程不调用这些脚本。`render_references.py` 属于参考文献检查，也不进入模型实验。
+
+## 数据可视化（只在 notebook 中显示）
+
+新增 `data_visualisation.ipynb`，使用 R 内核从头运行：CE 用 ggcube 绘制时空立方体，SIC 用 tmap 绘制观测 OD 流量，GVI 用 tmap 绘制上海观测点；SHP 不绘制。依赖 tidyverse（包含 ggplot2、dplyr、tidyr、purrr 和 stringr）、ggcube（已验证 0.2.0）、sf、tmap（已验证 4.3）、viridisLite 和 IRkernel。
+
+数据读取编排、整理及空间对象构建使用 tidyverse 的 `%>%` 管道：通过 `crossing()` 组织案例与数组，`map2()` 读取 NPZ 并配对坐标与响应，`pivot_wider()`、`unnest()`、`filter()` 和 `transmute()` 整理观测表，`pmap()` 构建 OD 线几何。底层 float64 解码使用 base R 的二进制读取，保留 NumPy 的行/列存储顺序，无须 Python、reticulate 或导出中间 CSV。这里的“流式”指管道式数据处理，各案例数组仍在内存中读取。SIC 优先读取仓库 `data/OD-Wuhan/wuhan_subdis.gpkg`，缺失时使用包内相同用途的底图。GVI 的上海边界来自 geoBoundaries CHN ADM1（2019，固定 release `9469f09`），已内嵌在笔记本中供离线使用。两幅 tmap 均使用固定响应分级、指北针和千米比例尺。
+
+运行结果仅显示并保存在 notebook 输出中；不调用 ggsave、tmap_save 或其他图表/数据导出函数，不修改论文图、实验数据、evidence 或 `plot_results.ipynb`。
