@@ -93,14 +93,14 @@ This study proposes a dimension-specific local attention network (DLAN),
 linking coordinate-specific bandwidths to reference retrieval and a Gaussian product prior.
 A FiLM-modulated predictor combines local context with query covariates.
 Four case studies use ten training seeds per reported configuration.
-Regressors have 6,957 trainable parameters in \COO, WuhanHP and GVI,
+Regressors have 6,957 trainable parameters in \COO, \WuhanHP and GVI,
 and 7,069 in the reported WuhanOD comparison.
 The WuhanOD DLAN restores attention width 12
 and uses 512 reference candidates,
 achieving a mean test root mean squared error of 565.28.
 Relative to \GAgg, the reported DLAN configurations reduce mean error
 by 57.81\%, 26.85\%, 2.99\% and 7.58\%
-on \COO, WuhanOD, WuhanHP and planar GVI, respectively.
+on \COO, WuhanOD, \WuhanHP and planar GVI, respectively.
 The WuhanOD mean advantage coexists with a higher median
 and fewer paired seed wins;
 its candidate-count experiment spans two machines.
@@ -385,9 +385,9 @@ Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
     Case    & Samples & Covariates & Dimensions & Training & Validation & Test  \\
     \midrule
     \COO  & 13,000  & 8          & 3          & 9,732    & 1,643      & 1,625 \\
-    WuhanOD & 13,807  & 35         & 4          & 9,618    & 2,104      & 2,085 \\
-    WuhanHP & 19,599  & 17         & 2          & 15,475   & 2,196      & 1,928 \\
-    GVI     & 2,122   & 176        & 2          & 1,696    & 213        & 213   \\
+    \WuhanOD & 13,807  & 35         & 4          & 9,618    & 2,104      & 2,085 \\
+    \WuhanHP & 19,599  & 17         & 2          & 15,475   & 2,196      & 1,928 \\
+    \GVI     & 2,122   & 176        & 2          & 1,696    & 213        & 213   \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -581,7 +581,7 @@ whose predictions remain linear in the covariates conditional on location.
 \GAgg also incorporates nonlinearity into its prediction process,
 which contributes to its comparatively strong performance.
 
-The modest improvement on WuhanHP also suggests that the current model does not adequately capture hierarchical data structures, despite some gains in predictive accuracy.
+The modest improvement on \WuhanHP also suggests that the current model does not adequately capture hierarchical data structures, despite some gains in predictive accuracy.
 Inspired by \gls{hgwr}, a module with shared group-level parameters may help address this limitation.
 On the other hand, although none of the four models compared here explicitly represents hierarchical structure,
 the positional encodings used in the attention mechanisms of \DLAN and \GAgg may partially mitigate this limitation.
@@ -632,9 +632,8 @@ rather than uniformly smaller errors across the response distribution.
   \centering
   \includegraphics[width=\linewidth]{matched_hp_groups.pdf}
   \caption{
-    WuhanHP ten-seed mean residuals at held-out communities
+    \WuhanHP ten-seed mean residuals at held-out communities
     and mean within-community RMSE against community size.
-    Marker size in the maps represents the number of houses.
   }\label{fig:hpgroups}
 \end{figure}
 
@@ -790,7 +789,7 @@ This formulation is closer to \gls{sgwr}, while allowing implicit within-group s
 For spatial variables strongly associated with location,
 the coordinate and feature encodings can convey similar information,
 encouraging observations to share aspects of their FiLM modulation.
-This provides a possible explanation for \DLAN's advantage on the WuhanHP dataset.
+This provides a possible explanation for \DLAN's advantage on the \WuhanHP dataset.
 
 Drawing on \gls{hgwr}, \DLAN could make greater use of hierarchical structure
 by constructing both a group-level condition $h_g$ and an individual-level condition $h_i$.
