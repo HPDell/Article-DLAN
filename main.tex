@@ -654,23 +654,24 @@ But the number of trainable parameters increased to 10,733, which could reduce t
 \begin{table}[tb]\centering
   \caption{Cross experiment on attention width and candidate count for the \DLAN model.}\label{tab:sensitivity}
   \small\setlength{\tabcolsep}{4pt}
-  \begin{tabular}{llrrrrr}\toprule
-    \makecell{Attention\\width} & \makecell{Candidate\\count} & Parameters & RMSE                       & MAE            & Worst           & \makecell{Computing\\Time} \\\midrule
-    \multirow{3}{*}{10}         & 512                         & 5,541      & $624.40\pm154.31$          & 54.83          & 944.09          &  \\
-                                & 1024                        & 5,541      & $620.00\pm252.45$          & 54.39          & 808.09          &  \\
-                                & 2048                        & 5,541      & $591.82\pm171.15$          & 53.21          & 847.45          &  \\
-    \multirow{3}{*}{12}         & 512                         & 7,069      & $\mathbf{565.28}\pm154.31$ & \textbf{50.28} & 827.76          &  \\
-                                & 1024                        & 7,069      & $608.73\pm252.45$          & 52.08          & 1,222.61        &  \\
-                                & 2048                        & 7,069      & $587.60\pm171.15$          & 51.07          & 840.72          &  \\
-    \multirow{3}{*}{16}         & 512                         & 10,773     & $636.55\pm104.63$          & 54.54          & 879.06          &  \\
-                                & 1024                        & 10,773     & $609.93\pm104.63$          & 52.94          & \textbf{753.40} &  \\
-                                & 2048                        & 10,773     & $665.21\pm104.63$          & 55.55          & 896.36          &  \\
+  \begin{tabular}{llrrrrrr}\toprule
+    \makecell{Attention\\width} & \makecell{Candidate\\count} & Parameters & RMSE                       & MAE            & Worst           & \makecell{Computing\\Time} & \makecell{Average\\Epochs} \\\midrule
+    \multirow{3}{*}{10}         & 512                         & 5,541      & $624.40$          & 54.83          & 944.09          & 303.43                     & 206.8 \\
+                                & 1024                        & 5,541      & $620.00$          & 54.39          & 808.09          & 345.82                     & 203.5 \\
+                                & 2048                        & 5,541      & $591.82$          & 53.21          & 847.45          & 481.75                     & 224.5 \\
+    \multirow{3}{*}{12}         & 512                         & 7,069      & $\mathbf{565.28}$ & \textbf{50.28} & 827.76          & 340.64                     & 233.7 \\
+                                & 1024                        & 7,069      & $608.73$          & 52.08          & 1,222.61        & 364.03                     & 227.3 \\
+                                & 2048                        & 7,069      & $587.60$          & 51.07          & 840.72          & 455.24                     & 226.3 \\
+    \multirow{3}{*}{16}         & 512                         & 10,773     & $636.55$          & 54.54          & 879.06          & 265.06                     & 179.2 \\
+                                & 1024                        & 10,773     & $609.93$          & 52.94          & \textbf{753.40} & 332.45                     & 205.3 \\
+                                & 2048                        & 10,773     & $665.21$          & 55.55          & 896.36          & 409.53                     & 194.9 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 Different configurations of \DLAN result in changes in computational burden.
-The attention width directly affects the number of trainable parameters, which in turn affects the time complexity.
+The attention width directly affects the number of trainable parameters, increasing the computational burden.
+However, different 
 The number of candidate count does not affect the number of trainable parameters, thus has no significant effect on the training time.
 Its main impact is on the use of memory: greater candidate counts, more memory is required to store the candidate features and attention weights.
 
@@ -691,10 +692,10 @@ particularly as it works with data of different dimensionalities.
   \begin{tabular}{lrrrr}\toprule
     \multirow{2}{*}{Case}     & \multicolumn{4}{c}{Time consumption} \\\cmidrule(lr){2-5}
     & \DLAN & \GAgg & \GNNWR & \GCNNWR \\\midrule
-    \COO     & 79.56  & 80.80  & 41.32 & \\
-    \WuhanOD & 804.63 & 305.22 & 33.83 & \\
-    \WuhanHP & 33.90 & 45.45 & 32.41 & 13.17 \\
-    \GVI     & 5.16 & 6.41 & 9.25 & 0.65 \\
+    \COO     & 243.44  & 344.26  & 122.64 & \\
+    \WuhanOD & 420.33 & 523.34 & 114.69 & \\
+    \WuhanHP & 128.74 & 194.40 & 85.28 & 53.49 \\
+    \GVI     & 13.27 & 20.10 & 11.40 & 2.23 \\
     \bottomrule
   \end{tabular}
 \end{table}
