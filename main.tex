@@ -235,7 +235,7 @@ There are two main components in the model:
 and (b) a FiLM predictor conditioned on the aggregated local context.
 
 \begin{figure}[tp]
-  \centering\includegraphics[width=\linewidth]{dlan_architecture.pdf}
+  \centering\includegraphics[width=\linewidth]{dlan_architecture_v2.pdf}
   \caption{
     The implemented DLAN architecture.
     Bandwidths influence both candidate retrieval and Gaussian scoring.
@@ -510,7 +510,7 @@ Unless otherwise stated, all metric values reported below are averages across th
 
 \begin{table}[tb]
   \centering\small
-  \caption{Prediction accuracy across the four cases. RMSE is mean $\pm$ sample SD; MAE and $R^2$ are seed means.}
+  \caption{Prediction accuracy across the four cases.}
   \label{tab:accuracy}
     \begin{tabular}{lrrrr}\toprule
     Case & Model   & RMSE                       & MAE             & $R^2$\\\midrule
@@ -542,14 +542,10 @@ Unless otherwise stated, all metric values reported below are averages across th
   \centering
   \includegraphics[width=\linewidth]{matched_relative_accuracy.pdf}
   \caption[Distributions of test RMSE and MAE across ten training seeds.]{
-    Distributions of test $\RMSE$ (left column) and $\MAE$ (right column) across ten training seeds.
-    Rows correspond to \COO, \WuhanOD, \WuhanHP and \GVI.
+    Distributions of test $\RMSE$ and $\MAE$ across ten training seeds.
     Boxes show the interquartile range,
     with the median marked by the central line
     and whiskers extending to the most extreme observations within 1.5 interquartile ranges of the box.
-    Points show all ten seeds for each model.
-    The two metrics share a vertical scale within each row,
-    with separate vertical scales across datasets.
   }\label{fig:relative}
 \end{figure}
 
