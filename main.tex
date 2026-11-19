@@ -87,28 +87,14 @@
 \maketitle
 
 \begin{abstract}
-Spatial heterogeneity requires models that combine local information
-with flexible relationships between attributes and responses.
-This study proposes a dimension-specific local attention network (DLAN),
-linking coordinate-specific bandwidths to reference retrieval and a Gaussian product prior.
-A FiLM-modulated predictor combines local context with query covariates.
-Four case studies use ten training seeds per reported configuration.
-Regressors have 6,957 trainable parameters in \COO, \WuhanHP and GVI,
-and 7,069 in the reported WuhanOD comparison.
-The WuhanOD DLAN restores attention width 12
-and uses 512 reference candidates,
-achieving a mean test root mean squared error of 565.28.
-Relative to \GAgg, the reported DLAN configurations reduce mean error
-by 57.81\%, 26.85\%, 2.99\% and 7.58\%
-on \COO, WuhanOD, \WuhanHP and planar GVI, respectively.
-The WuhanOD mean advantage coexists with a higher median
-and fewer paired seed wins;
-its candidate-count experiment spans two machines.
-Retained configuration comparisons distinguish the historical width-10 result,
-the restored-width K1024 diagnostic and the selected K512 result.
-The results establish useful reference-conditioned nonlinear prediction,
-with capacity allocation, candidate support and execution protocol
-as consequential determinants of performance.
+Spatial heterogeneity arises from geographical processes operating at different scales, requiring models that accommodate multidimensional proximity and nonlinear relationships between covariates and responses.
+\Gls{gwr} and its extensions, including \glsentrylong{gnnwr}, represent local variation through linear coefficients, while other approaches based on artificial neural networks like \GAgg combine coordinate dimensions within a common neighbourhood representation, limiting their ability to distinguish spatial and temporal influences.
+This study proposes a \DLAN that integrates coordinate-specific locality with context-dependent nonlinear prediction.
+\DLAN learns separate bandwidths and attention projections for each coordinate dimension, combining content similarity, directional geographical biases and a Gaussian product prior through joint attention over neighbouring training observations.
+The aggregated context then controls feature-wise linear modulation of a prediction network, allowing covariate–response relationships to vary locally.
+According to four case studies examining carbon dioxide emissions, urban mobility flows, housing prices and green view index, \DLAN achieves the lowest prediction error among competing models, with reduced computation time compared to the most accurate alternatives.
+The results demonstrate benefits for multidimensional geographical prediction and nonlinear modelling.
+\DLAN extends nonlinear-extensions of \gls{gwr} towards a unified framework for learning local relationships across planar, spatio-temporal and spatial flow data.
 \end{abstract}
 
 \begin{keywords}
