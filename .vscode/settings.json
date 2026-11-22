@@ -11,5 +11,6 @@
         "editor.fontLigatures": true,
         "editor.fontSize": 16,
         "editor.lineHeight": 1.6
-    }
+    },
+    "tinymist.outputPath": "_out/$name"
 }

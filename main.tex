@@ -1,5 +1,12 @@
 \documentclass[]{interact}
 
+\makeatletter
+\@ifundefined{ifanonymous}{%
+  \newif\ifanonymous
+  \anonymousfalse
+}{}
+\makeatother
+
 \usepackage[colorlinks=true,allcolors=black,citecolor=black]{hyperref}
 \usepackage{setspace}
 \usepackage[british]{babel}
@@ -79,12 +86,17 @@
 
 \articletype{RESEARCH ARTICLE}
 \title{Dimension-specific local attention for nonlinear regression in geographical and temporal spaces}
+
+\ifanonymous
+\else
 \author{
 \name{Yigong Hu\textsuperscript{a}, Bohan Liu\textsuperscript{b}, Zidong Fang\textsuperscript{a}, Linfang Ding\textsuperscript{a}, and Binbin Lu\textsuperscript{c*}\thanks{CONTACT Binbin Lu. Email: binbinlu@whu.edu.cn}}
 \affil{\textsuperscript{a}College of Geography and Remote Sensing, Hohai University, Nanjing, China;\\%
 \textsuperscript{b}School of Geospatial Artificial Intelligence, East China Normal University, Shanghai, China;\\%
 \textsuperscript{c}School of Remote Sensing and Information Engineering, Wuhan University, Wuhan, China}
 }
+\fi
+
 \maketitle
 
 \begin{abstract}
@@ -814,10 +826,13 @@ Current applications of \DLAN remain confined to local scales, with national and
 Reliable hyperparameter tuning procedures also require further investigation to simplify model configuration.
 Future research will address these issues individually.
 
+\ifanonymous
+\else
 \section*{Acknowledgements}
 
 The work was sponsored by the Fundamental Research Funds for the Central Universities under grant [number B260201041] and the National Natural Science Foundation of China under grant [number 42571480].
 The authors acknowledge the High-Performance Computing Platform at Hohai University for providing the computational resources used in this study.
+\fi
 
 \section*{Declaration of Generative AI Use}
 
@@ -832,6 +847,8 @@ The authors declare no competing interests.
 All data and codes are available at the following private link: \\
 \url{https://figshare.com/s/3e430339bfb39a9eef8a}.
 
+\ifanonymous
+\else
 \section*{Notes on contributors}
 
 \emph{\textbf{Yigong Hu}} is a lecturer at the College of Geography and Remote Sensing, Hohai University. His research interests lie in spatial statistics, geographically weighted regression and geo-computation.
@@ -852,6 +869,7 @@ CRediT:
 \textbf{Zidong Fang}: Writing - Review \& Editing;
 \textbf{Linfang Ding}: Writing - Review \& Editing;
 \textbf{Binbin Lu}: Writing - Review \& Editing;
+\fi
 
 \bibliographystyle{tfcad}
 \bibliography{zotero}
