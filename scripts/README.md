@@ -1,47 +1,47 @@
-# DLAN 论文实验复现包
+# DLAN article experiment reproduction package
 
-## 目录与任务映射
+## Directory structure and experiment mapping
 
 ```text
 scripts/
 ├── README.md
-├── REPRODUCE_FINDINGS.md      # 每项结论、每张当前论文图的具体入口
+├── REPRODUCE_FINDINGS.md      # Entry points for each finding and current manuscript figure
 ├── requirements.txt
 ├── environment_snapshot.json
-├── experiment_manifest.json  # 每组配置、历史来源、参数和文件 SHA256
+├── experiment_manifest.json  # Configurations, historical sources, parameters and file SHA256 hashes
 ├── data/
-│   ├── CE/                   # CO2；包含数据和 README
+│   ├── CE/                   # CO2 data and README
 │   ├── SIC/                  # WuhanOD
 │   ├── SHP/                  # WuhanHP
-│   ├── GVI/                  # GVI，另含月份扩展输入
-│   └── historical/           # 单独标注的旧协议记录
-├── models/                   # DLAN、GeoAggregator、GCNNWR 与 GNNWR 标准库适配
+│   ├── GVI/                  # GVI, including month-augmented inputs
+│   └── historical/           # Separately labelled records from earlier protocols
+├── models/                   # DLAN, GeoAggregator, GCNNWR and the published GNNWR adapter
 ├── CE.ipynb
 ├── SIC.ipynb
 ├── SHP.ipynb
 ├── GVI.ipynb
-├── plot_results.ipynb        # 现有 R 绘图笔记本，未修改
+├── plot_results.ipynb        # Existing R plotting notebook; retained without changes
 └── outputs/
-    ├── reference/            # 原始已完成实验的配置、预测、检查点、审计和训练历史副本
-    └── <RUN_ID>/             # 本次核验/重训的结果与待导入 evidence
+    ├── reference/            # Copies of completed-run configurations, predictions, checkpoints, audits and histories
+    └── <RUN_ID>/             # Replay/retraining results and evidence staged for publication
 ```
 
-所有路径相对于本目录解析。模型和数据无需再从仓库根目录 `models/`、`share/` 或 `experiments/` 加载；原路径仅作为来源信息保留。各实验按“读取数据 → 模型实验（DLAN、GeoAggregator、GNNWR、GCNNWR）→ 结果总结”组织，实验代码直接写在笔记本中。
+All paths are resolved relative to this directory. Models and data are loaded locally; the repository-root `models/`, `share/` and `experiments/` directories are no longer runtime dependencies. Original paths are retained as provenance. Each experiment follows **Read data → Model experiments (DLAN, GeoAggregator, GNNWR, GCNNWR) → Results summary**, with experiment code written directly in the notebook.
 
-## 数据集
+## Datasets
 
-| 新名称 | 原案例 | 样本数 | 协变量 | 坐标维度 | 训练 / 验证 / 测试 |
-|---|---|---:|---:|---:|---|
-| CE | CO2 | 13,000 | 8 | 3 | 9,732 / 1,643 / 1,625 |
-| SIC | WuhanOD | 13,807 | 35 | 4 | 9,618 / 2,104 / 2,085 |
-| SHP | WuhanHP | 19,599 | 17 | 2 | 15,475 / 2,196 / 1,928 |
-| GVI | GVI | 2,122 | 176 | 2 | 1,696 / 213 / 213 |
+| Package name | Original case | Observations | Covariates | Coordinate dimensions | Training / validation / test |
+| ------------ | ------------- | -----------: | ---------: | --------------------: | ---------------------------- |
+| CE           | CO2           |       13,000 |          8 |                     3 | 9,732 / 1,643 / 1,625        |
+| SIC          | WuhanOD       |       13,807 |         35 |                     4 | 9,618 / 2,104 / 2,085        |
+| SHP          | WuhanHP       |       19,599 |         17 |                     2 | 15,475 / 2,196 / 1,928       |
+| GVI          | GVI           |        2,122 |        176 |                     2 | 1,696 / 213 / 213            |
 
-逐案例说明见 `data/<case>/README.md`。CE 为未来年份预测；SHP 为整小区留出；GVI 为无缓冲的固定空间组划分和冻结特征回归。SIC 训练目标为 log1p(count)，指标使用恢复后的计数。保留全部坐标，CE 使用 GTNNWR，SIC 使用四维 GNNWR；二维 GCNNWR 不适用于 CE/SIC，相关章节明确标注不运行。
+See `data/<case>/README.md` for case-specific details. CE predicts future years; SHP holds out entire residential communities; GVI uses a fixed spatial-group split without a buffer and regression on frozen features. SIC is trained on log1p(count), with metrics calculated after recovering counts. All coordinate dimensions are retained: CE uses GTNNWR and SIC uses four-dimensional GNNWR. The two-dimensional GCNNWR implementation is inapplicable to CE/SIC, and those sections explicitly record that it is not run.
 
-## 依赖
+## Dependencies
 
-Python 3.12；NumPy、pandas、PyTorch、scikit-learn、JupyterLab、ipykernel、nbformat、nbclient，以及作者发布的 `gnnwr==0.1.17`。先在独立环境中安装与 CUDA/驱动兼容的 PyTorch，再安装其余依赖。
+Use Python 3.12 with NumPy, pandas, PyTorch, scikit-learn, JupyterLab, ipykernel, nbformat, nbclient and the author-published `gnnwr==0.1.17`. Install PyTorch compatible with the CUDA toolkit and driver in a separate environment before installing the remaining dependencies.
 
 ```bash
 cd article/scripts
@@ -50,13 +50,13 @@ python -m ipykernel install --user --name article-dlan --display-name "Python (D
 jupyter lab .
 ```
 
-若作者包的依赖约束与已验证的 PyTorch 环境冲突，可先安装其余依赖，再执行 `python -m pip install --no-deps gnnwr==0.1.17`。本适配只使用该标准库的 `networks.py`，不调用它的训练器、绘图或诊断模块。网络源码未重复打包；来源及一致性校验见 `models/PROVENANCE.json`。
+If the published package's dependency constraints conflict with the verified PyTorch environment, install the other dependencies first, then run `python -m pip install --no-deps gnnwr==0.1.17`. The adapter uses only the distribution's `networks.py`; it does not invoke its trainers, plotting or diagnostic modules. The network source is not duplicated in this package. See `models/PROVENANCE.json` for provenance and consistency checks.
 
-当前 R 绘图笔记本加载 tidyverse（含 ggplot2/dplyr/tidyr）、patchwork、sf、tmap、ggpubr 和 grid，并使用 viridisLite/scales；还需要 IRkernel。tmap 使用第 4 版 API；sf 需要可用的 GDAL/GEOS/PROJ。原统计绘图环境记录见 `../evidence/R_sessionInfo.txt`，当前绘图额外依赖以笔记本首部为准。已有 R 内核可直接运行 `plot_results.ipynb`。复现架构图另外需要 Pillow、Draw.io Desktop CLI、Inkscape，具体步骤见 `REPRODUCE_FINDINGS.md`。无需训练图像编码器，也不依赖 TensorFlow。
+The current R plotting notebook loads tidyverse (including ggplot2/dplyr/tidyr), patchwork, sf, tmap, ggpubr and grid, and also uses viridisLite/scales. IRkernel is required. tmap uses the version 4 API; sf requires working GDAL/GEOS/PROJ installations. The original statistical plotting environment is recorded in `../evidence/R_sessionInfo.txt`; consult the notebook's setup cells for additional current dependencies. An existing R kernel can run `plot_results.ipynb` directly. Reproducing the architecture artwork additionally requires Pillow, Draw.io Desktop CLI and Inkscape; see `REPRODUCE_FINDINGS.md`. Image encoders are not trained, and TensorFlow is not required.
 
-## 默认：核验已有结果并重建证据
+## Default workflow: audit saved results and reconstruct evidence
 
-依次用新的 Python 内核运行 `CE.ipynb`、`SIC.ipynb`、`SHP.ipynb`、`GVI.ipynb`，或在本目录执行：
+Run `CE.ipynb`, `SIC.ipynb`, `SHP.ipynb` and `GVI.ipynb` in that order, each with a fresh Python kernel, or execute the following commands from this directory:
 
 ```bash
 jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 --ExecutePreprocessor.kernel_name=article-dlan CE.ipynb
@@ -65,59 +65,59 @@ jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeou
 jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.timeout=1800 --ExecutePreprocessor.kernel_name=article-dlan GVI.ipynb
 ```
 
-默认 `ARTICLE_MODE=replay`，逐个检查 SHA256、行标识、划分、参考库、检查点和已有重载审计，再从保存的预测重新计算验证/测试 RMSE、MAE、R²、尾部误差、社区误差和尺度参数。它不会重新训练，也不把“重新计算指标”称为“重新训练复现”。
+The default `ARTICLE_MODE=replay` checks SHA256 hashes, row identifiers, splits, reference banks, checkpoints and existing checkpoint-reload audits. It then recomputes validation/test RMSE, MAE, R², tail errors, community errors and scale parameters from the saved artefacts. This audits existing results without retraining; recomputing metrics is distinct from reproducing model training.
 
-最后完成的案例将四个案例的片段汇总到 `outputs/replay/evidence/`。其中包括 `plot_results.ipynb` 当前读取的全部 8 个输入 CSV，以及主表、补充比较与 SIC 3×3 敏感性汇总。核验与重训分别使用独立 RUN_ID；不同模式、不同源清单或种子集合的片段不能混合。
+The last case to complete merges fragments from all four cases into `outputs/replay/evidence/`. This includes all eight input CSV files currently read by `plot_results.ipynb`, together with the main table, supplementary comparisons and the SIC 3×3 sensitivity summary. Use separate RUN_ID values for replay and retraining. Fragments with different modes, source manifests or seed sets cannot be combined.
 
-## 从头训练
+## Training from scratch
 
-在启动新内核前设置：
+Set the following variables before starting a new kernel:
 
 ```bash
 export ARTICLE_MODE=train
 export ARTICLE_RUN_ID=retrain-v1
 ```
 
-然后按同样顺序执行四个笔记本。该模式训练主比较及被汇总图表需要的历史/补充配置，计算量大；默认每组 10 个种子。SIC 的九格因子实验保持预测头 `(10,8)`，不能与旧的宽度 10、预测头 `(36,3)` 配置混淆。每次拟合保存配置、训练历史、预测、检查点与重载审计，全部审计通过后才写入完成指标。
+Then run the four notebooks in the same order. This mode trains the main comparison and the historical/supplementary configurations required by the summary figures. It is computationally intensive and defaults to ten seeds per configuration. The nine-cell SIC factorial experiment retains prediction head `(10,8)`; it is distinct from the earlier width-10 configuration with head `(36,3)`. Each fit saves its configuration, training history, predictions, checkpoint and reload audit. Completion metrics are written only after all audits pass.
 
-统一训练设置为 AdamW、学习率 0.001、权重衰减 0.0001、有效 batch 1,024、查询微 batch 64、最多 300 轮、验证损失早停 patience 30、min_delta 1e-5、梯度裁剪 5，ReduceLROnPlateau 的 factor 0.5、patience 10。模型参数预算与候选数按清单逐配置设置。主比较 SIC 为 7,069 参数、DLAN K512；其余案例为 6,957 参数。
+Shared training settings are AdamW, learning rate 0.001, weight decay 0.0001, effective batch size 1,024, query microbatch size 64, at most 300 epochs, validation-loss early stopping with patience 30 and min_delta 1e-5, gradient clipping at 5, and ReduceLROnPlateau with factor 0.5 and patience 10. Parameter budgets and candidate counts are set separately for each configuration in the manifest. The main SIC comparison uses 7,069 parameters and DLAN K512; the other cases use 6,957 parameters.
 
-GPU 推荐用于完整训练；默认核验可在 CPU 上完成。训练软件、随机数、硬件和原始运行计时均有记录；SIC K512/K2048 的原始实验运行环境不同，不能把记录时间当成同机速度比较。新增拟合将记录自己的计时，不复用原计时冒充新测量。
+A GPU is recommended for full training; the default audit can run on a CPU. Training software, randomisation, hardware and original timings are recorded. The original SIC K512/K2048 experiments used different execution environments, so their recorded times are not a comparison on identical hardware. New fits record their own timings rather than reusing historical values.
 
-## 将结果导入论文 evidence
+## Publishing results to the article evidence directory
 
-默认 `ARTICLE_PUBLISH_EVIDENCE=0`，不会覆盖 `../evidence/`。确认 `outputs/<RUN_ID>/evidence/` 后，在最后一个案例的准备 cell 设置 `PUBLISH_EVIDENCE=True`，只重跑结果总结末尾的导入 cell；也可在启动内核前设置 `ARTICLE_PUBLISH_EVIDENCE=1` 后重跑。覆盖前的证据会备份到该运行目录。
+The default `ARTICLE_PUBLISH_EVIDENCE=0` leaves `../evidence/` unchanged. After inspecting `outputs/<RUN_ID>/evidence/`, set `PUBLISH_EVIDENCE=True` in the final case's preparation cell and rerun only the publication cell at the end of Results summary. Alternatively, set `ARTICLE_PUBLISH_EVIDENCE=1` before starting the kernel and rerun. Existing evidence is backed up under the run directory before replacement.
 
-导入不会执行或编辑 `plot_results.ipynb`，其已有输出保持原样。需要更新图时再显式执行绘图笔记本。每张当前论文图和每项结果的步骤见 `REPRODUCE_FINDINGS.md`。
+Publication neither executes nor edits `plot_results.ipynb`, and its saved outputs remain intact. Explicitly execute the plotting notebook when figure updates are needed. See `REPRODUCE_FINDINGS.md` for the steps corresponding to each current manuscript figure and reported finding.
 
-## 可复现范围
+## Reproduction scope
 
-本包包含 27 个独立配置、270 次已完成拟合的冻结产物；14 个主配置对应 140 次拟合。重复引用的 K512、容量或因子实验通过来源路径去重，主比较与历史比较仍分开汇总。历史 Gaussian-prior CSV 单独保留，不声称它是最终 DLAN 的模块消融或由这四个笔记本重新拟合。
+The package contains frozen artefacts for 27 distinct configurations and 270 completed fits; the 14 main configurations account for 140 fits. Repeated references to K512, capacity or factorial experiments are deduplicated by source path, while main and historical comparisons remain separately summarised. The historical Gaussian-prior CSV is retained separately. It is neither a module ablation of the final DLAN nor retrained by these four notebooks.
 
-模型整理保留原数值操作和 state-dict 键，文件名与导入路径仅作局部调整。标准库 GNNWR 采用固定训练参考点，是预算约束下的作者网络适配，不是作者默认全参考设置的完整复刻。
+Model organisation preserves the original numerical operations and state-dict keys, with local changes to filenames and imports. The published-library GNNWR adapter uses fixed training-reference landmarks under the parameter budget; it does not reproduce the author's default full-reference configuration.
 
-本次整理不修改 `main.tex`、现有 `article/evidence/`、图片或 `plot_results.ipynb` 的任何内容。
+The packaging step left `main.tex`, existing `article/evidence/`, images and `plot_results.ipynb` unchanged.
 
-## 当前绘图笔记本的已知执行问题（未修改）
+## Recorded execution issues in the existing plotting notebook
 
-在空 R 内核中用重建证据运行副本，发现以下既有问题：
+An execution copy run in a fresh R kernel with reconstructed evidence exposed the following pre-existing issues:
 
-| Cell（从 1 开始计数） | 问题 | 影响 |
-|---|---|---|
-| 12 | `mutate()` 引用尚未生成的 `accuracy_long$metric` | 主比较图的绘图表达式失败；其后 `ggsave()` 可能保存此前的图，不能只凭文件存在判定成功。 |
-| 16 | 使用尚未定义的 `p` | 计算时间比较导出失败。 |
-| 31 | `glimpse(od)` 出现在创建 `od` 的 cell 前 | 从空内核运行时失败；后续 cell 才创建该变量。 |
+| Cell (1-based) | Issue                                                            | Effect                                                                                                                                                 |
+| -------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 12             | `mutate()` refers to `accuracy_long$metric` before it is created | The main comparison plotting expression fails; the subsequent `ggsave()` may save an earlier plot, so file existence alone does not establish success. |
+| 16             | `p` is used before it is defined                                 | The computation-time comparison export fails.                                                                                                          |
+| 31             | `glimpse(od)` precedes the cell that creates `od`                | Execution fails in a fresh kernel; the variable is created in a later cell.                                                                            |
 
-这三处属于现有绘图代码的变量引用/执行顺序问题，不是输入 CSV 的指标差异。本次按要求没有修改 `plot_results.ipynb` 或它的结果。`outputs/replay/plot_compatibility.json` 记录了执行副本的诊断；不将“部分图已导出”描述为整个绘图笔记本已通过。
+These are variable-reference/execution-order issues in the plotting code, rather than differences in the input CSV metrics. The packaging step preserved `plot_results.ipynb` and its saved results. `outputs/replay/plot_compatibility.json` records the execution-copy diagnostics. Successful exports of some figures do not establish that the entire notebook runs successfully.
 
-SIC 九格敏感性结果的标准差均由该格十个种子重新计算。当前 LaTeX 中部分宽度 10/16 行的标准差与重新计算结果不同；重建结果见 `outputs/replay/evidence/sic_factorial_summary.csv`，本次未改论文表格。
+Standard deviations in the SIC nine-cell sensitivity results are recomputed from the ten seeds in each cell. Some width-10/16 standard deviations in the current LaTeX table differ from these calculations. Reconstructed results are in `outputs/replay/evidence/sic_factorial_summary.csv`; the manuscript table was not changed during packaging.
 
-原有 `prepare_evidence.py`、`prepare_supplement_evidence.py` 和 `prepare_reported_results.py` 作为历史入口保留，仍服务旧仓库布局；新复现流程不调用这些脚本。`render_references.py` 属于参考文献检查，也不进入模型实验。
+The original `prepare_evidence.py`, `prepare_supplement_evidence.py` and `prepare_reported_results.py` remain as historical entry points for the earlier repository layout. The new reproduction workflow does not call them. `render_references.py` checks references and is outside the model experiment workflow.
 
-## 数据可视化（只在 notebook 中显示）
+## Data visualisation (inline notebook display only)
 
-新增 `data_visualisation.ipynb`，使用 R 内核从头运行：CE 用 ggcube 绘制时空立方体，SIC 用 tmap 绘制观测 OD 流量，GVI 用 tmap 绘制上海观测点；SHP 不绘制。依赖 tidyverse（包含 ggplot2、dplyr、tidyr、purrr 和 stringr）、ggcube（已验证 0.2.0）、sf、tmap（已验证 4.3）、viridisLite 和 IRkernel。
+Run `data_visualisation.ipynb` from the top with an R kernel. CE uses ggcube for a space–time cube, SIC uses tmap for observed OD flows, and GVI uses tmap for Shanghai observation points; SHP is omitted. Dependencies are tidyverse (including ggplot2, dplyr, tidyr, purrr and stringr), ggcube (verified with 0.2.0), sf, tmap (verified with 4.3), viridisLite and IRkernel.
 
-数据读取编排、整理及空间对象构建使用 tidyverse 的 `%>%` 管道：通过 `crossing()` 组织案例与数组，`map2()` 读取 NPZ 并配对坐标与响应，`pivot_wider()`、`unnest()`、`filter()` 和 `transmute()` 整理观测表，`pmap()` 构建 OD 线几何。底层 float64 解码使用 base R 的二进制读取，保留 NumPy 的行/列存储顺序，无须 Python、reticulate 或导出中间 CSV。这里的“流式”指管道式数据处理，各案例数组仍在内存中读取。SIC 优先读取仓库 `data/OD-Wuhan/wuhan_subdis.gpkg`，缺失时使用包内相同用途的底图。GVI 的上海边界来自 geoBoundaries CHN ADM1（2019，固定 release `9469f09`），已内嵌在笔记本中供离线使用。两幅 tmap 均使用固定响应分级、指北针和千米比例尺。
+Data reading, transformation and spatial-object construction use tidyverse `%>%` pipelines: `crossing()` enumerates cases and arrays, `map2()` reads NPZ arrays and pairs coordinates with responses, `pivot_wider()`, `unnest()`, `filter()` and `transmute()` organise the observation table, and `pmap()` constructs OD line geometries. Low-level float64 decoding uses base R binary reading and preserves NumPy's C/Fortran storage order. Python, reticulate and intermediate CSV exports are unnecessary. This is in-memory pipeline processing; each case's arrays are still read into memory. SIC first looks for `data/OD-Wuhan/wuhan_subdis.gpkg` under the repository root, then falls back to the packaged contextual basemap. GVI's Shanghai boundary comes from geoBoundaries CHN ADM1 (2019, frozen release `9469f09`) and is embedded in the notebook for offline use. Both tmap maps use fixed response classes, a north arrow and a kilometre scale bar.
 
-运行结果仅显示并保存在 notebook 输出中；不调用 ggsave、tmap_save 或其他图表/数据导出函数，不修改论文图、实验数据、evidence 或 `plot_results.ipynb`。
+Results are displayed and retained only in notebook outputs. The notebook does not call ggsave, tmap_save or other figure/data export functions, and it leaves manuscript figures, experiment data, evidence and `plot_results.ipynb` unchanged.

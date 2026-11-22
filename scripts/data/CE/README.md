@@ -1,41 +1,41 @@
 # CE — CO2
 
-2014—2021 年地区面板。原始文件来自 MGTWR 数据包 `data/MGTWR_2SCALL/data/co2data_13k.csv`；原文件没有变量名称及物理量纲，因此保留 x1—x8 和存储响应尺度，不推断吨数或额外指数变换。
+Regional panel for 2014–2021, sourced from the MGTWR data bundle at `data/MGTWR_2SCALL/data/co2data_13k.csv`. The source provides neither variable names nor physical units, so x1–x8 and the stored response scale are retained without assuming tonnage or an additional exponential transformation.
 
-## 可直接使用的数据
+## Ready-to-use data
 
-- `ordinary.npz`：冻结的模型输入、响应、行标识和划分；共 13,000 行、8 个协变量、3 个坐标维度。
-- `contract.json`：原实验契约，保留来源、SHA256、划分、预处理和评分定义；其中历史源路径用于溯源，不是新笔记本的运行依赖。
-- `map_coordinates.npz`：仅供残差地图使用的行对齐坐标，字段 `coordinates`。
+- `ordinary.npz`: Frozen model inputs, responses, row identifiers and splits; 13,000 rows, 8 covariates and 3 coordinate dimensions.
+- `contract.json`: Original experiment contract, retaining provenance, SHA256 hashes, splits, preprocessing and scoring definitions. Historical source paths provide provenance and are not runtime dependencies of the new notebooks.
+- `map_coordinates.npz`: Row-aligned coordinates for residual maps only, stored in the `coordinates` field.
 
-## 划分与尺度
+## Splits and scales
 
-训练 2014—2019 年；验证 2020 年；测试 2021 年。地区可以跨年份重复，因此是未来年份预测，不是未见地区留出。
+Training covers 2014–2019, validation uses 2020, and testing uses 2021. Regions may recur across years, so this evaluates future-year prediction rather than holding out unseen regions.
 
-训练/验证/测试样本数：9,732 / 1,643 / 1,625。
-坐标顺序：(u, v, year)。
-响应处理：存储的 CO₂ 响应；训练器内部标准化，评价恢复到存储尺度。
+Training / validation / test observations: 9,732 / 1,643 / 1,625.
+Coordinate order: (u, v, year).
+Response processing: the stored CO₂ response is standardised within the trainer and restored to its stored scale for evaluation.
 
-训练器对协变量、目标和坐标的新增变换均只使用训练行；验证和测试响应不进入参考库，训练查询排除自身。
+Any additional covariate, target and coordinate transformations fitted by the trainer use training rows only. Validation and test responses never enter the reference bank, and training queries exclude their own rows.
 
-## 数组字段
+## Array fields
 
-| 字段 | 形状 | 含义 |
+| Field | Shape | Description |
 |---|---|---|
-| `x` | `(13000, 8)` | 协变量矩阵 |
-| `u` | `(13000, 3)` | 送入训练器的冻结坐标；训练器仍使用训练行拟合自己的坐标变换 |
-| `u_raw` | `(13000, 3)` | 来源坐标，用于追踪和诊断；不要替换 u 后沿用旧检查点 |
-| `y` | `(13000,)` | 训练目标，尚未应用训练器的目标标准化 |
-| `actual` | `(13000,)` | 最终指标计算尺度上的响应 |
-| `groups` | `(13000,)` | 原始组标识 |
-| `row_id` | `(13000,)` | 稳定行标识，用于跨模型对齐 |
-| `train_ids` | `(9732,)` | 训练行的位置索引 |
-| `validation_ids` | `(1643,)` | 验证行的位置索引 |
-| `test_ids` | `(1625,)` | 测试行的位置索引 |
-| `coordinate_center` | `(3,)` | 数据准备时记录的坐标中心 |
-| `coordinate_scale` | `(3,)` | 数据准备时记录的坐标尺度 |
+| `x` | `(13000, 8)` | Covariate matrix |
+| `u` | `(13000, 3)` | Frozen coordinates supplied to the trainer; the trainer fits its own coordinate transformation using training rows |
+| `u_raw` | `(13000, 3)` | Source coordinates for provenance and diagnostics; replacing `u` invalidates compatibility with existing checkpoints |
+| `y` | `(13000,)` | Training target before the trainer applies target standardisation |
+| `actual` | `(13000,)` | Response on the scale used to calculate final metrics |
+| `groups` | `(13000,)` | Original group identifiers |
+| `row_id` | `(13000,)` | Stable row identifiers for alignment across models |
+| `train_ids` | `(9732,)` | Positional indices of training rows |
+| `validation_ids` | `(1643,)` | Positional indices of validation rows |
+| `test_ids` | `(1625,)` | Positional indices of test rows |
+| `coordinate_center` | `(3,)` | Coordinate centre recorded during data preparation |
+| `coordinate_scale` | `(3,)` | Coordinate scale recorded during data preparation |
 
-## 运行入口
+## Running the experiment
 
-运行 `../../CE.ipynb`。默认 `replay` 核验已保存预测；`ARTICLE_MODE=train` 从当前冻结输入重新训练。
-每个配置使用种子 1—10。训练本身不修改本数据目录。
+Run `../../CE.ipynb`. The default `replay` mode audits saved predictions; `ARTICLE_MODE=train` retrains models from the frozen inputs.
+Each configuration uses seeds 1–10. Training leaves this data directory unchanged.

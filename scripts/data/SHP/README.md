@@ -1,45 +1,45 @@
 # SHP — WuhanHP
 
-武汉住宅数据，住宅嵌套于小区。17 个协变量；同小区房屋共享位置。地图坐标单独保存，避免将模型输入中的既有坐标缩放误当作米。
+Wuhan housing data contain dwellings nested within residential communities and 17 covariates. Dwellings in the same community share a location. Map coordinates are stored separately so that the existing coordinate scaling in the model inputs is not mistaken for distances in metres.
 
-## 可直接使用的数据
+## Ready-to-use data
 
-- `ordinary.npz`：冻结的模型输入、响应、行标识和划分；共 19,599 行、17 个协变量、2 个坐标维度。
-- `contract.json`：原实验契约，保留来源、SHA256、划分、预处理和评分定义；其中历史源路径用于溯源，不是新笔记本的运行依赖。
-- `map_coordinates.npz`：仅供残差地图使用的行对齐坐标，字段 `coordinates`。
+- `ordinary.npz`: Frozen model inputs, responses, row identifiers and splits; 19,599 rows, 17 covariates and 2 coordinate dimensions.
+- `contract.json`: Original experiment contract, retaining provenance, SHA256 hashes, splits, preprocessing and scoring definitions. Historical source paths provide provenance and are not runtime dependencies of the new notebooks.
+- `map_coordinates.npz`: Row-aligned coordinates for residual maps only, stored in the `coordinates` field.
 
-## 划分与尺度
+## Splits and scales
 
-按整个小区划分；训练、验证、测试小区互不重叠。
+Entire communities are assigned to the training, validation or test set; communities do not overlap between sets.
 
-训练/验证/测试样本数：15,475 / 2,196 / 1,928。
-坐标顺序：(x, y)。
-响应处理：使用文件中保存的响应尺度；不要自行作指数反变换。
+Training / validation / test observations: 15,475 / 2,196 / 1,928.
+Coordinate order: (x, y).
+Response processing: use the response scale stored in the files without applying an additional exponential back-transformation.
 
-训练器对协变量、目标和坐标的新增变换均只使用训练行；验证和测试响应不进入参考库，训练查询排除自身。
+Any additional covariate, target and coordinate transformations fitted by the trainer use training rows only. Validation and test responses never enter the reference bank, and training queries exclude their own rows.
 
-## 数组字段
+## Array fields
 
-| 字段 | 形状 | 含义 |
+| Field | Shape | Description |
 |---|---|---|
-| `x` | `(19599, 17)` | 协变量矩阵 |
-| `u` | `(19599, 2)` | 送入训练器的冻结坐标；训练器仍使用训练行拟合自己的坐标变换 |
-| `y` | `(19599,)` | 训练目标，尚未应用训练器的目标标准化 |
-| `actual` | `(19599,)` | 最终指标计算尺度上的响应 |
-| `groups` | `(19599,)` | 原始组标识 |
-| `row_id` | `(19599,)` | 稳定行标识，用于跨模型对齐 |
-| `train_ids` | `(15475,)` | 训练行的位置索引 |
-| `validation_ids` | `(2196,)` | 验证行的位置索引 |
-| `test_ids` | `(1928,)` | 测试行的位置索引 |
-| `u_raw` | `(19599, 2)` | 来源坐标，用于追踪和诊断；不要替换 u 后沿用旧检查点 |
-| `coordinate_center` | `(2,)` | 数据准备时记录的坐标中心 |
-| `coordinate_scale` | `(2,)` | 数据准备时记录的坐标尺度 |
+| `x` | `(19599, 17)` | Covariate matrix |
+| `u` | `(19599, 2)` | Frozen coordinates supplied to the trainer; the trainer fits its own coordinate transformation using training rows |
+| `y` | `(19599,)` | Training target before the trainer applies target standardisation |
+| `actual` | `(19599,)` | Response on the scale used to calculate final metrics |
+| `groups` | `(19599,)` | Original group identifiers |
+| `row_id` | `(19599,)` | Stable row identifiers for alignment across models |
+| `train_ids` | `(15475,)` | Positional indices of training rows |
+| `validation_ids` | `(2196,)` | Positional indices of validation rows |
+| `test_ids` | `(1928,)` | Positional indices of test rows |
+| `u_raw` | `(19599, 2)` | Source coordinates for provenance and diagnostics; replacing `u` invalidates compatibility with existing checkpoints |
+| `coordinate_center` | `(2,)` | Coordinate centre recorded during data preparation |
+| `coordinate_scale` | `(2,)` | Coordinate scale recorded during data preparation |
 
-## 底图
+## Basemap
 
-`wuhan_subdis.gpkg` 为当前绘图笔记本使用的武汉街道底图副本，不进入模型训练。为保持现有绘图笔记本不变，`scripts/wuhan_subdis.gpkg` 原文件也保留。
+`wuhan_subdis.gpkg` is a copy of the Wuhan subdistrict basemap used by the current plotting notebook; it is excluded from model training. The original `scripts/wuhan_subdis.gpkg` is also retained to preserve compatibility with that notebook.
 
-## 运行入口
+## Running the experiment
 
-运行 `../../SHP.ipynb`。默认 `replay` 核验已保存预测；`ARTICLE_MODE=train` 从当前冻结输入重新训练。
-每个配置使用种子 1—10。训练本身不修改本数据目录。
+Run `../../SHP.ipynb`. The default `replay` mode audits saved predictions; `ARTICLE_MODE=train` retrains models from the frozen inputs.
+Each configuration uses seeds 1–10. Training leaves this data directory unchanged.

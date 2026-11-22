@@ -1,45 +1,45 @@
 # GVI — GVI
 
-2,122 个街景绿视率样本及 176 维冻结特征：Sentinel 128 维、SVF 16 维、树冠高度和有效比例 32 维。当前实验只训练回归模型，不训练图像编码器。
+There are 2,122 street-view green view index observations with 176 frozen features: 128 Sentinel features, 16 SVF features, and 32 canopy-height and valid-fraction features. The experiments train regression models only; image encoders remain frozen.
 
-## 可直接使用的数据
+## Ready-to-use data
 
-- `ordinary.npz`：冻结的模型输入、响应、行标识和划分；共 2,122 行、176 个协变量、2 个坐标维度。
-- `contract.json`：原实验契约，保留来源、SHA256、划分、预处理和评分定义；其中历史源路径用于溯源，不是新笔记本的运行依赖。
-- `map_coordinates.npz`：仅供残差地图使用的行对齐坐标，字段 `coordinates`。
+- `ordinary.npz`: Frozen model inputs, responses, row identifiers and splits; 2,122 rows, 176 covariates and 2 coordinate dimensions.
+- `contract.json`: Original experiment contract, retaining provenance, SHA256 hashes, splits, preprocessing and scoring definitions. Historical source paths provide provenance and are not runtime dependencies of the new notebooks.
+- `map_coordinates.npz`: Row-aligned coordinates for residual maps only, stored in the `coordinates` field.
 
-## 划分与尺度
+## Splits and scales
 
-固定 1 km 空间组划分；没有缓冲带，保留原探索性划分中的跨划分影像覆盖重叠；不是未来时期留出。
+A fixed split by 1 km spatial groups is used without a buffer. Cross-split imagery-footprint overlaps from the original exploratory split are retained. The split does not hold out a future period.
 
-训练/验证/测试样本数：1,696 / 213 / 213。
-坐标顺序：(projected_x, projected_y)；补充版本加入 elapsed capture month。
-响应处理：actual 为 [0,1] 的 GVI 比例。
+Training / validation / test observations: 1,696 / 213 / 213.
+Coordinate order: (projected_x, projected_y); the supplementary version adds elapsed capture month.
+Response processing: `actual` is the GVI proportion in [0,1].
 
-训练器对协变量、目标和坐标的新增变换均只使用训练行；验证和测试响应不进入参考库，训练查询排除自身。
+Any additional covariate, target and coordinate transformations fitted by the trainer use training rows only. Validation and test responses never enter the reference bank, and training queries exclude their own rows.
 
-## 数组字段
+## Array fields
 
-| 字段 | 形状 | 含义 |
+| Field | Shape | Description |
 |---|---|---|
-| `x` | `(2122, 176)` | 协变量矩阵 |
-| `y` | `(2122,)` | 训练目标，尚未应用训练器的目标标准化 |
-| `actual` | `(2122,)` | 最终指标计算尺度上的响应 |
-| `u` | `(2122, 2)` | 送入训练器的冻结坐标；训练器仍使用训练行拟合自己的坐标变换 |
-| `groups` | `(2122,)` | 原始组标识 |
-| `row_id` | `(2122,)` | 稳定行标识，用于跨模型对齐 |
-| `train_ids` | `(1696,)` | 训练行的位置索引 |
-| `validation_ids` | `(213,)` | 验证行的位置索引 |
-| `test_ids` | `(213,)` | 测试行的位置索引 |
-| `u_raw` | `(2122, 2)` | 来源坐标，用于追踪和诊断；不要替换 u 后沿用旧检查点 |
-| `coordinate_center` | `(2,)` | 数据准备时记录的坐标中心 |
-| `coordinate_scale` | `(2,)` | 数据准备时记录的坐标尺度 |
+| `x` | `(2122, 176)` | Covariate matrix |
+| `y` | `(2122,)` | Training target before the trainer applies target standardisation |
+| `actual` | `(2122,)` | Response on the scale used to calculate final metrics |
+| `u` | `(2122, 2)` | Frozen coordinates supplied to the trainer; the trainer fits its own coordinate transformation using training rows |
+| `groups` | `(2122,)` | Original group identifiers |
+| `row_id` | `(2122,)` | Stable row identifiers for alignment across models |
+| `train_ids` | `(1696,)` | Positional indices of training rows |
+| `validation_ids` | `(213,)` | Positional indices of validation rows |
+| `test_ids` | `(213,)` | Positional indices of test rows |
+| `u_raw` | `(2122, 2)` | Source coordinates for provenance and diagnostics; replacing `u` invalidates compatibility with existing checkpoints |
+| `coordinate_center` | `(2,)` | Coordinate centre recorded during data preparation |
+| `coordinate_scale` | `(2,)` | Coordinate scale recorded during data preparation |
 
-## 运行入口
+## Running the experiment
 
-运行 `../../GVI.ipynb`。默认 `replay` 核验已保存预测；`ARTICLE_MODE=train` 从当前冻结输入重新训练。
-每个配置使用种子 1—10。训练本身不修改本数据目录。
+Run `../../GVI.ipynb`. The default `replay` mode audits saved predictions; `ARTICLE_MODE=train` retrains models from the frozen inputs.
+Each configuration uses seeds 1–10. Training leaves this data directory unchanged.
 
-## 月份扩展
+## Month-augmented inputs
 
-`month_augmented.npz` 和 `month_augmented_contract.json` 是第三坐标版本。样本、协变量、响应、空间划分与二维版本一致；DLAN 宽度/预测头为 `(6,16,33)`、候选数 768，GeoAggregator 为 `(24,14,31)`。这是同参数量配置比较，不是只改变时间信息的单因素消融。
+`month_augmented.npz` and `month_augmented_contract.json` provide the three-coordinate version. Observations, covariates, responses and spatial splits match the planar version. DLAN uses width/head configuration `(6,16,33)` with 768 candidates; GeoAggregator uses `(24,14,31)`. This compares configurations with equal parameter counts, rather than a single-factor ablation that changes only temporal information.

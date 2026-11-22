@@ -1,41 +1,41 @@
 # SIC — WuhanOD
 
-武汉街道之间的正出行流，2020 年 7 月 20—26 日。35 个协变量与四维起终点坐标全部保留。
+Positive travel flows between Wuhan subdistricts for 20–26 July 2020. All 35 covariates and all four origin–destination coordinate dimensions are retained.
 
-## 可直接使用的数据
+## Ready-to-use data
 
-- `ordinary.npz`：冻结的模型输入、响应、行标识和划分；共 13,807 行、35 个协变量、4 个坐标维度。
-- `contract.json`：原实验契约，保留来源、SHA256、划分、预处理和评分定义；其中历史源路径用于溯源，不是新笔记本的运行依赖。
-- `map_coordinates.npz`：仅供残差地图使用的行对齐坐标，字段 `coordinates`。
+- `ordinary.npz`: Frozen model inputs, responses, row identifiers and splits; 13,807 rows, 35 covariates and 4 coordinate dimensions.
+- `contract.json`: Original experiment contract, retaining provenance, SHA256 hashes, splits, preprocessing and scoring definitions. Historical source paths provide provenance and are not runtime dependencies of the new notebooks.
+- `map_coordinates.npz`: Row-aligned coordinates for residual maps only, stored in the `coordinates` field.
 
-## 划分与尺度
+## Splits and scales
 
-固定训练/验证/测试样本划分；不是时间外推，也不是整组起点或终点留出。
+A fixed observation-level training/validation/test split is used. It evaluates neither temporal extrapolation nor the exclusion of entire origin or destination groups.
 
-训练/验证/测试样本数：9,618 / 2,104 / 2,085。
-坐标顺序：(origin_x, origin_y, destination_x, destination_y)。
-响应处理：y 为 log1p(count)；actual 为原始计数。预测必须 expm1 后截断到非负值，再计算计数尺度指标。
+Training / validation / test observations: 9,618 / 2,104 / 2,085.
+Coordinate order: (origin_x, origin_y, destination_x, destination_y).
+Response processing: `y` is log1p(count), and `actual` contains original counts. Apply expm1 to predictions and clip them to non-negative values before calculating metrics on the count scale.
 
-训练器对协变量、目标和坐标的新增变换均只使用训练行；验证和测试响应不进入参考库，训练查询排除自身。
+Any additional covariate, target and coordinate transformations fitted by the trainer use training rows only. Validation and test responses never enter the reference bank, and training queries exclude their own rows.
 
-## 数组字段
+## Array fields
 
-| 字段 | 形状 | 含义 |
+| Field | Shape | Description |
 |---|---|---|
-| `x` | `(13807, 35)` | 协变量矩阵 |
-| `u` | `(13807, 4)` | 送入训练器的冻结坐标；训练器仍使用训练行拟合自己的坐标变换 |
-| `y` | `(13807,)` | 训练目标，尚未应用训练器的目标标准化 |
-| `actual` | `(13807,)` | 最终指标计算尺度上的响应 |
-| `groups` | `(13807,)` | 原始组标识 |
-| `row_id` | `(13807,)` | 稳定行标识，用于跨模型对齐 |
-| `train_ids` | `(9618,)` | 训练行的位置索引 |
-| `validation_ids` | `(2104,)` | 验证行的位置索引 |
-| `test_ids` | `(2085,)` | 测试行的位置索引 |
-| `u_raw` | `(13807, 4)` | 来源坐标，用于追踪和诊断；不要替换 u 后沿用旧检查点 |
-| `coordinate_center` | `(4,)` | 数据准备时记录的坐标中心 |
-| `coordinate_scale` | `(4,)` | 数据准备时记录的坐标尺度 |
+| `x` | `(13807, 35)` | Covariate matrix |
+| `u` | `(13807, 4)` | Frozen coordinates supplied to the trainer; the trainer fits its own coordinate transformation using training rows |
+| `y` | `(13807,)` | Training target before the trainer applies target standardisation |
+| `actual` | `(13807,)` | Response on the scale used to calculate final metrics |
+| `groups` | `(13807,)` | Original group identifiers |
+| `row_id` | `(13807,)` | Stable row identifiers for alignment across models |
+| `train_ids` | `(9618,)` | Positional indices of training rows |
+| `validation_ids` | `(2104,)` | Positional indices of validation rows |
+| `test_ids` | `(2085,)` | Positional indices of test rows |
+| `u_raw` | `(13807, 4)` | Source coordinates for provenance and diagnostics; replacing `u` invalidates compatibility with existing checkpoints |
+| `coordinate_center` | `(4,)` | Coordinate centre recorded during data preparation |
+| `coordinate_scale` | `(4,)` | Coordinate scale recorded during data preparation |
 
-## 运行入口
+## Running the experiment
 
-运行 `../../SIC.ipynb`。默认 `replay` 核验已保存预测；`ARTICLE_MODE=train` 从当前冻结输入重新训练。
-每个配置使用种子 1—10。训练本身不修改本数据目录。
+Run `../../SIC.ipynb`. The default `replay` mode audits saved predictions; `ARTICLE_MODE=train` retrains models from the frozen inputs.
+Each configuration uses seeds 1–10. Training leaves this data directory unchanged.
