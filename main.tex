@@ -369,10 +369,10 @@ Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
     \toprule
     Case    & Samples & Covariates & Dimensions & Training & Validation & Test  \\
     \midrule
-    \COO  & 13,000  & 8          & 3          & 9,732    & 1,643      & 1,625 \\
-    \WuhanOD & 13,807  & 35         & 4          & 9,618    & 2,104      & 2,085 \\
-    \WuhanHP & 19,599  & 17         & 2          & 15,475   & 2,196      & 1,928 \\
-    \GVI     & 2,122   & 176        & 2          & 1,696    & 213        & 213   \\
+    \COO  & 13,000  & 8          & 3          & 9732    & 1643      & 1625 \\
+    \WuhanOD & 13,807  & 35         & 4          & 9618    & 2104      & 2085 \\
+    \WuhanHP & 19,599  & 17         & 2          & 15,475   & 2196      & 1928 \\
+    \GVI     & 2122   & 176        & 2          & 1696    & 213        & 213   \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -409,7 +409,7 @@ saturation and interactions that are poorly represented by a single linear respo
 We collected street-view images in Shanghai, China and computed the \gls{gvi} via a model trained on manually labelled images.
 Then, at the locations where street-view images were taken, we downloaded the on-site remote sensing data from Sentinel-1 and Sentinel-2 satellites and cut them into patches.
 We further collected the building-height, road-network density, categorical \gls{poi} counts, sky-view factors and canopy features from the same area.
-The dataset comprises 2,122 Shanghai-area observations captured during 2019--2022.
+The dataset comprises 2122 Shanghai-area observations captured during 2019--2022.
 All the features are processed by an encoder to produce 176 covariates as model inputs.
 This case is intended to examine the nonlinear prediction component related to features learnt from remote sensing data.
 
@@ -431,23 +431,23 @@ These parameters vary across cases, as shown in \autoref{tbl:model-parameters}.
     \toprule
     Case & Model & Structural parameters & Neighbour size & Parameters \\\midrule
     \COO
-    & \DLAN & \makecell[l]{Attention width: 13\\FiLM layers: $(12, 24)$} & 768 candidates & 6,957 \\
-    & \GAgg & \makecell[l]{Latent dimension: 48\\Decoder layers: $(14, 22)$} & 256 neighbours & 6,957 \\
-    & \GNNWR & \makecell[l]{SWNN layers: (40, 32)\\STPNN layers: $(2,7,1)$} & 128 references & 6,957 \\\midrule
+    & \DLAN & \makecell[l]{Attention width: 13\\FiLM layers: $(12, 24)$} & 768 candidates & 6957 \\
+    & \GAgg & \makecell[l]{Latent dimension: 48\\Decoder layers: $(14, 22)$} & 256 neighbours & 6957 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (40, 32)\\STPNN layers: $(2,7,1)$} & 128 references & 6957 \\\midrule
     \WuhanOD
-    & \DLAN & \makecell[l]{Attention width: 12\\FiLM shape: $(10, 8)$} & 512 candidates & 7,069 \\
-    & \GAgg & \makecell[l]{Latent dimension: 48\\Decoder shape: $(6, 16)$} & 256 neighbours & 7,069 \\
-    & \GNNWR & \makecell[l]{SWNN layers: (51, 9)} & 119 references & 7,069 \\\midrule
+    & \DLAN & \makecell[l]{Attention width: 12\\FiLM shape: $(10, 8)$} & 512 candidates & 7069 \\
+    & \GAgg & \makecell[l]{Latent dimension: 48\\Decoder shape: $(6, 16)$} & 256 neighbours & 7069 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (51, 9)} & 119 references & 7069 \\\midrule
     \WuhanHP
-    & \DLAN & \makecell[l]{Attention width: 14\\FiLM shape: $(20, 17)$} & 768 candidates & 6,957 \\
-    & \GAgg & \makecell[l]{Latent dimension: 32\\Decoder shape: $(62, 14)$} & 256 neighbours & 6,957 \\
-    & \GNNWR & \makecell[l]{SWNN layers: (44, 14)} & 768 references & 6,957 \\
-    & \GCNNWR & \makecell[l]{CNN channels: (5, 16)\\Pooling: $2 \times 2$\\Hidden width: 73} & $16 \times 16$ grids & 6,957 \\\midrule
+    & \DLAN & \makecell[l]{Attention width: 14\\FiLM shape: $(20, 17)$} & 768 candidates & 6957 \\
+    & \GAgg & \makecell[l]{Latent dimension: 32\\Decoder shape: $(62, 14)$} & 256 neighbours & 6957 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (44, 14)} & 768 references & 6957 \\
+    & \GCNNWR & \makecell[l]{CNN channels: (5, 16)\\Pooling: $2 \times 2$\\Hidden width: 73} & $16 \times 16$ grids & 6957 \\\midrule
     \GVI
-    & \DLAN & \makecell[l]{Attention width: 7\\FiLM shape: $(12, 58)$} & 768 candidates & 6,957 \\
-    & \GAgg & \makecell[l]{Latent dimension: 32\\Decoder shape: $(7, 11)$} & 256 neighbours & 6,957 \\
-    & \GNNWR & \makecell[l]{SWNN layers: (31, 12)} & 134 references & 6,957 \\
-    & \GCNNWR & \makecell[l]{CNN channels: (8, 17)\\Pooling: $2 \times 2$\\Hidden width: 22} & $16 \times 16$ grids & 6,957 \\
+    & \DLAN & \makecell[l]{Attention width: 7\\FiLM shape: $(12, 58)$} & 768 candidates & 6957 \\
+    & \GAgg & \makecell[l]{Latent dimension: 32\\Decoder shape: $(7, 11)$} & 256 neighbours & 6957 \\
+    & \GNNWR & \makecell[l]{SWNN layers: (31, 12)} & 134 references & 6957 \\
+    & \GCNNWR & \makecell[l]{CNN channels: (8, 17)\\Pooling: $2 \times 2$\\Hidden width: 22} & $16 \times 16$ grids & 6957 \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -601,7 +601,7 @@ is consistent with the repeated-run advantage in future-year prediction.
 
 For \WuhanOD, \DLAN's main advantage is lower mean error and a smaller extreme error across training seeds, as shown in \autoref{fig:odtail}.
 With an attention width of 12 and 512 nearest neighbours, \DLAN achieves a mean RMSE of 565.28 and MAE of 50.28, reducing mean RMSE by 26.85\% relative to \GAgg and 84.16\% relative to \GNNWR.
-Its worst RMSE is 827.76, compared with 3,110.57 for \GAgg.
+Its worst RMSE is 827.76, compared with 3110.57 for \GAgg.
 The response-tail diagnostics show that the largest 1\% of observed flows
 account for 97.43\% of \DLAN's squared error and 98.28\% of \GAgg's.
 Excluding these flows gives RMSE of 85.39 for \DLAN and 65.88 for \GAgg,
@@ -645,9 +645,9 @@ These results support \DLAN's nonlinear, reference-conditioned prediction for vi
 
 As mentioned in \autoref{sec:model-settings}, \DLAN has two critical hyperparameters: attention width and candidate support.
 We conducted additional experiments on \WuhanOD to examine the sensitivity of these hyperparameters.
-A full factorial experiment crossing attention widths of 10, 12 and 16 with candidate counts of 512, 1,024 and 2,048 revealed complex effects of these two parameters on model performance.
-By fixing the attention width at 12, we found that changes in mean RMSE are smaller than the standard deviation across seeds when the candidate count is varied from 512 to 2,048.
-However, the worst-seed RMSE increases dramatically from 827.76 to 1,222.61 with a candidate count of 1024.
+A full factorial experiment crossing attention widths of 10, 12 and 16 with candidate counts of 512, 1024 and 2048 revealed complex effects of these two parameters on model performance.
+By fixing the attention width at 12, we found that changes in mean RMSE are smaller than the standard deviation across seeds when the candidate count is varied from 512 to 2048.
+However, the worst-seed RMSE increases dramatically from 827.76 to 1222.61 with a candidate count of 1024.
 On the other hand, as the attention width increases from 12 to 16, the worst-seed RMSE could fall to 753.40, which is the lowest among all configurations, but the mean RMSE remains relatively stable.
 But the number of trainable parameters increased to 10,733, which could reduce the stability of the model and increase the risk of overfitting.
 
@@ -656,12 +656,12 @@ But the number of trainable parameters increased to 10,733, which could reduce t
   \small\setlength{\tabcolsep}{4pt}
   \begin{tabular}{llrrrrrr}\toprule
     \makecell{Attention\\width} & \makecell{Candidate\\count} & Parameters & RMSE                       & MAE            & Worst           & \makecell{Computing\\Time} & \makecell{Average\\Epochs} \\\midrule
-    \multirow{3}{*}{10}         & 512                         & 5,541      & $624.40$          & 54.83          & 944.09          & 303.43                     & 206.8 \\
-                                & 1024                        & 5,541      & $620.00$          & 54.39          & 808.09          & 345.82                     & 203.5 \\
-                                & 2048                        & 5,541      & $591.82$          & 53.21          & 847.45          & 481.75                     & 224.5 \\
-    \multirow{3}{*}{12}         & 512                         & 7,069      & $\mathbf{565.28}$ & \textbf{50.28} & 827.76          & 340.64                     & 233.7 \\
-                                & 1024                        & 7,069      & $608.73$          & 52.08          & 1,222.61        & 364.03                     & 227.3 \\
-                                & 2048                        & 7,069      & $587.60$          & 51.07          & 840.72          & 455.24                     & 226.3 \\
+    \multirow{3}{*}{10}         & 512                         & 5541      & $624.40$          & 54.83          & 944.09          & 303.43                     & 206.8 \\
+                                & 1024                        & 5541      & $620.00$          & 54.39          & 808.09          & 345.82                     & 203.5 \\
+                                & 2048                        & 5541      & $591.82$          & 53.21          & 847.45          & 481.75                     & 224.5 \\
+    \multirow{3}{*}{12}         & 512                         & 7069      & $\mathbf{565.28}$ & \textbf{50.28} & 827.76          & 340.64                     & 233.7 \\
+                                & 1024                        & 7069      & $608.73$          & 52.08          & 1222.61        & 364.03                     & 227.3 \\
+                                & 2048                        & 7069      & $587.60$          & 51.07          & 840.72          & 455.24                     & 226.3 \\
     \multirow{3}{*}{16}         & 512                         & 10,773     & $636.55$          & 54.54          & 879.06          & 265.06                     & 179.2 \\
                                 & 1024                        & 10,773     & $609.93$          & 52.94          & \textbf{753.40} & 332.45                     & 205.3 \\
                                 & 2048                        & 10,773     & $665.21$          & 55.55          & 896.36          & 409.53                     & 194.9 \\
