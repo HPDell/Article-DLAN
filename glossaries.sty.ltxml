@@ -1,0 +1,139 @@
+# -*- latex -*-
+# LaTeXML binding for glossaries (stub).
+# A self-contained replacement for the system glossaries binding.
+# The stock binding processes the real glossaries.sty, which drags in the
+# datatool package whose UTF-8 codepoint tables rely on \futurelet loops that
+# LaTeXML 0.8.8 cannot execute, flooding the conversion with errors.
+#
+# This stub records acronym definitions (\newacronym) in a Perl table and
+# typesets the macros used in the paper.  Only what the paper needs is
+# implemented; the rest is ignored.
+
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+our %glossaries;
+our %gls_used;
+our $gls_current_field_value;
+
+sub _lx_gls_parse_kv {
+    my ($kv) = @_;
+    my %out;
+    return \%out unless defined $kv;
+    my $str = ToString($kv);
+    while ($str =~ /\s*([^,=\s]+)\s*(?:=\s*(\{[^}]*\}|[^,]+))?/g) {
+        my ($k, $v) = ($1, $2);
+        next unless defined $k;
+        if (defined $v && $v =~ /^\{([^}]*)\}$/) { $v = $1; }
+        $out{$k} = (defined $v ? $v : 1);
+    }
+    return \%out;
+}
+
+sub _lx_gls_plural {
+    my ($word) = @_;
+    return $word if $word eq '';
+    return $word . 's';
+}
+
+DefMacro('\newacronym[]{}{}{}', sub {
+    my ($gullet, $opts, $label, $short, $long) = @_;
+    my $key = ToString($label);
+    $glossaries{$key}{short} = ToString($short);
+    $glossaries{$key}{long}  = ToString($long);
+    my $kv = _lx_gls_parse_kv($opts);
+    $glossaries{$key}{useri} = $kv->{user1} if $kv->{user1};
+    return Tokens();
+});
+
+DefMacro('\glsentrylong{}', sub {
+    my ($gullet, $label) = @_;
+    my $key = ToString($label);
+    return Tokens(Explode($glossaries{$key}{long} || $key));
+});
+
+DefMacro('\glsentryshort{}', sub {
+    my ($gullet, $label) = @_;
+    my $key = ToString($label);
+    return Tokens(Explode($glossaries{$key}{short} || $key));
+});
+
+DefMacro('\gls{}', sub {
+    my ($gullet, $label) = @_;
+    my $key = ToString($label);
+    if ($gls_used{$key}) {
+        return Tokens(Explode($glossaries{$key}{short} || $key));
+    }
+    $gls_used{$key} = 1;
+    return Tokens(Explode(($glossaries{$key}{long} || $key)
+            . ' (' . ($glossaries{$key}{short} || $key) . ')'));
+});
+
+DefMacro('\Gls{}', sub {
+    my ($gullet, $label) = @_;
+    my $key = ToString($label);
+    my $text = ($gls_used{$key}
+        ? ($glossaries{$key}{short} || $key)
+        : (($glossaries{$key}{long} || $key) . ' (' . ($glossaries{$key}{short} || $key) . ')'));
+    $gls_used{$key} = 1;
+    $text =~ s/^([a-z])/\u$1/;
+    return Tokens(Explode($text));
+});
+
+DefMacro('\glspl{}', sub {
+    my ($gullet, $label) = @_;
+    my $key = ToString($label);
+    $gls_used{$key} = 1;
+    return Tokens(Explode(_lx_gls_plural($glossaries{$key}{short} || $key)));
+});
+
+DefMacro('\glslowercase{}', sub {
+    my ($gullet, $arg) = @_;
+    my $text = ToString(Expand($arg));
+    return Tokens(Explode(lc $text));
+});
+
+DefMacro('\glsunset{}', sub {
+    my ($gullet, $label) = @_;
+    $gls_used{ToString($label)} = 1;
+    return Tokens();
+});
+
+DefMacro('\glsdisablehyper', Tokens());
+
+DefMacro('\ifglshasfield{}{}{}{}', sub {
+    my ($gullet, $field, $label, $then, $else) = @_;
+    my $key = ToString($label);
+    if (defined $glossaries{$key}{useri} && length $glossaries{$key}{useri}) {
+        $gls_current_field_value = $glossaries{$key}{useri};
+        return $then->unlist;
+    }
+    return $else->unlist;
+});
+
+DefMacro('\glscurrentfieldvalue', sub {
+    return ($gls_current_field_value
+        ? Tokens(Explode($gls_current_field_value))
+        : Tokens());
+});
+
+DefMacro('\glsresetall', sub { %gls_used = (); return Tokens(); });
+DefMacro('\makenoidxglossaries', Tokens());
+DefMacro('\Glsentrylong{}', sub {
+    my ($gullet, $label) = @_;
+    my $text = $glossaries{ToString($label)}{long} || ToString($label);
+    $text =~ s/^([a-z])/\u$1/;
+    return Tokens(Explode($text));
+});
+DefMacro('\glsentrytitlecase{}{}', sub {
+    my ($gullet, $label, $field) = @_;
+    my $text = $glossaries{ToString($label)}{ToString($field)} || ToString($label);
+    $text =~ s/\b([a-z])/\u$1/g;
+    return Tokens(Explode($text));
+});
+
+DefMacro('\printglossary', Tokens());
+DefMacro('\printglossaries', Tokens());
+DefMacro('\printnoidxglossary', Tokens());
+1;

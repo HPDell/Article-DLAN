@@ -1,0 +1,21 @@
+# -*- mode: Perl -*-
+# Semantic HTML support for the interact front matter used by main.tex.
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+LoadClass('article');
+RequirePackage('graphicx');
+RequirePackage('amssymb');
+RequirePackage('amsthm');
+RequirePackage('booktabs');
+RequirePackage('hyperref');
+DefMacro('\\author{}', '\\@add@frontmatter{ltx:creator}[role=author]{#1}');
+DefMacro('\\name{}', '\\@personname{#1}');
+DefMacro('\\affil{}', '\\lx@contact{affiliation}{#1}');
+DefMacro('\\articletype{}', '\\@add@frontmatter{ltx:classification}[scheme=articletype]{#1}');
+DefEnvironment('{keywords}', '<ltx:keywords>#body</ltx:keywords>');
+# LaTeXML already formats equation references with parentheses.
+DefMacro('\\labelformat{}{}', '');
+1;

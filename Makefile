@@ -20,8 +20,9 @@ tagged:
 	cp "$(OUTDIR)/$(SOURCE).pdf" "$(OUTDIR)/$(TARGET)_$(DOC_VERSION).pdf"
 
 html:
-	latexml --preload=amsmath --dest="$(OUTDIR)/$(TARGET).xml" "$(SOURCE).tex"
-	cd "$(OUTDIR)" && latexmlpost --dest="$(TARGET).html" --css=style.css --javascript=LaTeXML-maybeMathjax.js "$(TARGET).xml"
+	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir="$(OUTDIR)" "$(SOURCE).tex"
+	latexml --preload=amsmath --preload=html.ltxml --path="$(OUTDIR)" --dest="$(OUTDIR)/$(TARGET).xml" "$(SOURCE).tex"
+	cd "$(OUTDIR)" && latexmlpost --dest="$(TARGET).html" --javascript=LaTeXML-maybeMathjax.js "$(TARGET).xml"
 
 docx: html
 	cd "$(OUTDIR)" && pandoc -o "$(TARGET)_$(DOC_VERSION).docx" --reference-doc=template.docx --mathml "$(TARGET).html" 

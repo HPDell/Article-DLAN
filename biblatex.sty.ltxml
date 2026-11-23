@@ -1,0 +1,50 @@
+# -*- latex -*-
+# LaTeXML binding for biblatex (stub).
+# Provides a minimal subset of biblatex so that documents using it can be
+# converted by latexml without loading the real biblatex.sty (which would pull
+# in the expl3 kernel that LaTeXML 0.8.8 cannot digest).
+# Citations are handled by the natbib binding that elsarticle already loads.
+
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+our $BIBFILE;
+
+# Honor biblatex's style option (LaTeXML's natbib binding controls citation
+# formatting, and the elsarticle class defaults it to 'numbers').  When the
+# document requests style=authoryear, switch natbib to author-year output.
+DeclareOption(undef, sub {
+    my $opt = ToString(Expand(T_CS('\CurrentOption')));
+    if ($opt =~ /^\s*style\s*=\s*authoryear/) {
+        AssignValue(CITE_STYLE       => 'authoryear');
+        AssignValue(CITE_OPEN        => T_OTHER('('));
+        AssignValue(CITE_CLOSE       => T_OTHER(')'));
+        AssignValue(CITE_SEPARATOR   => T_OTHER(';'));
+        AssignValue(CITE_AY_SEPARATOR => T_OTHER(',')); }
+    return; });
+ProcessOptions();
+
+DefMacro('\addbibresource{}', sub {
+    my ($gullet, $file) = @_;
+    my $name = ToString($file);
+    $name =~ s/^\{|\}$//g;
+    $name =~ s/\.bib$//;
+    $BIBFILE = $name;
+    return Tokens();
+});
+
+DefMacro('\printbibliography', sub {
+    return ($BIBFILE
+        ? Tokens(T_CS('\bibliography'), T_BEGIN, T_OTHER($BIBFILE), T_END)
+        : Tokens());
+});
+
+DefMacro('\biboptions{}', Tokens());
+DefMacro('\labelformat{}{}', Tokens());
+DefMacro('\printbibheading', Tokens());
+DefMacro('\printshorthands',  Tokens());
+
+DefMacro('\dbend', '--');
+DefMacro('\centralization', 'centralization');
+1;

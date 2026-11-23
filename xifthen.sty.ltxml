@@ -1,0 +1,23 @@
+# -*- latex -*-
+# LaTeXML binding for xifthen (stub).
+# The real xifthen.sty builds on ifthen/calc and (in recent TeX Live) the
+# l3keys2e machinery.  We keep the parts the document actually relies on
+# (\isempty, used by \odvar in the preamble) and keep ifthen's own
+# \ifthenelse implementation for compound tests used by other packages.
+
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+RequirePackage('ifthen');
+RequirePackage('calc');
+
+DefMacro('\isempty{}', sub {
+    my ($gullet, $arg) = @_;
+    # ifthen evaluates numeric comparisons, not bare 1/0 truth values.
+    return Explode(IsEmpty($arg) ? '1=1' : '1=0');
+});
+
+DefMacro('\IfPackageLoadedTF{}{}{}', '#2');
+DefMacro('\ProcessKeyOptions', '');
+1;

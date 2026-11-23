@@ -1,0 +1,14 @@
+# -*- latex -*-
+# LaTeXML binding for xparse (stub).
+# The stock binding runs the real xparse.sty, which in current TeX Live is a
+# thin wrapper over the expl3 kernel; LaTeXML 0.8.8 cannot digest the 2026
+# expl3-code.tex and hangs for ~10 minutes on a \prg_replicate:nn loop.
+#
+# The paper loads xparse but never uses its commands (no \NewDocumentCommand
+# etc.), so an empty binding is sufficient here.
+
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+1;

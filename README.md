@@ -13,6 +13,26 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=_out main.tex
 All compiler products are written to `_out/`.
 The native editor is open; its preview compiler cannot download the uncached Tectonic bundle, so the delivered PDF uses local pdfLaTeX.
 
+## HTML with LaTeXML 0.8.8
+
+Run `make html` from `article/` (or `./make.ps1 html` in PowerShell).
+The result is `_out/Paper-DLAN.html`, with its images, stylesheets and JavaScript
+beside it. Keep these files together when sharing the HTML.
+
+The HTML target first runs `latexmk` to refresh `_out/main.bbl` using
+`zotero.bib` and `tfcad.bst`. It then preloads `html.ltxml` and searches `_out/`
+so LaTeXML uses this bibliography instead of converting the entire Zotero library.
+This requires the same pdfLaTeX/BibTeX tools as the PDF build, plus `latexml`
+and `latexmlpost`. The default LaTeXML stylesheets are used; no `style.css`
+is supplied by this repository.
+
+Local `interact.cls.ltxml` and `babel.sty.ltxml` bindings handle this manuscript's
+front matter and British English without parsing unsupported TeX package code.
+The local `glossaries.sty.ltxml` implements the acronym commands used here,
+including first-use expansion, citation fields and reset after the abstract.
+These are manuscript-specific bindings, not complete implementations of those
+packages. They do not change the LaTeX source or the PDF build.
+
 ## Evidence incorporated on 10 November 2026
 
 - Main comparison: 140 fits, fourteen configurations, ten seeds each, 6,957 trainable parameters. Original matched-case results are extended by the pinned upstream PyTorch GNNWR/GTNNWR baselines. GTNNWR is used for CO2; GNNWR retains all four coordinates on WuhanOD. GCNNWR remains limited to the planar cases.

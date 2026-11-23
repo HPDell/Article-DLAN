@@ -1,0 +1,11 @@
+# -*- latex -*-
+# LaTeXML binding for mypackage.sty
+use strict;
+use warnings;
+use LaTeXML::Package;
+
+RequirePackage('amsmath');
+RequirePackage('xifthen');
+RequirePackage('biblatex');
+
+1;

@@ -42,10 +42,11 @@ function Invoke-Step {
 }
 
 function Invoke-Html {
-    Invoke-Step { latexml --preload=amsmath --dest="$OUTDIR/$TARGET.xml" "$SOURCE_FILE" }
+    Invoke-Step { latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir="$OUTDIR" "$SOURCE_FILE" }
+    Invoke-Step { latexml --preload=amsmath --preload=html.ltxml --path="$OUTDIR" --dest="$OUTDIR/$TARGET.xml" "$SOURCE_FILE" }
     Push-Location $OUTDIR
     try {
-        Invoke-Step { latexmlpost --dest="$TARGET.html" --css=style.css --javascript=LaTeXML-maybeMathjax.js "$TARGET.xml" }
+        Invoke-Step { latexmlpost --dest="$TARGET.html" --javascript=LaTeXML-maybeMathjax.js "$TARGET.xml" }
     } finally {
         Pop-Location
     }

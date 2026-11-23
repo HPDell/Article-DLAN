@@ -1,0 +1,11 @@
+# -*- mode: Perl -*-
+# This manuscript uses only British English. Avoid parsing the newer babel
+# runtime with LaTeXML 0.8.8; no multilingual typesetting is required here.
+package LaTeXML::Package::Pool;
+use strict;
+use warnings;
+use LaTeXML::Package;
+DeclareOption('british', sub { MergeFont(language => 'en-GB'); });
+ProcessOptions();
+DefMacro('\\languagename', 'british');
+1;
