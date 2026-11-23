@@ -1,6 +1,6 @@
-# Data and Code for Article "Dimension-specific local attention for nonlinear regression in geographical and temporal spaces"
+# Instructions
 
-This repository stores all code and data for the article *Dimension-specific local attention for nonlinear regression in geographical and temporal spaces*. Four experiment are included (see [Datasets](#Datasets) below). 
+This repository stores all code and data for the article *Dimension-specific local attention for nonlinear regression in geographical and temporal spaces*. Four experiment are included (see "Datasets" below). 
 
 Each experiment follows the same workflow:
 
@@ -37,6 +37,15 @@ Folders and files are organised in the following structure in this repository.
 
 ## Datasets
 
+Datasets for four empirical studies are included:
+
+* CE predicts future years
+* SHP holds out entire residential communities
+* GVI uses a fixed spatial-group split without a buffer and regression on frozen features
+* SIC is trained on $ln(\text{count}+ 1)$, with metrics calculated after recovering counts.
+
+All coordinate dimensions are retained: CE uses GTNNWR and SIC uses four-dimensional GNNWR. 
+
 | Case | Dataset Name | Observations | Covariates | Coordinate dimensions | Training / validation / test |
 | ---- | ------------ | -----------: | ---------: | --------------------: | ---------------------------- |
 | CE   | CO2          |       13,000 |          8 |                     3 | 9,732 / 1,643 / 1,625        |
@@ -45,13 +54,6 @@ Folders and files are organised in the following structure in this repository.
 | GVI  | GVI          |        2,122 |        176 |                     2 | 1,696 / 213 / 213            |
 
 See `data/<case>/README.md` for case-specific details. 
-
-* CE predicts future years
-* SHP holds out entire residential communities
-* GVI uses a fixed spatial-group split without a buffer and regression on frozen features
-* SIC is trained on $ln(\text{count}+ 1)$, with metrics calculated after recovering counts.
-
-All coordinate dimensions are retained: CE uses GTNNWR and SIC uses four-dimensional GNNWR. 
 
 **Note: The two-dimensional GCNNWR implementation is inapplicable to CE/SIC, and those sections explicitly record that it is not run.**
 
@@ -121,7 +123,7 @@ Run `plot_results.ipynb` from the top with an R kernel to reproduce figures in t
 | --------------------------------------- | --------------------------------- | -------------------------------------------------------- |
 | Data dimensions and splits              | All four                          | `data/<case>/contract.json` and displayed data checks    |
 | Main accuracy and seed variability      | All four                          | `reported_metrics.csv`, `reported_summary.csv`           |
-| WuhanOD 3×3 width/candidate sensitivity | `SIC.ipynb` (DLAN factorial jobs) | `sic_factorial_metrics.csv`, `sic_factorial_summary.csv` |
+| SIC 3×3 width/candidate sensitivity | `SIC.ipynb` (DLAN factorial jobs) | `sic_factorial_metrics.csv`, `sic_factorial_summary.csv` |
 | Training cost / epochs                  | All four                          | `reported_metrics.csv`, `reported_summary.csv`           |
-| WuhanHP equal-community accuracy        | `SHP.ipynb`                       | `matched_hp_groups.csv`, `reported_metrics.csv`          |
+| SHP equal-community accuracy        | `SHP.ipynb`                       | `matched_hp_groups.csv`, `reported_metrics.csv`          |
 
