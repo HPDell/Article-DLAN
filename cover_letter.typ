@@ -27,9 +27,9 @@ We are pleased to submit our manuscript, #emph(metadata.title), for consideratio
 
 Spatial dependence and spatial heterogeneity motivate local regression methods that account for geographical context when modelling relationships between covariates and responses.
 Geographically weighted regression and its extensions provide a well-established framework, but their local linear formulations can restrict the representation of nonlinear relationships.
-Existing nonlinear approaches do not always distinguish the scales and contributions of individual geographical and temporal dimensions, which is particularly relevant to spatio-temporal observations and origin–destination flows.
+Existing nonlinear approaches are designed for specific types of spatial data and do not always distinguish the scales and contributions of individual geographical and temporal dimensions, causing several problems when applied to multidimensional data, like spatio-temporal and spatial flow data.
 Our manuscript addresses these issues through a dimension-specific local attention network (DLAN), extending the dimension-specific locality of geographical and temporal density regression to nonlinear prediction.
-DLAN learns separate bandwidths and attention projections for each coordinate dimension.
+DLAN learns separate scales and attention projections for each coordinate dimension.
 It combines content similarity, directional geographical biases and a Gaussian product prior to aggregate information from neighbouring training observations.
 The resulting local context modulates a nonlinear prediction network, allowing covariate–response relationships to vary with geographical and temporal conditions.
 This construction accommodates planar, spatio-temporal and spatial flow data within a common modelling framework.
@@ -45,6 +45,7 @@ The environmental, urban flow, housing and street-level greenery applications il
 
 // Authors should verify the submission-status and author-approval declarations before submission.
 We confirm that this manuscript is original, has not been published previously, and is not under consideration for publication elsewhere.
+The word count including references is less than 8000 words.
 All authors have approved the manuscript and its submission.
 The authors declare no competing interests.
 A private link to the data and code is provided in the manuscript for review.
