@@ -100,13 +100,14 @@
 \maketitle
 
 \begin{abstract}
-Spatial heterogeneity arises from geographical processes operating at different scales, requiring models that accommodate multidimensional proximity and nonlinear relationships between covariates and responses.
-\Gls{gwr} and its extensions, including \glsentrylong{gnnwr}, represent local variation through spatial weights and linear coefficients, whereas other neural network approaches, such as \GAgg, combine coordinate dimensions within a common neighbourhood representation, limiting their ability to distinguish spatial and temporal influences.
-This study proposes a \DLAN that integrates coordinate-specific locality with context-dependent nonlinear prediction.
-\DLAN learns separate bandwidths and attention projections for each coordinate dimension, combining content similarity, directional geographical biases and a Gaussian product prior through joint attention over neighbouring training observations.
-The aggregated context then controls feature-wise linear modulation of a prediction network, allowing covariate–response relationships to vary locally.
-Across four case studies examining carbon dioxide emissions, urban mobility flows, housing prices and the green view index, \DLAN achieves the lowest prediction error among the competing models with moderate computation times.
-The results demonstrate benefits for multidimensional geographical prediction and nonlinear modelling.
+Arisen from spatial heterogeneity, geographical relationships often vary across places, requiring models that can account for local differences.
+\Gls{gwr} and related extensions provide effective methods to fit spatially varying relationships but are only applicable to linear relationships.
+Existing nonlinear extensions of \gls{gwr} lack a general framework for multidimensional data, such as spatial, spatio-temporal, and spatial flow data.
+This study introduces a \DLAN that integrates coordinate-specific locality with context-dependent nonlinear prediction.
+\DLAN learns separate scales and attention projections for each coordinate dimension, combining content similarity and geographical biases as context through joint attention over neighbouring training observations.
+The aggregated context then controls a prediction network, allowing covariate--response relationships to vary locally.
+In four empirical examining carbon dioxide emissions, urban mobility flows, housing prices and the visible greenery, \DLAN produces lower mean prediction errors with moderate computational cost than the competing models under the evaluated settings.
+The findings show the value of combining dimension-specific proximity with locally adaptive nonlinear prediction.
 \DLAN advances nonlinear extensions of \gls{gwr} towards a unified framework for learning local relationships across planar, spatio-temporal and spatial flow data.
 \end{abstract}
 
@@ -270,7 +271,7 @@ and the candidate set is the deduplicated union of the $k$ closest eligible trai
 \begin{equation}\label{eq:candidate-set}
   \cand_i = \cup_{r,h} \operatorname{TopK}_{j \in \train\setminus\{i\}} \{-d_{rh}^2(i,j)\}.
 \end{equation}
-Here, $\train$ represents the training set.
+where $\train$ represents the training set.
 This procedure selects nearby observations under the current joint bandwidth metric.
 It differs from taking the union of separate one-dimensional nearest-neighbour lists.
 A reference that is close along one axis can remain distant under \autoref{eq:coordinate-scaled-distance}.
