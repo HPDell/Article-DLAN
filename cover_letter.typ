@@ -36,7 +36,6 @@ This construction accommodates planar, spatio-temporal and spatial flow data wit
 
 We evaluate DLAN through four case studies covering carbon dioxide emissions in China, urban mobility flows and housing prices in Wuhan, and the green view index in Shanghai.
 Across ten training runs per case, DLAN achieves the lowest mean test RMSE among the models compared in the reported configurations.
-Relative to GeoAggregator, mean RMSE decreases by 57.81%, 26.85%, 2.99% and 7.58%, respectively.
 Further analyses examine learned coordinate-specific scales, residual patterns and sensitivity to neighbourhood size and attention width, clarifying how the model performs across different geographical data structures.
 
 We believe the manuscript will interest the journal's readership through its contribution to spatially explicit modelling and geographical information science.

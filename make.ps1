@@ -60,7 +60,7 @@ foreach ($t in $Targets) {
     Write-Host "==> Target: $t" -ForegroundColor Yellow
     switch ($t) {
         { $_ -in @("all", "pdf") } {
-            Invoke-Step { latexmk -pdf -outdir=$OUTDIR $SOURCE }
+            Invoke-Step { latexmk -pdf -outdir="${OUTDIR}" $SOURCE }
             Invoke-Step { Copy-Item "$OUTDIR/$SOURCE.pdf" "$OUTDIR/${TARGET}_${DOC_VERSION}.pdf" -Force }
         }
         "anonymous" {

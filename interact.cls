@@ -4,12 +4,12 @@
 %%
 %% This file is part of a Taylor & Francis 'Interact' LaTeX bundle.
 %%
-%% v1.03 - 2016/10/17
+%% v1.02 - 2016/08/30
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{interact}[2016/10/17 v1.03 Interact LaTeX document class]
+\ProvidesClass{interact}[2016/08/30 v1.02 Interact LaTeX2e document class]
 %
 \newif\iflargeformat
 \newif\ifsuppldata
@@ -418,28 +418,48 @@
                                      \fi
                        #7}}\fi
      \@xsect{#5}}
-
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%% End Sectioning commands %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Appendix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\renewcommand\appendix{%
-  \let\@seccntformat\@appseccntformat
-  \setcounter{equation}{0}\renewcommand\theequation{\thesection\arabic{equation}}%
-  \setcounter{section}{0}\renewcommand\thesection{\Alph{section}}%
-  \setcounter{subsection}{0}\renewcommand\thesubsection{\thesection.\arabic{subsection}}%
-  \setcounter{table}{0}\renewcommand\thetable{\thesection\@arabic\c@table}%
-  \setcounter{figure}{0}\renewcommand\thefigure{\thesection\@arabic\c@figure}%
-  \@addtoreset{equation}{section}
-  \@addtoreset{table}{section}
-  \@addtoreset{figure}{section}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End Appendix %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Captions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\newbox\tempbox
+%
+\setlength\abovecaptionskip{7\p@}
+\setlength\belowcaptionskip{\z@}
+%
+\def\FigName{figure}
+%
+\long\def\@caption#1[#2]#3{\par\begingroup
+    \@parboxrestore
+    \normalsize
+    \@makecaption{\csname fnum@#1\endcsname}{\ignorespaces #3}\par
+  \endgroup}
+%
+\long\def\@makecaption#1#2{%
+  \ifx\FigName\@captype
+    \vskip5pt
+    \setbox\tempbox\hbox{\figcaptionfont{\fignumfont#1}\hskip4pt#2}%
+    \ifdim\wd\tempbox>\hsize
+            {\figcaptionfont\noindent{\fignumfont#1}\hskip7pt\ignorespaces#2\par}
+    \else
+            {\box\tempbox}%
+    \fi
+ \else
+    {\tablecaptionfont
+    {\tablenumfont#1}\hskip7pt\ignorespaces{#2}\par}%
+   \vskip\belowcaptionskip
+ \fi}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End Captions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Figures %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-\def\fnum@figure{\figurename\nobreakspace\thefigure.}%
+\renewcommand\thefigure{\@arabic\c@figure}
+\def\fps@figure{tbp}
+\def\ftype@figure{1}
+\def\ext@figure{lof}
+\def\fnum@figure{\figurename\nobreakspace\thefigure.}
 \renewenvironment{figure}%
                {\figcaptionfont\@float{figure}}
                {\end@float}
@@ -480,7 +500,11 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Tables %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-\def\fnum@table{\tablename\nobreakspace\thetable.}%
+\renewcommand\thetable{\@arabic\c@table}
+\def\fps@table{tbp}
+\def\ftype@table{2}
+\def\ext@table{lot}
+\def\fnum@table{\tablename\nobreakspace\thetable.}
 \renewenvironment{table}%
                {\@float{table}}
                {\vskip5pt\end@float}
@@ -491,11 +515,11 @@
 \newdimen\tabledim
 %
 \long\def\tbl#1#2{%
- \setbox\@tempboxa\hbox{\tablefont #2}%
- \tabledim\hsize\advance\tabledim by -\wd\@tempboxa
+ \setbox\tempbox\hbox{\tablefont #2}%
+ \tabledim\hsize\advance\tabledim by -\wd\tempbox
     \global\divide\tabledim\tw@
  \caption{#1}
-    \centerline{\box\@tempboxa}
+    \centerline{\box\tempbox}
   }%
 %
 \newenvironment{tabnote}{%
@@ -511,37 +535,6 @@
 \renewcommand\bottomrule{\\[-7.5pt]\hline}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End Tables %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Captions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-\setlength\abovecaptionskip{7\p@}
-\setlength\belowcaptionskip{\z@}
-%
-\def\FigName{figure}
-%
-\long\def\@caption#1[#2]#3{\par\begingroup
-    \@parboxrestore
-    \normalsize
-    \@makecaption{\csname fnum@#1\endcsname}{\ignorespaces #3}\par
-  \endgroup}
-%
-\long\def\@makecaption#1#2{%
-  \ifx\FigName\@captype
-  \vskip\abovecaptionskip
-    \setbox\@tempboxa\hbox{\figcaptionfont{\fignumfont#1}\hskip4pt#2}%
-  \ifdim \wd\@tempboxa >\hsize
-    {\figcaptionfont\noindent{\fignumfont#1}\hskip7pt\ignorespaces#2\par}%
-  \else
-    \global \@minipagefalse
-    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
-  \fi
- \else
-    {\tablecaptionfont
-    {\tablenumfont#1}\hskip7pt\ignorespaces{#2}\par}%
-  \vskip\belowcaptionskip
-  \fi}
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End Captions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Lists %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
@@ -647,7 +640,19 @@
   \@endparenv}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% End Lists %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+%
+\renewcommand{\appendix}{%
+   \let\@seccntformat\@appseccntformat
+   \setcounter{equation}{0}\renewcommand\theequation{\thesection\arabic{equation}}%
+   \setcounter{section}{0}\renewcommand\thesection       {\Alph{section}}%
+   \setcounter{subsection}{0}\renewcommand\thesubsection       {\thesection.\arabic{subsection}}%
+   \setcounter{table}{0}\renewcommand\thetable{\thesection\@arabic\c@table}%
+   \setcounter{figure}{0}\renewcommand\thefigure{\thesection\@arabic\c@figure}%
+   \@addtoreset{equation}{section}
+   \@addtoreset{table}{section}
+   \@addtoreset{figure}{section}
+}
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Footnotes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \renewcommand\footnoterule{%
