@@ -356,8 +356,11 @@ The empirical comparison comprises:
 and (d) \GVI.\glsunset{gvi}
 These cases represent spatio-temporal data, spatial flow data, hierarchical geographical data and planar geographical data incorporating remote sensing observations, respectively.
 \DLAN accommodates all four cases, whereas the original implementations of the competing models do not all support these data structures, as they were primarily designed for planar geographical data.
-To enable a fair comparison, the \GNNWR baseline represents \GNNWR and \GTNNWR for spatio-temporal and spatial flow data, respectively.
-\GCNNWR has not been extended to these multidimensional settings and is therefore applied only to the planar geographical datasets, \WuhanHP and \GVI.
+
+To enable a fair comparison, the \GNNWR  actually represents \GNNWR and \GTNNWR for spatio-temporal data.
+For the spatial flow data, the STPNN in \GTNNWR was extended to 4-D coordinates to accommodate the \WuhanOD case.
+\GCNNWR was not extended to accommodate multidimensional data considering the complexity of adaptation and the potential fundamental changes it may cause to the model.
+Therefore, this model is only used for geographic data, i.e., \WuhanHP and \GVI.
 Neither model was designed specifically for spatial flow data such as \WuhanOD.
 For spatio-temporal and spatial flow data, \GAgg uses an adaptor that extends distance computation from planar to multidimensional coordinates while preserving the original model architecture.
 Table~\ref{tab:data} summarises the data and fixed evaluation partitions.
