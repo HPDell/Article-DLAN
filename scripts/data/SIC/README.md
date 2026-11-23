@@ -35,6 +35,10 @@ Any additional covariate, target and coordinate transformations fitted by the tr
 | `coordinate_center` | `(4,)` | Coordinate centre recorded during data preparation |
 | `coordinate_scale` | `(4,)` | Coordinate scale recorded during data preparation |
 
+## Basemap
+
+The Wuhan subdistrict layer is shared with SHP and stored at `../basemap/wuhan_subdis.gpkg`. The SIC map in `data_visualisation.ipynb` reads `data/basemap/wuhan_subdis.gpkg` from the scripts working directory. The layer provides map context and is excluded from model training.
+
 ## Running the experiment
 
 Run `../../SIC.ipynb`. The default `replay` mode audits saved predictions; `ARTICLE_MODE=train` retrains models from the frozen inputs.

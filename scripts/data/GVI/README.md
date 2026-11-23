@@ -35,6 +35,10 @@ Any additional covariate, target and coordinate transformations fitted by the tr
 | `coordinate_center` | `(2,)` | Coordinate centre recorded during data preparation |
 | `coordinate_scale` | `(2,)` | Coordinate scale recorded during data preparation |
 
+## Basemap
+
+The Shanghai boundary layer is stored at `../basemap/shanghai_county.geojson`. The GVI map in `data_visualisation.ipynb` reads `data/basemap/shanghai_county.geojson` from the scripts working directory. The layer provides map context and is excluded from model training.
+
 ## Running the experiment
 
 Run `../../GVI.ipynb`. The default `replay` mode audits saved predictions; `ARTICLE_MODE=train` retrains models from the frozen inputs.

@@ -19,6 +19,7 @@ repository/
 ├── environment_snapshot.json
 ├── experiment_manifest.json  # Configurations, historical sources, parameters and file SHA256 hashes
 ├── data/
+│   ├── basemap/              # Shared Wuhan and Shanghai boundary layers
 │   ├── CE/                   # CE case, including CO2 data
 │   ├── SIC/                  # SIC case, including origin-destination (OD) flow counts in Wuhan
 │   ├── SHP/                  # SHP case, including secondhand housing price in Wuhan

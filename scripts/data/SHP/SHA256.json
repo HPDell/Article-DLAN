@@ -1,6 +1,5 @@
 {
   "map_coordinates.npz": "d782b4ed6c61818fef19c3d39942a330fa872ccec670a25922e9e0c86522cf61",
   "contract.json": "23daa4a591ba9b582c9a4bc2366b515f3edeff9237f2d36ffa5201f357ffc0fa",
-  "ordinary.npz": "fe8252d9951eeac63582c0cdf198a0828d19ab312873df95d9e03dc36ae3ce12",
-  "wuhan_subdis.gpkg": "baaec15abba1cb7199112de8d57f4c4b5cc66aed4e43c2151631bb211eefe977"
+  "ordinary.npz": "fe8252d9951eeac63582c0cdf198a0828d19ab312873df95d9e03dc36ae3ce12"
 }

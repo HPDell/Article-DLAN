@@ -37,7 +37,7 @@ Any additional covariate, target and coordinate transformations fitted by the tr
 
 ## Basemap
 
-`wuhan_subdis.gpkg` is a copy of the Wuhan subdistrict basemap used by the current plotting notebook; it is excluded from model training. The original `scripts/wuhan_subdis.gpkg` is also retained to preserve compatibility with that notebook.
+The Wuhan subdistrict basemap is shared with SIC and stored once at `../basemap/wuhan_subdis.gpkg` (`data/basemap/wuhan_subdis.gpkg` from the scripts working directory). It is used by `plot_results.ipynb` and is excluded from model training.
 
 ## Running the experiment
 
