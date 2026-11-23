@@ -7,6 +7,8 @@ Each experiment follows the same workflow:
 1. Read data and train models: DLAN, GNNWR/GTNNWR, GCNNWR, GeoAggregator (**each in a separate Jupyter Notebook**)
 2. Visualise results (**all case in a single Jupyter Notebook**)
 
+Run all notebooks and Python entry points from this directory (`article/scripts/`). Paths are relative to the current working directory; the code does not search for the project or notebook directory.
+
 ## Directory structure and experiment mapping
 
 ```text
@@ -22,6 +24,7 @@ repository/
 │   ├── SHP/                  # SHP case, including secondhand housing price in Wuhan
 │   ├── GVI/                  # GVI, including street-view images and related datasets on predicting green view index
 │   └── historical/           # Separately labelled records from earlier protocols
+├── evidence/                 # Saved metrics, predictions, provenance and figure inputs
 ├── models/                   # DLAN, GeoAggregator, GCNNWR and the published GNNWR adapter
 ├── CE.ipynb
 ├── SIC.ipynb
@@ -73,7 +76,7 @@ Additional requrirements:
 - **tmap** uses the version 4 API
 - **sf** requires working GDAL/GEOS/PROJ installations.
 
-The original statistical plotting environment is recorded in `../evidence/R_sessionInfo.txt`; consult the notebook's setup cells for additional current dependencies. 
+The original statistical plotting environment is recorded in `evidence/R_sessionInfo.txt`; consult the notebook's setup cells for additional current dependencies. 
 
 An existing R kernel can run `plot_results.ipynb` directly. 
 
@@ -99,7 +102,7 @@ Run `plot_results.ipynb` from the top with an R kernel to reproduce figures in t
 1. Install the Python and R dependencies in `README.md`.
 2. Start fresh Python kernels and run `CE.ipynb`, `SIC.ipynb`, `SHP.ipynb`, then `GVI.ipynb` from top to bottom.
 3. The final completed case creates the complete figure-input bundle in `outputs/replay/evidence/`. Each case saves its own fragments and completion manifest first.
-4. Inspect the generated tables. To publish them into `article/evidence/`, set `ARTICLE_PUBLISH_EVIDENCE=1` and rerun the final result-summary cells only. Existing evidence is backed up under the run directory.
+4. Inspect the generated tables. To publish them into `evidence/`, set `ARTICLE_PUBLISH_EVIDENCE=1` and rerun the final result-summary cells only. Existing evidence is backed up under the run directory.
 5. Open `plot_results.ipynb` with the R kernel and run the relevant figure cell after its setup/data cells. To retain its current saved outputs, make an execution copy or use nbconvert with a separate output notebook; set `ARTICLE_FIGURE_DIR` to a temporary directory to retain existing exported images.
 
 ### Figures

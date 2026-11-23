@@ -9,7 +9,7 @@ import json,hashlib
 import numpy as np
 import pandas as pd
 import torch
-ROOT=Path(__file__).resolve().parents[2];OUT=ROOT/'article/evidence'
+ROOT=Path.cwd().parent.parent;OUT=Path('evidence')
 main=pd.read_csv(OUT/'matched_metrics.csv');extra=pd.read_csv(OUT/'supplement_metrics.csv')
 parts=[main[main.case!='OD-Wuhan'].copy()]
 od=extra[((extra.experiment=='OD capacity')&extra.model_label.isin(['GeoAggregator','GNNWR']))|((extra.experiment=='OD neighbours')&(extra.model_label=='K512'))].copy()

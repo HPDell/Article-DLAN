@@ -1,7 +1,7 @@
 """Validate direct and glossary-driven citation keys against the Zotero export."""
 from pathlib import Path
 import re
-root=Path(__file__).resolve().parents[1]
+root=Path.cwd().parent
 source=(root/'main.tex').read_text();bib=(root/'zotero.bib').read_text()
 entries=set(re.findall(r'^@\w+\s*\{\s*([^,\s]+)\s*,',bib,re.M))
 body=source.split(r'\begin{document}',1)[1]
@@ -15,5 +15,5 @@ missing=sorted(keys-entries)
 assert r'\bibitem'not in source and r'\bibliography{zotero}'in source
 print(f'{len(keys)} cited keys; {len(keys)-len(missing)} found; {len(missing)} missing.')
 for key in missing:print('MISSING:',key)
-(root/'evidence/current_citation_keys.txt').write_text('\n'.join(sorted(keys))+'\n')
+Path('evidence/current_citation_keys.txt').write_text('\n'.join(sorted(keys))+'\n')
 if missing:raise SystemExit(1)

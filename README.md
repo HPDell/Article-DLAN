@@ -37,7 +37,7 @@ Other cases retain their 6,957-parameter configurations; the paper no longer cla
 K512 ran on the second machine, so its fit time is not a same-hardware speed comparison with the baselines.
 
 `prepare_reported_results.py` selects these explicit source records, rechecks all twenty K512 prediction arrays and verifies the saved projection shapes.
-The source manifest is `evidence/reported_configuration_manifest.json`.
+The source manifest is `scripts/evidence/reported_configuration_manifest.json`.
 Primary tables and R plots read `reported_metrics.csv`, `reported_summary.csv`, `reported_predictions.csv` and `reported_bandwidths.csv`.
 Some exported figure filenames retain their historical `matched_` prefix for compatibility; the source tables, titles and captions specify the reported configurations.
 Historical `matched_` evidence remains unchanged by this selection step.
@@ -45,17 +45,19 @@ Historical `matched_` evidence remains unchanged by this selection step.
 ## Reproduce the manuscript evidence and figures
 
 ```sh
-python scripts/prepare_evidence.py
-python scripts/prepare_supplement_evidence.py
-python scripts/prepare_reported_results.py
-jupyter nbconvert --to notebook --execute --inplace scripts/plot_results.ipynb
-python scripts/render_references.py
+cd scripts
+python prepare_evidence.py
+python prepare_supplement_evidence.py
+python prepare_reported_results.py
+jupyter nbconvert --to notebook --execute --inplace plot_results.ipynb
+python render_references.py
 ```
 
+All reproduction commands run from `article/scripts/`; paths are resolved directly from that working directory.
 These scripts read saved artifacts and do not train networks.
 The main and supplementary audit checks 440 held-out prediction arrays from 220 unique completed fits; 20 additional arrays come from the separate historical HPC experiment.
 The GVI OLS diagnostic is recovered from an existing fitted buffer, not refitted.
-Source hashes, completion records, metrics and the ongoing-diagnostic status snapshot are saved under `evidence/`.
+Source hashes, completion records, metrics and the ongoing-diagnostic status snapshot are saved under `scripts/evidence/`.
 The R notebook `scripts/plot_results.ipynb` generates fourteen figures; manuscript tables remain inline in `main.tex`.
 All plotting code is written directly in notebook cells, with no custom plotting functions or external script calls.
 Each figure cell displays its result and exports PDF and PNG files under `figures/`.

@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import torch
 
-ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / 'article/evidence'
+ROOT = Path.cwd().parent.parent
+OUT = Path('evidence')
 VERSION = 'dlan_matched4_10seeds_v1'
 CASES = {'CO2': ['dlan', 'geoaggregator', 'gtnnwr'], 'OD-Wuhan': ['dlan', 'geoaggregator', 'gnnwr'],
          'WuhanHP': ['dlan', 'geoaggregator', 'gcnnwr', 'gnnwr'],
