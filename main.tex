@@ -721,50 +721,39 @@ Drawing on \gls{gtdr}, we place dimension-specific attention at the centre of th
 Compared with conventional Euclidean and geodetic settings, proximity is more difficult to define and measure in higher-dimensional coordinate spaces because individual dimensions can operate at different scales.
 \GTNNWR follows the extension from \gls{gwr} to \gls{gtwr}, using neural networks to construct a spatio-temporal distance metric.
 \GAgg likewise relies on distance-based context selection and therefore requires a spatio-temporal distance metric.
-Both approaches consequently face the same difficulty as \gls{gtwr}:
-incorporating an additional coordinate dimension requires specifying a distance metric for the expanded coordinate space, potentially introducing additional parameters and limiting the model's applicability.
-
 In contrast, \DLAN uses dimension-specific attention to learn how individual coordinate dimensions contribute to prediction.
-The model also accounts for spatial dependence.
-As \citet{HuLu-2023} noted, dimension-specific weighting avoids the need to combine different types of space and coordinate systems through ad hoc distance metrics within a single distance-decay function.
-Assigning a weighting scheme to each dimension and then combining them offers an alternative, as implemented in \gls{gtdr}.
+However, as \citet{HuLu-2023} noted, dimension-specific weighting avoids the need to combine different types of space and coordinate systems through ad hoc distance metrics within a single distance-decay function.
+% Assigning a weighting scheme to each dimension and then combining them offers an alternative, as implemented in \gls{gtdr}.
 Evidence from the four cases supports this view.
 In the \COO case, the model learns a wider temporal scale than spatial scales,
 characterising the geographical prior learnt for this panel.
 This architecture allows the model to learn different scales for each dimension, which is particularly important for spatio-temporal data where the temporal dimension may have a different influence on the response than the spatial dimensions.
+\DLAN's dimension-specific attention therefore provides a flexible approach to learning the relative contributions of coordinate dimensions and could be extended to five-, six- and higher-dimensional data, including spatio-temporal flows.
 
 Although learning dimension-specific attention parameters is useful for higher-dimensional data,
-\DLAN learns similar scale factors for the two related spatial dimensions,
-as observed across all four case studies.
-Anisotropy in small-scale spatial-only data is relatively uncommon.
-These findings suggest that the full benefit of \DLAN's dimension-specific attention is realised when the coordinate dimensions represent fundamentally different quantities.
+% \DLAN learns similar scale factors for the two related spatial dimensions,
+% as observed across all four case studies.
+anisotropy in small-scale spatial-only data could be missing.
+The full benefit of \DLAN's dimension-specific attention is realised when the coordinate dimensions represent fundamentally different quantities.
 Using \WuhanHP as an example, we evaluated a variant that aggregates attention using planar spatial distance, termed \DLAN-P.
 With the same number of trainable parameters, \DLAN-P further reduced RMSE to 0.1614, outperforming all models in the preceding comparison.
 Combining the two spatial dimensions through planar distance reduces the parameter requirements of the attention module, leaving more capacity for the nonlinear prediction head to learn the relationship between features and the response.
 These results suggest further scope for optimisation by allowing related spatial coordinate pairs to be specified in the model configuration, thereby reducing the degrees of freedom.
 Nevertheless, the current \DLAN model already supports a broad range of applications.
 
-\DLAN's dimension-specific attention therefore provides a flexible approach to learning the relative contributions of coordinate dimensions and could be extended to five-, six- and higher-dimensional data, including spatio-temporal flows.
-
 \subsection{Attention width and other hyperparameters}
 
 As discussed above, attention width substantially affects predictive accuracy because it directly determines feature encoding, positional encoding, dimension-specific attention projections and contextual representations.
-Its role is similar to that of the latent representation dimension $d_{\text{model}}$ in \GAgg.
-Increasing this width substantially increases the number of trainable parameters, so it should be chosen according to the size of the available training set.
-The capacity of the FiLM prediction head also directly affects the model's ability to represent nonlinear relationships: 
-an overly narrow head restricts the relationships it can learn among covariates,
-whereas an overly wide head may reduce the capacity available to attention under a fixed parameter budget or increase overfitting.
+% Its role is similar to that of the latent representation dimension $d_{\text{model}}$ in \GAgg.
+Increasing attention width substantially increases the number of trainable parameters, so it should be chosen according to the size of the available training set.
+The capacity of the FiLM prediction head also directly affects the model's ability to represent nonlinear relationships.
 The candidate count controls the number of reference samples entering the attention computation,
 affecting information coverage, interference from less relevant samples, computational cost and variability across training runs.
-A larger candidate count is generally a safer choice, although excessively large values require considerably more memory.
 These three parameters are therefore the main targets for tuning.
 
 Other parameters may also affect performance, although their benefits are less consistent.
 \DLAN supports both multi-head attention and stacked attention blocks,
 but these choices generally have less influence than in other Transformer models.
-This may reflect the relatively direct relationships between the input features and the response,
-together with pronounced spatial heterogeneity in these case studies,
-which limit the gains from additional attention heads and greater depth relative to their computational cost.
 The capacity of the nonlinear transformation following attention aggregation may also affect performance.
 The geometric-bias network controls the flexibility of the nonlinear mapping from signed coordinate offsets, absolute distances and directions to attention biases,
 but varying its capacity had little effect across the spatial datasets examined.
@@ -775,7 +764,7 @@ but varying its capacity had little effect across the spatial datasets examined.
 and to generate predictions by conditioning this field on the sampled observations.
 \DLAN constructs an individual condition for each observation:
 $h_i=A(x_i,u_i;\mathcal R_i)$ and $\widehat y_i=f_{\mathrm{FiLM}}(x_i;h_i)$.
-Consequently, even two dwellings at identical coordinates can have different query representations and conditioning vectors if their covariates differ.
+Consequently, even two observations at identical coordinates can have different query representations and conditioning vectors if their covariates differ.
 For spatial variables strongly associated with location,
 the coordinate and feature encodings can convey similar information,
 encouraging observations to share aspects of their FiLM modulation.
@@ -786,8 +775,8 @@ by constructing both a group-level condition $h_g$ and an individual-level condi
 These conditions could then be combined as $\tilde{h}_i=h_g+\lambda(h_i-h_g)$ to condition the FiLM predictor, where $\lambda$ is a learnable parameter that controls the degree of shrinkage towards the group-level condition.
 This formulation would represent the shared environment and individual differences separately,
 while shrinking individual conditions towards the group-level condition to reduce unnecessary within-group variation.
-The same construction could be extended recursively across multiple hierarchical levels,
-allowing the model to learn relationships beyond a two-level group–individual structure.
+% The same construction could be extended recursively across multiple hierarchical levels,
+% allowing the model to learn relationships beyond a two-level group–individual structure.
 Such an extension could offer greater flexibility than statistical models that require an explicit specification of the effects and dependence structure at each level.
 
 \subsection{Nonlinear relationships and remote sensing information}
